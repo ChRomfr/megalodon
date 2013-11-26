@@ -89,6 +89,21 @@
 							<input type="checkbox" name="acl[mailing_access]" value="1" {if isset($user->acl['mailing_access'])}checked="checked"{/if}/>
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Demander un mailing :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[mailing_demand]" value="1" {if isset($user->acl['mailing_demand'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Traiter les demandes :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[mailing_valid]" value="1" {if isset($user->acl['mailing_valid'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
 				</div><!-- /panel-body -->
 			</div><!-- /panel -->
 
@@ -101,6 +116,14 @@
 							<input type="checkbox" name="acl[campaign_access]" value="1" {if isset($user->acl['campaign_access'])}checked="checked"{/if}/>
 						</div>
 					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Assigner une campagne :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[campaign_assign]" value="1" {if isset($user->acl['campaign_assign'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
 				</div><!-- /panel-body -->
 			</div><!-- /panel -->
 

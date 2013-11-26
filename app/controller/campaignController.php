@@ -9,7 +9,7 @@ class campaignController extends Controller{
 	public function __construct($registry){
 		parent::__construct($registry);
 
-		if( isAdmin() < 1 || !getAcl('campaign_access') ){
+		if( isAdmin() < 1 && !getAcl('campaign_access') ){
 			header('HTTP/1.0 401 Unauthorized');
 			header('Location: '. $this->registry->Helper->getLink("index"));			
 		}

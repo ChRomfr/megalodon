@@ -4,6 +4,19 @@
 class mailingController extends Controller{
 	
 	/**
+	 * Surchage de la fonction pour verification ACL
+	 * @param [type] $registry [description]
+	 */
+	public function __construct($registry){
+		parent::__construct($registry);
+
+		if( isAdmin() < 1 && !getAcl('mailing_access') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("index"));			
+		}
+	}
+
+	/**
 	*	Affiche la liste des mailings
 	*	@return string code html de la page
 	*/
