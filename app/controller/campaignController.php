@@ -11,8 +11,7 @@ class campaignController extends Controller{
 
 		if( isAdmin() < 1 || !getAcl('campaign_access') ){
 			header('HTTP/1.0 401 Unauthorized');
-			//header('Location: '. $this->registry->Helper->getLink("index"));
-			exit('This page require right to open <a href="'. $this->registry->Helper->getLink("index") .'" title="Retour">Retour</a>');			
+			header('Location: '. $this->registry->Helper->getLink("index"));			
 		}
 	}
 	
