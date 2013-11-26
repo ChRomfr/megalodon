@@ -123,6 +123,7 @@
 		{/if}
 		
 	</table>
+	<div id="nb-contacts-for-mailing"></div>
 	
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid) || isset($smarty.session.acl.contacts_export_csv)}
 	<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="icon-download icon-white"></i>&nbsp;Export cible CSV</a>
@@ -162,5 +163,18 @@ function deletemailing(id){
 	}
 }
 {/if}
+
+jQuery(document).ready(function(){
+	$.get(
+        '{$Helper->getLink("mailing/ajax_get_nbcontacts/{$mailing.id}")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+           $("#nb-contacts-for-mailing").html('<div class="text-center">Nombre de contacts : ' + data + '</div>');
+           console.log(data);
+        }       
+    );
+});
 //-->
 </script>
+<pre>
+{$mailing|print_r}

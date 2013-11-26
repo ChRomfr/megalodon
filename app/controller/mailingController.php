@@ -292,6 +292,21 @@ class mailingController extends Controller{
 			return "false";
 		}
 	}
+
+
+	public function ajax_get_nbcontactsAction($mailing_id){
+
+		$mailing = new mailing();
+		$mailing->get($mailing_id);
+
+		$mailing->cible = unserialize($mailing->cible);
+
+		$ccontacts = $this->load_controller('contacts');
+		$where = $ccontacts->getWhere($mailing->cible);
+		$this->load_manager('contacts');
+			
+		return $this->manager->contacts->count($where);
+	}
 	
 	/**
 	*	Contruit le lien vers le fichier CSV pour exporter les contacts
