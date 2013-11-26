@@ -1,0 +1,122 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>
+	<li><a href="{$Helper->getLink("adm/users_index")}" title="Utilisateurs">Utilisateurs</a></li>
+	<li class="active">Edition</li>
+</ol>
+
+<div class="well">
+	<form method="post" class="form-horizontal">
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Type d'authentification :</label>
+			<div class="col-sm-5">
+				<select name="user[auth_type]" class="form-control">
+					<option value="sso" {if $user->auth_type == 'sso'}selected="selected"{/if} >SSO</option>
+					<option value="php" {if $user->auth_type == 'php'}selected="selected"{/if}>Base local</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Identifiant :</label>
+			<div class="col-sm-5">
+				<input type="text" name="user[identifiant]" value="{$user->identifiant}" class="form-control" {if $user->auth_type == 'sso'}disabled{/if}/>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">E-mail :</label>
+			<div class="col-sm-5">
+				<input type="email" name="user[email]" value="{$user->email}" class="form-control" {if $user->auth_type == 'sso'}disabled{/if}/>
+			</div>
+		</div>
+
+		<div class="form-group">
+				<label class="control-label col-sm-2">Administrateur :</label>
+				<div class="col-sm-5">
+					<select name="user[isAdmin]" class="form-control">
+						<option value="0" {if $user->isAdmin == 0}selected="selected"{/if} >Non</option>
+						<option value="1" {if $user->isAdmin == 1}selected="selected"{/if}>Oui</option>
+					</select>
+				</div>
+			</div>
+
+		<fieldset>
+			<legend>Acl</legend>			
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Module contacts</div>
+	  			<div class="panel-body">
+
+	  				<div class="form-group">
+						<label class="control-label col-sm-2">Ajouter :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[contacts_add]" value="1" {if isset($user->acl['contacts_add'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Modifier :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[contacts_edit]" value="1" {if isset($user->acl['contacts_edit'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Supprimer :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[contacts_delete]" value="1" {if isset($user->acl['contacts_delete'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
+					<div class="form-group">
+						<label class="control-label col-sm-2">Exporter en CSV :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[contacts_export_csv]" value="1" {if isset($user->acl['contacts_export_csv'])}checked="checked"{/if}/>
+						</div>
+					</div>
+
+				</div><!-- /panel-body -->
+			</div><!-- /panel -->
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Module mailing</div>
+	  			<div class="panel-body">
+					<div class="form-group">
+						<label class="control-label col-sm-2">Mailing accès :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[mailing_access]" value="1" {if isset($user->acl['mailing_access'])}checked="checked"{/if}/>
+						</div>
+					</div>
+				</div><!-- /panel-body -->
+			</div><!-- /panel -->
+
+			<div class="panel panel-default">
+				<div class="panel-heading">Module campagne</div>
+	  			<div class="panel-body">
+					<div class="form-group">
+						<label class="control-label col-sm-2">Campagne accès :</label>
+						<div class="col-sm-5">
+							<input type="checkbox" name="acl[campaign_access]" value="1" {if isset($user->acl['campaign_access'])}checked="checked"{/if}/>
+						</div>
+					</div>
+				</div><!-- /panel-body -->
+			</div><!-- /panel -->
+
+		</fieldset>
+		<div class="text-center">
+			<hr/>
+			<input type="hidden" name="user[id]" value="{$user->id}" />
+			<button class="btn btn-primary" type="submit">Enregistrer</button>
+		</div>
+	</form>
+
+	
+
+</div>
+
+
+
+<pre>
+{$user|print_r}

@@ -1,0 +1,53 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
+	<li class="active">Administration</li>
+</ol>
+
+<div class="well">
+	<h4>Administration</h4>
+	
+	<ul class="bs-glyphicons">
+
+		<li>
+			<a href="{$Helper->getLink("categorie")}" title="">
+				<span class="fa fa-sitemap fa-3x"></span>
+				<span class="glyphicon-class">Catégories</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("adm/contacts_maintenance")}" title="">
+				<span class="fa fa-users fa-3x"></span>
+				<span class="glyphicon-class">Contacts</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("importafpi")}" title="">
+				<span class="fa fa-upload fa-3x"></span>
+				<span class="glyphicon-class">Importer</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("organisme")}" title="">
+				<span class="fa fa-puzzle-piece fa-3x"></span>
+				<span class="glyphicon-class">Organismes</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("adm/configuration")}" title="">
+				<span class="glyphicon glyphicon-wrench"></span>
+				<span class="glyphicon-class">Préferences</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("adm/users_index")}" title="">
+				<span class="fa fa-user fa-3x"></span>
+				<span class="glyphicon-class">Utilisateurs</span>
+			</a>
+		</li>
+	</ul>
+</div>

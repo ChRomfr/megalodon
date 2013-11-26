@@ -1,0 +1,159 @@
+{* FORMULAIRE DE RECHERCHE APPELLE SUR TOUTE LES PAGES *}
+{strip}
+<hr/>
+<div class="pull-right" id="select-view-form">
+	<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>
+</div>
+<li class="nav-header hidden-tablet">Filtre</li>
+<div class="clearfix"></div>
+
+<form method="get" action="{$Helper->getLink("contacts/index")}" style="display:none;" id="global-search-form" role="form">
+<fieldset>
+	<div class="form-group">
+		<label>Recherche :</label>
+		<input type="text" name="filtre[query]" value="{if isset($smarty.get.filtre.query) && !empty($smarty.get.filtre.query)}{$smarty.get.filtre.query}{/if}" placeholder="ex: nom, tel, email ..." class="form-control"/>
+	</div>
+	
+	<div class="form-group">
+		<label>Departement:</label>
+		<br/>
+		<select name="filtre[departement][]" class="chozen form-control" multiple>
+			<option value=""></option>
+				{foreach $global_departements as $row}
+				<option value="{$row.dpt}"
+					{if isset($smarty.get.filtre.departement)}
+						{foreach $smarty.get.filtre.departement as $k => $v}
+							{if $row.dpt == $v}
+								selected="selected"
+							{/if}
+						{/foreach}
+					{/if}
+					>{$row.dpt}
+				</option>
+				{/foreach}
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label for="">Categorie :</label>
+		<br/>
+		<select name="filtre[categorie][]" class="chozen form-control" multiple>
+			{foreach $global_categories as $row}
+			<option value="{$row.id}"
+				{if isset($smarty.get.filtre.categorie)}
+					{foreach $smarty.get.filtre.categorie as $k => $v}
+						{if $row.id == $v}
+							selected="selected"
+						{/if}
+					{/foreach}
+				{/if}
+				>{$row.libelle}
+			</option>
+			{/foreach}
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label>Condition categorie :</label>
+		<select name="filtre[categorie_condition]" class="form-control">
+			<option value="OR" {if isset($smarty.get.filtre.categorie_condition) && $smarty.get.filtre.categorie_condition == 'OR'}selected="selected"{/if}>Ou</option>
+			<option value="AND" {if isset($smarty.get.filtre.categorie_condition) && $smarty.get.filtre.categorie_condition == 'AND'}selected="selected"{/if}>Et</option>
+		</select>
+	</div>
+	
+	{* Organisme *}
+	<div class="form-group">
+		<label for="filtre_organismes">Organismes :</label><br/>
+		<select name="filtre[organisme][]" class="form-control chzn-select" multiple >
+			{foreach $global_organismes as $row}
+			<option value="{$row.id}"
+				{if isset($smarty.get.filtre.organisme)}
+					{foreach $smarty.get.filtre.organisme as $k => $v}
+						{if $row.id == $v}
+							selected="selected"
+						{/if}
+					{/foreach}
+				{/if}
+				>{$row.libelle}
+			</option>
+			{/foreach}
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label>Effectif : </label>
+		<div class="row">
+			<div class="col-xs-2">
+				<input type="text" name="filtre[effectif_mini]" class="form-control" {if isset($smarty.get.filtre.effectif_mini) && !empty($smarty.get.filtre.effectif_mini)}value="{$smarty.get.filtre.effectif_mini}"{/if} /> 
+			</div>
+			<div class="col-xs-1">à </div>
+			<div class="col-xs-2">
+				<input type="text" name="filtre[effectif_max]" class="form-control col-xs-2" {if isset($smarty.get.filtre.effectif_max) && !empty($smarty.get.filtre.effectif_max)}value="{$smarty.get.filtre.effectif_max}"{/if} />
+			</div>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label>Poste :</label>		
+		<select name="filtre[poste]" class="form-control">
+			<option value=""></option>
+			{foreach $global_postes as $row}
+			<option value="{$row.id}" {if isset($smarty.get.filtre.poste) && $smarty.get.filtre.poste == $row.id}selected="selected"{/if}>{$row.libelle}</option>
+			{/foreach}
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label>Service :</label>								
+		<select name="filtre[service]" class="form-control">
+			<option value=""></option>
+			{foreach $global_services as $row}
+			<option value="{$row.id}" {if isset($smarty.get.filtre.service) && $smarty.get.filtre.service == $row.id}selected="selected"{/if}>{$row.libelle}</option>
+			{/foreach}
+		</select>
+	</div>
+	
+	<div class="form-group">
+		<label>APE :</label>
+		<br/>
+		<select name="filtre[ape_id]" id="filtre-ape-id" class="form-control chozen">
+			<option value=""></option>
+			{foreach $global_ape as $row}
+			<option value="{$row.id}" {if isset($smarty.get.filtre.ape_id) && $smarty.get.filtre.ape_id == $row.id}selected="selected"{/if}>{$row.code}</option>
+			{/foreach}
+		</select>
+	</div>
+	
+	{* Filtre sur les types *}
+	<label class="checkbox-inline">
+		<input type="checkbox" name="filtre[societes]" value="1" {if !isset($smarty.get.filtre) || isset($smarty.get.filtre.societes) && $smarty.get.filtre.societes == 1}checked="checked"{/if} />&nbsp;Societe
+	</label>
+	
+	<label class="checkbox-inline"><input type="checkbox" name="filtre[societe_contact]" value="1" {if !isset($smarty.get.filtre) || isset($smarty.get.filtre.societe_contact) && $smarty.get.filtre.societe_contact == 1}checked="checked"{/if}/>&nbsp;Contact societe
+	</label>
+	
+	<label class="checkbox-inline"><input type="checkbox" name="filtre[particulier]" value="1" {if !isset($smarty.get.filtre) || isset($smarty.get.filtre.particulier) && $smarty.get.filtre.particulier == 1}checked="checked"{/if}/>&nbsp;Particulier</label>
+	
+	<hr/>
+	<label class="checkbox-inline"><input type="checkbox" name="filtre[email_is_valid]" value="1" {if isset($smarty.get.filtre.email_is_valid)}checked="checked"{/if}/>&nbsp;Email valide </label>
+	<label class="checkbox-inline"><input type="checkbox" name="filtre[is_client]" value="1" {if isset($smarty.get.filtre.is_client)}checked="checked"{/if}/>&nbsp;Client</label>
+	</fieldset>
+	<hr/>
+	<div class="text-center">
+		<button type="submt" class="btn btn-primary"><i class="icon-white icon-search"></i>&nbsp;Rechercher</button>
+	</div>
+</form>
+{/strip}
+<script type="text/javascript">
+<!--
+function showsearchform(){
+	$('#global-search-form').css('display','block');
+	$('#select-view-form').html('<a href="javascript:hidesearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-up"></i></a>');
+}
+
+function hidesearchform(){
+	$('#global-search-form').css('display','none');
+	$('#select-view-form').html('<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>');
+}
+//-->
+</script>

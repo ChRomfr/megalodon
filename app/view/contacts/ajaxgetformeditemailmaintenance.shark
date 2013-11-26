@@ -1,0 +1,19 @@
+{strip}
+<form method="post" action="{$Helper->getLink("contacts/ajaxgetformeditemailmaintenance/{$contact.id}")}" id="" class="well form-horizontal">
+	
+	<div class="form-group">
+		<label class="control-label">Email :</label>
+		<div class="controls">
+			<input type="email" name="contact[email]" id="email" value="{$contact.email}" class="form-control"/>
+			<span class="help-block">Veuillez saisir une adresse valide. Laisser vide pour la supprimer</span>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<hr/>
+		<input type="hidden" name="contact[id]" value="{$contact.id}" />
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+
+</form>
+{/strip}

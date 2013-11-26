@@ -1,0 +1,64 @@
+{strip}
+<div class="pull-right">
+	<a href="{$Helper->getLink("contacts/add")}" title="Nouveau contact"><i class="icon icon-plus"></i></a>
+</div>
+<div class="clearfix"></div>
+
+<form method="post" action="{$Helper->getLink("contacts/massdelete")}" onsubmit="return confirSendForm();">
+
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Contact</th>
+			<th>Ville</th>
+			<th>Email</th>
+			<th>Type</th>
+			{if $smarty.session.utilisateur.isAdmin > 0}
+			<th></th>
+			{/if}
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $contacts as $row}
+		<tr>
+			<td><a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Detail">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a></td>
+			<td>{$row.ville}</td>
+			<td>{$row.email}</td>
+			<td>
+				{if $row.ctype == 'societe'}Societe
+				{elseif $row.ctype == 'societe_contact'}Pro
+				{else}Par
+				{/if}
+			</td>
+			{if $smarty.session.utilisateur.isAdmin > 0}
+			<td>
+				<!--<a href="javascript:deleteContact({$row.id});" title="Supprimer"><i class="icon icon-trash"></i></a>
+				&nbsp;&nbsp;-->
+				<input type="checkbox" name="contacts[][{$row.id}]" />
+			</td>
+			{/if}
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+
+{if isset($Pagination)}
+<div class="pull-left">
+	{$Pagination->render()}
+</div>
+{/if}
+
+<div class="pull-right">
+	{if $smarty.session.utilisateur.isAdmin > 0 || $smarty.session.utilisateur.contacts_export_csv == 1}
+	<a href="{$Helper->getLink("contacts/csv")}?{$smarty.server.QUERY_STRING}&amp;csv" title="CSV" target="_blank" class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;CSV</a>
+	&nbsp;
+	{/if}
+	
+	{if $smarty.session.utilisateur.isAdmin > 0}
+	<button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-trash"></i>&nbsp;Supprimer</button>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+</form>
+{/strip}

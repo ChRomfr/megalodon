@@ -1,0 +1,36 @@
+<div class="well nav-collapse sidebar-nav">
+	<ul class="nav nav-tabs nav-stacked main-menu">
+		<li class="nav-header hidden-tablet">Navigation</li>
+		<li><a href="{$Helper->getLink("contacts")}" title="Contacts">Contacts</a></li>
+		{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.campaign_access)}
+		<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
+		{/if}
+		
+		{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_access)}
+		<li class="dropdown-submenu">
+			<a href="#" data-toggle="dropdown">Mailing</a>
+			<ul class="dropdown-menu">
+				<li><a href="{$Helper->getLink("mailing")}" title="Liste des mailings">Liste</a></li>
+				<li><a href="{$Helper->getLink("mailing/calendrier")}" title="Calendrier">Calendrier</a></li>
+				<li><a href="{$Helper->getLink("mailing/add")}" title="Nouvelle demande">Demande</a></li>
+			</ul>
+		</li>
+		{/if}
+		
+		{if $smarty.session.utilisateur.isAdmin > 0}
+		<li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>		
+		{/if}	
+
+		{* Traitements des bundles *}
+		{if isset($Bundle) && is_array($Bundle)}
+			{foreach $Bundle as $Row}
+				{if $Row.menu_admin == 1}
+					{$Row.menu_admin_code}
+				{/if}
+			{/foreach}
+		{/if}
+		
+		{$global_form_search}		
+						
+	</ul>{* /nav *}
+</div>{* /well *}

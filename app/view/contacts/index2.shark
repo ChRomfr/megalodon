@@ -1,0 +1,40 @@
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
+	<li class="active">Contacts</li>
+</ol>
+
+<div class="well">
+	<div id="index2_contacts">
+		<div>Chargements ...</div>
+	</div>
+</div>
+{/strip}
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	paramUrl = getParameters();
+
+	$.get(
+        '{$Helper->getLink("contacts/ajax_load_contacts")}',paramUrl
+		,{literal}        
+        function(data){
+        	$('#index2_contacts').html(data);
+        }
+    );{/literal}
+});
+
+function getParameters() {
+  var searchString = window.location.search.substring(1),
+      params = searchString.split("&"),
+      hash = {};
+
+  if (searchString == "") return {};
+  for (var i = 0; i < params.length; i++) {
+    var val = params[i].split("=");
+    hash[unescape(val[0])] = unescape(val[1]);
+  }
+  return hash;
+}
+//-->
+</script>

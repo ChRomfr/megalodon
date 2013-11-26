@@ -1,0 +1,36 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li class="active">Campagne</li>
+</ol>
+
+<div class="well">
+	<div class="pull-right">
+		<a href="{$Helper->getLink("campaign/add")}" title="Nouvelle campagne"><i class="icon icon-add"></i></a>
+	</div>
+	<h3>Campagnes</h3>
+	<div class="clearfix"></div>
+	<table class="table">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Campagne</th>
+				<th>Type</th>
+				<th>Assigné à</th>
+				<th>Date début</th>
+				<th>Date fin</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $campaigns as $campaign}
+			<tr>
+				<td>{$campaign.id}</td>
+				<td><a href="{$Helper->getLink("campaign/view/{$campaign.id}")}" title="Detail de la campagne">{$campaign.title}</a></td>
+				<td>{$campaign.type}</td>
+				<td>{$campaign.assign_to}</td>
+				<td>{$campaign.date_start}</td>
+				<td>{$campaign.date_end}</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>

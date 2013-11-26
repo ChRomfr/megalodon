@@ -1,0 +1,66 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="Accueil">Administration</a></li>
+	<li class="active">Utilisateurs</li>
+</ol>
+
+<div class="well">
+	<h4>Utilisateurs</h4>
+	<table class="table" id="users-liste">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Identifiant</th>
+				<th>Administrateur</th>
+				<th>Authentification</th>
+				<th>Actif</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $users as $user}
+			<tr>
+				<td>{$user.id}</td>
+				<td>{$user.identifiant}</td>
+				<td>{if $user.isAdmin > 0}<span class="label label-success">Oui</span>{else}<span class="label label-default">Non</span>{/if}</td>
+				<td>{$user.auth_type}</td>
+				<td>{if $user.actif == 1}<span class="label label-success">Oui</span>{else}<span class="label label-danger">Non</span>{/if}</td>
+				<td>
+					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="icon icon-edit"></i></a>
+				</tr>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+
+	<div class="pager" id="pager" style="position:static">
+		<form>
+			<img class="first" src="{$config.url}web/images/first.png">
+			<img class="prev" src="{$config.url}web/images/prev.png">
+			<input class="pagedisplay" type="text">
+			<img class="next" src="{$config.url}web/images/next.png">
+			<img class="last" src="{$config.url}web/images/last.png">
+			<select class="pagesize" disabled>
+				<option selected="selected" value="10">10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+				<option value="40">40</option>
+			</select>
+		</form>
+	</div>
+
+	{if $config.ldap_use == 1}
+	<div class="bs-callout bs-callout-info">
+		<p>Pour désactiver un compte utilisateur SSO ceci doit être fait depuis votre <strong>annulaire LDAP</strong>.</p>
+	</div>
+	{/if}
+</div>
+<script type="text/javascript">
+<!--
+{literal}
+jQuery(document).ready(function(){
+	 $("#users-liste").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
+});
+{/literal}
+//-->
+</script>

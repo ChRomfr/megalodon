@@ -1,0 +1,43 @@
+<ul class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a><span class="divider">&gt;&gt;</span></li>
+	<li><a href="{$Helper->getLink("")}" title="Administration">Administration</a><span class="divider">&gt;&gt;</span></li>
+	<li class="active">Utilisateurs</li>
+</ul>
+
+<div class="well">
+	<h3>Utilisateurs</h3>
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Identifiant</th>
+				<th>SSO</th>
+				<th>Email</th>
+				<th></th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $users as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{if $row.actif == 0}<strike>{/if}{$row.identifiant}{if $row.actif == 0}</strike>{/if}</td>
+				<td>{if $row.auth_type == 'sso'}Oui{else}Non{/if}</td>
+				<td>{$row.email}</td>
+				<td>
+					<a href="{$Helper->getLink("utilisateur/edition/{$row.id}")}" title="Edition"><i class="icon icon-edit"></i></a>
+					<a href="javascript:deluser({$row.id},'{$row.identifiant}')"><i class="icon icon-trash"></i></a>
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+<!--
+function deluser(uid, identifiant){
+	if(confirm('Etes vous sur de vouloir supprimer cet utilisateur : '+identifiant+'?')){
+		window.location.href = '{$Helper->getLink("utilisateur/delete/'+uid+'")}';
+	}
+}
+//-->
+</script>

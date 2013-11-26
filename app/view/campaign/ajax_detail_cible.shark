@@ -1,0 +1,86 @@
+<div class="well">
+	<!-- Resume contacts -->
+	<h4>{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</h4>
+	<table class="table table-condensed">
+		{foreach $contact.telephones as $row}
+		<tr>
+			<td>
+				{if $row.type == 1}Ligne directe
+				{elseif $row.type == 2}Standard
+				{elseif $row.type == 3}Domicile
+				{elseif $row.type == 4}Mobile
+				{elseif $row.type == 5}Fax
+				{/if}
+			</td>
+			<td>{$row.telephone}</td>
+		</tr>
+		{/foreach}
+
+		{if !empty($contact.email)}
+		<tr>
+			<td>Email :</td>
+			<td><i class="glyphicon glyphicon-envelope"></i>&nbsp;{$contact.email}</td>
+		</tr>
+		{/if}
+	</table>
+</div>
+
+<div class="well">
+	<!-- Suivi campagne -->
+	{if count($suivis) > 0}	
+	<table class="table table-condensed">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Suivi</th>
+				<th>Date</th>
+				<th>Utilisateur</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $suivis as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{$row.suivi|nl2br}</td>
+				<td>{$row.add_on}</td>
+				<td>{$row.author}</td>
+			{/foreach}
+		</tbody>
+	</table>
+	{else}
+	<div class="alert alert-info">Aucun suivi !</div>
+	{/if}
+</div>
+
+<!-- edition data campaign -->
+{if $smarty.session.utilisateur.id == $campaign.assign}
+<form class="well" method="post" action="{$Helper->getLink("campaign/suivi_add/{$campaign_data.id}")}">
+	<div class="form-group">
+		<label>Suivi :</label>
+		<div class="">
+			<textarea name="suivi[suivi]" class="form-control"></textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label>Statut :</label>
+		<div class="">
+			<select name="campaign_suivi[statut]" id="" class="form-control">
+				<option value="0">--</option>
+				<option value="1" {if $campaign_data.statut == 1}selected="selected"{/if}>En attente</option>
+				<option value="2" {if $campaign_data.statut == 2}selected="selected"{/if}>Succès</option>
+				<option value="3" {if $campaign_data.statut == 3}selected="selected"{/if}>Echec</option>
+				<option value="4" {if $campaign_data.statut == 4}selected="selected"{/if}>Annuler</option>
+			</select>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<hr/>
+		{if isset($filter)}
+		<input type="hidden" name="filter" value="{$filter}" />
+		{/if}
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+</form>
+{/if}

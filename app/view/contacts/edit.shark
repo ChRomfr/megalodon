@@ -1,0 +1,237 @@
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("contacts")}" title"Contacts">Contacts</a></li>
+	<li><a href="{$Helper->getLink("contacts/detail/{$contact.contact_id}")}" title="Detail">{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</a></li>
+	<li class="active">Edition</li>
+</ol>
+
+<form method="post" action="" class="form-horizontal well" id="form-edit-contact">
+
+{if !empty($contact.raison_social)}
+	<div class="form-group">
+		<label class="control-label col-sm-2">Raison social</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[ets][raison_social]" id="raison_social" value="{$contact.raison_social}" required class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">SIRET</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[ets][siret]" id="siret" value="{$contact.siret}" required class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">Effectif :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[ets][effectif]" id="contact-ets-effectif" value="{$contact.effectif}" class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">APE :</label>
+		<div class="col-sm-5">
+			<select name="contact[ets][ape_id]" id="contact-ets-apeid" class="chzn-select form-control">
+				<option value=""></option>
+				{foreach $apes as $row}
+				<option value="{$row.id}" {if $contact.ape_id == $row.id}selected="selected"{/if}>{$row.code}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
+	
+	<div class="form-group">
+	<label class="control-label col-sm-2">Siège social :</label>
+	<div class="col-sm-5">
+		<select name="contact[ets][mother]" id="siege-social" class="form-control">
+			<option value="0" {if $contact.mother == 0}selected="selected"{/if}>Non</option>
+			<option value="1" {if $contact.mother == 1}selected="selected"{/if}>Oui</option>
+		</select>
+	</div>
+</div>
+{else}
+	<div class="form-group">
+		<label class="control-label col-sm-2">Nom :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[per][nom]" id="contact-par-nom" value="{$contact.nom}" required class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">Prenom :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[per][prenom]" id="contact-par-prenom" value="{$contact.prenom}" required class="form-control"/>
+		</div>
+	</div>
+
+	{* Information si contact lié a une societe *}
+		{if !empty($contact.societe)}
+		<div class="form-group">
+			<label class="control-label col-sm-2">Societe :</label>
+			<div class="col-sm-5">
+				<select name="contact[per][societe_id]" id="contact-per-societe" class="chzn-select">
+					<option value=""></option>
+					{foreach $entreprises as $row}
+					<option value="{$row.id}" {if $row.id == $contact.societe_id}selected="selected"{/if}>{$row.raison_social}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Poste :</label>
+			<div class="col-sm-5">
+				<select name="contact[per][poste_id]" id="contact-per-poste" class="chzn-select">
+					<option value=""></option>
+					{foreach $global_postes as $row}
+					<option value="{$row.id}">{$row.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Service :</label>
+			<div class="col-sm-5">
+				<select name="contact[per][service_id]" id="contact-per-service" class="chzn-select">
+					<option value=""></option>
+					{foreach $global_services as $row}
+					<option value="{$row.id}">{$row.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+		{/if}
+	{/if}
+
+	{* CHAMPS COMMUN *}
+	<div class="form-group">
+		<label class="control-label col-sm-2">Adresse :</label>
+		<div class="col-sm-5">
+			<textarea name="contact[adresse1]" id="contact-adresse1" class="form-control">{$contact.adresse1}</textarea>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Adresse (suite):</label>
+		<div class="col-sm-5">
+			<textarea name="contact[adresse2]" id="contact-adresse2" class="form-control">{$contact.adresse2}</textarea>
+		</div>
+	</div>
+	
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Code postal :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[code_postal]" id="contact-codepostal" value="{$contact.code_postal}" class="form-control"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Ville :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[ville]" id="contact-ville" value="{$contact.ville}" class="form-control"/>
+		</div>
+	</div>				
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Pays :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[pays]" id="contact-pays" value="{$contact.pays}" class="form-control"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Email :</label>
+		<div class="col-sm-5">
+			<input type="email" name="contact[email]" id="email" value="{$contact.email}" class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">Code interne :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[code_interne]" id="code_interne" value="{$contact.code_interne}" class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">Client :</label>
+		<div class="col-sm-5">
+			<select name="contact[client]" id="client" class="form-control">
+				<option value="0" {if $contact.client == 0}selected="selected"{/if}>Non</option>
+				<option value="1" {if $contact.client == 1}selected="selected"{/if}>Oui</option>
+			</select>
+		</div>
+	</div>
+	
+	<div class="text-center">
+		<hr/>
+		<input type="hidden" name="contact[id]" value="{$contact.contact_id}" />
+		{if !empty($contact.societe_id)}
+		<input type="hidden" name="societe_id" value="{$contact.societe_id}" />
+		{else}
+		<input type="hidden" name="personne_id" value="{$contact.personne_id}" />
+		{/if}
+		
+		{if !empty($contact.raison_social)}
+		<input type="hidden" name="contact[ets][id]" value="{$contact.sid}" />
+		{/if}
+		
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+</form>
+{/strip}
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	// binds form submission and fields to the validation engine
+	$("#form-edit-contact").validate({
+		rules:{
+			"contact[nom]":{
+				required:true,
+			},
+			"contact[email]":{
+				email:true,
+				//remote: '{$Helper->getLink("contact/checkemail/'+$('#email').val()+'?nohtml")}',
+			},
+			{if !empty($contact.raison_social)}
+			"contact[raison_social]":{
+				required:true,
+			},
+			"contact[siret]":{
+				required:true,
+			}
+			{/if}
+		},
+		messages:{
+			"contact[nom]":{
+				required:"Veuillez indiquer le nom du contact",
+			},
+			"contact[email]":{
+				email:"Veuillez entrer une adresse email valide",
+				remote:"Un contact a deja cette adresse email d utilisee",
+			}
+		},
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('success');
+            $(element).parents('.form-group').addClass('error');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('error');
+            $(element).parents('.form-group').addClass('success');
+        }
+	});
+
+	$('#telephone').mask("99.99.99.99.99");
+	$('#mobile').mask("99.99.99.99.99");
+	$('#fax').mask("99.99.99.99.99");
+});
+//-->
+</script>
+
+{$contact|var_dump}

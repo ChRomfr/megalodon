@@ -1,0 +1,152 @@
+{strip}
+<ol class="breadcrumb">
+    <li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>
+    <li class="active">Configuration</li>
+</ol>
+
+<div class="well">
+    <form method="post" action="" id="form-edit-config" class="form-horizontal">
+        
+        <fieldset>
+            <legend id="configuration-auth">Authentification</legend>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Base utilisateur php</label>
+                <div class="col-sm-5">
+                    <select name="config[auth_php]" id="config-auth-php" class="form-control">
+                        <option value="0" {if $config.auth_php == 0}selected="selected"{/if}>Non</option>
+                        <option value="1" {if $config.auth_php == 1}selected="selected"{/if}>Oui</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Authentification LDAP :</label>
+                <div class="col-sm-5">
+                    <select name="config[auth_sso]" id="config-auth-sso" class="form-control">
+                        <option value="0" {if $config.auth_sso == 0}selected="selected"{/if}>Non</option>
+                        <option value="1" {if $config.auth_sso == 1}selected="selected"{/if}>Oui</option>
+                    </select>
+                </div>
+            </div>
+            
+        </fieldset>
+        
+        <fieldset>
+            <legend id="configuration-email">Email</legend>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Methode :</label>
+                <div class="col-sm-5">
+                    <select name="config[mail_method]" id="" class="form-control">
+                        <option value="smtp" {if $config['mail_method'] == 'smtp'}selected="selected"{/if}>SMTP</option>
+                        <option value="php" {if $config['mail_method'] == 'php'}selected="selected"{/if}>PHP</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Serveur SMTP :</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[smtp_server]" id="config-smtp-server" value="{$config.smtp_server}" class="form-control"/>
+                </div>
+            </div>
+        
+            <div class="form-group">
+                <label class="control-label col-sm-2">Port :</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[smtp_port]" id="config-smtp-port" value="{$config.smtp_port}" class="form-control" placeholder="25"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Utilisateur :</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[smtp_login]" id="config-smtp-login" value="{$config.smtp_login}" class="form-control"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mot de passe :</label>
+                <div class="col-sm-5">
+                    <input type="password" name="config[smtp_password]" id="config-smtp-password" value="{$config.smtp_password}" class="form-control"/>
+                </div>
+            </div>
+        </fieldset>
+        
+        <fieldset>
+            <legend id="configuration-ldap">LDAP</legend>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Actif :</label>
+                <div class="col-sm-5">
+                    <select name="config[ldap_use]" id="config-ldap-user" class="form-control">
+                        <option value="0" {if $config.ldap_use == 0}selected="selected"{/if}>Non</option>
+                        <option value="1" {if $config.ldap_use == 1}selected="selected"{/if}>Oui</option>
+                    </select>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Serveurs :</label>
+                <div class="col-sm-5">
+                    <input type="text" value="{implode(',',unserialize($config.ldap_server))}" name="config[ldap_server]" id="config-ldap-server" class="form-control"/>
+                    <span class="help-block">adresse des serveurs separer par une ,</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Utilisateur :</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[ldap_user]" id="config-ldap-user" value="{$config.ldap_user}" class="form-control"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Mot de passe :</label>
+                <div class="col-sm-5">
+                    <input type="password" id="config-ldap-password" value="{$config.ldap_password}" class="form-control"/>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Suffix :</label>
+                <div class="col-sm-5">
+                    <input type="text" id="config-ldap-accsuffix" value="{$config.ldap_accsuffix}" class="form-control"/>
+                    <span class="help-block">@domaine.com</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Base DN</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[ldap_basedn]" id="config-ldap-basedn" value="{$config.ldap_basedn}" class="form-control"/>
+                    <span class="help-block">DC=domaine,DC=com</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Groupe</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[group_ad]" id="config-ldap-group-ad" value="{$config.group_ad}" class="form-control"/>
+                    <span class="help-block">Permet de definir un groupe d'utilisateur pouvant accèder à l'application</span>
+                </div>
+            </div>
+            
+            <div class="form-group">
+                <label class="control-label col-sm-2">Groupe admin</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[group_ad_adm]" id="config-ldap-group-ad-adm" value="{$config.group_ad_adm}" class="form-control"/>
+                    <span class="help-block">Permet de definir un groupe d'utilisateur donnant les droits d'administration</span>
+                </div>
+            </div>
+            
+        </fieldset>
+        <div class="text-center">
+            <hr/>
+            <button class="btn btn-primary" type="submit">Enregistrer</button>
+        </div>
+    </form>
+</div>
+{/strip}

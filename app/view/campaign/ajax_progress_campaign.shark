@@ -1,0 +1,28 @@
+<table class="table table-condensed table-striped">
+	<tr>
+		<td>Cibles :</td>
+		<td>{$stats.total_cible}</td>
+	</tr>
+	<tr>
+		<td>Progression :</td>
+		<td>
+			<div>{$stats.a_traiter} / {$stats.total_cible}</div>
+			<div class="progress">
+				<div class="progress-bar" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {$stats.traiter_per_cent}%;">
+					<span style="color:black;">{$stats.traiter_per_cent|round}%</span>
+				</div>
+			</div>
+		</td>
+	</tr>
+	<tr>
+		<td>Succès :</td>
+		<td>
+			<div>{$stats.succes} / {$stats.total_cible}</div>
+			<div class="progress">
+				<div class="progress-bar progress-bar-success" role="progressbar" aria-valuenow="60" aria-valuemin="0" aria-valuemax="100" style="width: {$stats.succes_per_cent}%;">
+					<span style="color:black;">{$stats.succes_per_cent|round}%</span>
+				</div>
+			</div>
+		</td>
+	</tr>
+</table>

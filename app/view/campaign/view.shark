@@ -1,0 +1,188 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
+	<li class="active">Detail</li>
+</ol>
+
+<div class="well">
+	{if $smarty.session.utilisateur.isAdmin > 0}
+	<div class="pull-right">
+		<a href="javascript:delete_campaign({$campaign.id});" title="Supprimer cette campagne"><i class="icon icon-trash"></i></a>
+	</div>
+	{/if}
+	<h4>Detail : {$campaign.title}</h4>
+	<div class="clearfix"></div>
+	<br/>
+	<table class="table">
+		<tr>
+			<td>Description :</td>
+			<td>{$campaign.description|nl2br}</td>
+		</tr>
+		<tr>
+			<td>Type :</td>
+			<td>{$campaign.type}</td>
+		</tr>
+		<tr>
+			<td>Date de début :</td>
+			<td>{$campaign.date_start}</td>
+		</tr>
+		<tr>
+			<td>Date de fin :</td>
+			<td>{$campaign.date_end}</td>
+		</tr>
+		<tr>
+			<td>Assigné à :</td>
+			<td>{$campaign.assign_to}</td>
+		</tr>
+		<tr>
+			<td>Objectif :</td>
+			<td>{$campaign.objectif|nl2br}</td>
+		</tr>
+	</table>
+
+	{if $campaign.generated == 0}
+	<div class="alert alert-warning text-center" id="campaign-generated">
+		La liste n'a pas encore été générée.<br/>
+		<a href="javascript:generateCible({$campaign.id});" title="" class="alert-link">Generer la liste des cibles</a>
+		<div id="contacts-maybe"></div>
+	</div>
+	<div id="campaign-result-generation"></div>
+	{else}
+	<hr/>
+	<div id="progress-campaign"></div>
+	<hr/>
+	<h4>Cibles</h4>
+	<div class="pull-right">
+		<a href="javascript:get_target_filter('0')"><span class="label label-default">A traiter</span></a>
+		<a href="javascript:get_target_filter('1')"><span class="label label-info">En attente</span></a>
+		<a href="javascript:get_target_filter('2')"><span class="label label-success">Succès</span></a>
+		<a href="javascript:get_target_filter('all')"><span class="label label-primary">Tous</span></a>
+	</div>
+	<table class="table table-condensed table-striped" id="table-targets"><thead><tr><th>Cible</th><th>Statut</th></tr></thead><tbody></tbody></table>
+	<div class="pager" id="pager" style="position:static">
+		<form>
+			<img class="first" src="{$config.url}web/images/first.png">
+			<img class="prev" src="{$config.url}web/images/prev.png">
+			<input class="pagedisplay" type="text">
+			<img class="next" src="{$config.url}web/images/next.png">
+			<img class="last" src="{$config.url}web/images/last.png">
+			<select class="pagesize">
+				<option selected="selected" value="10">10</option>
+				<option value="20">20</option>
+				<option value="30">30</option>
+				<option value="40">40</option>
+			</select>
+		</form>
+	</div>
+	<div class="clearfix"></div>
+	{/if}
+</div>
+
+<script type="text/javascript">
+<!--
+var filter_cible = '';
+
+function generateCible(cid){
+	$('#campaign-result-generation').html('<div class="alert alert-info text-center">Generation en cours ...</div>');
+
+	$.get(
+        '{$Helper->getLink("campaign/generat_cible/'+cid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+        	$('#campaign-generated').css('display','none');
+        	$('#campaign-result-generation').html('<div class="alert alert-success text-center"><a href="{$Helper->getLink("campaign/view/'+cid+'")}" title="" class="alert-link">Campagne generée. Cliquez ici pour recharger la page</a></div>');
+            //$("#complement-form-add-contacts").html(data);
+        }
+    );
+}
+
+function delete_campaign(id){
+	if(confirm('Etes vous sur ce vouloir supprimer cette campagne ?')){
+		window.location.href = '{$Helper->getLink("campaign/delete/'+id+'")}';
+	}
+}
+
+{if $campaign.generated == 0}
+jQuery(document).ready(function(){
+	$.get(
+        '{$Helper->getLink("campaign/ajax_possible_contacts/{$campaign.id}")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+        	$('#contacts-maybe').html('<br/><br/>Il y a ' + data + ' contact(s) potentiels');
+        }
+    );
+});
+{else}
+jQuery(document).ready(function(){
+
+	{if !isset($filter)}
+	$.get(
+	    '{$Helper->getLink("campaign/ajax_get_targets/{$campaign.id}")}',
+	    {
+	    	nohtml:'nohtml',
+	    },{literal}        
+	    function(data){
+	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="icon icon-edit"></i></a></tr>';
+	    	for( var i in data ){      
+	        	$('#table-targets').append( Mustache.render(tpl, data[i]) );
+	    	}
+
+	    	 $("#table-targets").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});  
+
+
+	    },'json'
+	);{/literal}
+	{else}
+		get_target_filter({$filter});
+	{/if}
+
+	$.get(
+        '{$Helper->getLink("campaign/ajax_get_progress/{$campaign.id}")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+           $("#progress-campaign").html(data);
+           console.log(data);
+        }       
+    );
+
+});
+
+function get_detail_contact(ccid){
+	$.get(
+        '{$Helper->getLink("campaign/ajax_get_detail/'+ccid+'")}',{literal}
+        {nohtml:'nohtml', filter:filter_cible},{/literal}
+        function(data){
+            $("#modal-global-body").html(data);
+        }       
+    );
+
+	$('#modal-global-label').html('Suivi de cible');
+    $('#modal-global').modal('show')
+}
+
+{/if}
+
+function get_target_filter(filter){
+	filter_cible = filter;
+
+	$('#table-targets tbody').remove();
+	$.get(
+	    '{$Helper->getLink("campaign/ajax_get_targets/{$campaign.id}")}',
+	    {
+	    	nohtml:'nohtml', filter:filter,
+	    },{literal}        
+	    function(data){
+	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="icon icon-edit"></i></a></tr>';
+	    	for( var i in data ){      
+	        	$('#table-targets').append( Mustache.render(tpl, data[i]) );
+	    	}
+
+	    	 $("#table-targets").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});  
+
+
+	    },'json'
+	);{/literal}
+}
+
+//-->
+</script>

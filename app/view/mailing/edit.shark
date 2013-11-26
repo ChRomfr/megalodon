@@ -1,0 +1,266 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
+	<li><a href="{$Helper->getLink("mailing")}" title="">Mailing</a></li>
+	<li><a href="{$Helper->getLink("mailing/fiche/{$mailing->id}")}" title="Fiche">{$mailing->libelle}</a></li>
+	<li class="active">Edition</li>
+</ol>
+
+<div class="well">
+	<form method="post" action="#" class="form-horizontal" id="form-mailing-request">
+		<fieldset>
+			
+			<legend>Edition {$mailing->libelle}</legend>
+			
+			{* START LIBELLE *}
+			<div class="form-group">
+				<label class="control-label col-sm-2">Nom du mailing :</label>
+				<div class="col-sm-5">
+					<input type="text" name="mailing[libelle]" id="libelle" required value="{$mailing->libelle}" class="form-control"/>
+				</div>			
+			</div>
+			{* END LIBELLE *}
+
+			{* START DESCRIPTION *}
+			<div class="form-group">
+				<label class="control-label col-sm-2">Description :</label>
+				<div class="col-sm-5">
+					<textarea name="mailing[description]" id="description" required rows="6" class="form-control">{$mailing->description}</textarea>
+				</div>
+			</div>
+			{* END DESCRIPTION *}
+
+			{* START DATE_WISH *}
+			<div class="form-group">
+				<label class="control-label col-sm-2">Date d'envoie souhaitée :</label>
+				<div class="col-sm-5">
+					<input type="text" name="mailing[date_wish]" id="date_wish" class="form-control" value="{$mailing->date_wish}" />
+				</div>
+			</div>
+			{* END DATE_WISH *}
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Demandeur :</label>
+				<div class="col-sm-5">
+					<input type="text" name="mailing[caller]" id="caller" value="{$mailing->caller}" class="form-control"/>
+				</div>			
+			</div>
+			
+		</fieldset>
+		<fieldset>
+			<legend>Cible du mailing</legend>
+			{* START CRITERES RECHERCHE *}
+					
+			<div class="form-group">
+				<label class="control-label col-sm-2">Departement:</label>
+				<div class="col-sm-5">
+					<select name="mailing[cible][departement][]" class="chzn-select form-control" multiple>
+						<option value=""></option>
+						{foreach $global_departements as $k => $v}
+						<option value="{$v.dpt}" 
+							{if isset($mailing->cible['departement']) && is_array($mailing->cible['departement'])}
+								{foreach $mailing->cible['departement'] as $key =>  $value}
+									{if $value == $v['dpt']}selected="selected"{/if}
+								{/foreach}
+							{/if}
+						>{$v.dpt}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Categorie :</label>
+				<div class="col-sm-5">
+					<select name="mailing[cible][categorie][]" class="chzn-select form-control" multiple>
+						{foreach $global_categories as $row}
+						<option value="{$row.id}"
+							{if isset($mailing->cible.categorie)}
+								{foreach $mailing->cible.categorie as $k => $v}
+									{if $row.id == $v}
+										selected="selected"
+									{/if}
+								{/foreach}
+							{/if}
+							>{$row.libelle}
+						</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Condition categorie :</label>
+				<div class="col-sm-1">
+					<select name="mailing[cible][categorie_condition]" class="form-control">
+						<option value="OR" {if $mailing->cible['categorie_condition'] == "OR"}selected="selected"{/if}>Ou</option>
+						<option value="AND"{if $mailing->cible['categorie_condition'] == "AND"}selected="selected"{/if}>Et</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Effectif : </label>
+				<div class="col-sm-5">
+					<div class="col-xs-2">
+						<input type="text" name="mailing[cible][effectif_mini]" class="form-control" {if !empty($mailing->cible['effectif_mini'])}value="{$mailing->cible['effectif_mini']}"{/if} /> 
+					</div>
+					<div class="col-xs-1">à</div> 
+					<div class="col-xs-2">
+						<input type="text" name="mailing[cible][effectif_max]" class="form-control" {if !empty($mailing->cible['effectif_max'])}value="{$mailing->cible['effectif_max']}"{/if}/>
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Poste :</label>
+				<div class="col-sm-5">		
+					<select name="mailing[cible][poste]" class="form-control">
+						<option value=""></option>
+						{foreach $global_postes as $row}
+						<option value="{$row.id}" {if !empty($mailing->cible['poste']) && $mailing->cible['poste'] == $row['id']}selected="selected"{/if}>{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Service :</label>	
+				<div class="col-sm-5">				
+					<select name="mailing[cible][service]" class="form-control">
+						<option value=""></option>
+						{foreach $global_services as $row}
+						<option value="{$row.id}" {if !empty($mailing->cible['service']) && $mailing->cible['service'] == $row['id']}selected="selected"{/if}>{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div> 
+			</div>
+			
+			<div id="champs-contacts"></div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Client :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="mailing[cible][is_client]" value="1" {if isset($mailing->cible['is_client'])}checked="checked"{/if} />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Societe :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="mailing[cible][societes]" value="1" {if isset($mailing->cible['societes'])}checked="checked"{/if}/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Contact societe :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="mailing[cible][societe_contact]" value="1" {if isset($mailing->cible['societe_contact'])}checked="checked"{/if}/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Particulier :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="mailing[cible][particulier]" value="1" {if isset($mailing->cible['particulier'])}checked="checked"{/if}/>
+				</div>
+			</div>
+
+			{* END CRITERES RECHERCHE *}
+
+			{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
+			<div class="form-group">
+				<label class="control-label col-sm-2">Status :</label>
+				<div class="col-sm-5">
+					<select name="mailing[valid]" id="mailing-valid" required class="form-control">
+						<option value="0" {if $mailing->valid == 0}selected="selected"{/if}>A valider</option>
+						<option value="1" {if $mailing->valid == 1}selected="selected"{/if}>Accepter</option>
+						<option value="2" {if $mailing->valid == 2}selected="selected"{/if}>Refuser</option>
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Refus :</label>
+				<div class="col-sm-5">
+					<textarea name="mailing[refus]" id="refus" rows="6" class="form-control" >{$mailing->refus}</textarea>
+				</div>
+			</div>
+			
+			{/if}
+			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
+			<input type="hidden" name="mailing[id]" value="{$mailing->id}" />
+			<input type="hidden" name="mailing[date_send]" value="{$mailing->date_send}" />
+			<input type="hidden" name="mailing[send]" value="{$mailing->send}" />			
+			<input type="hidden" name="mailing[demand_by]" value="{$mailing->demand_by}" />			
+			<input type="hidden" name="mailing[demand_on]" value="{$mailing->demand_on}" />			
+			<input type="hidden" name="mailing[valid_by]" value="{$mailing->valid_by}" />			
+			<input type="hidden" name="mailing[valid_on]" value="{$mailing->valid_on}" />			
+			
+
+		</fieldset>
+		
+		<div class="text-center">
+			<hr/>
+			<button type="submit" class="btn btn-primary">Enregistrer</button>
+			&nbsp;&nbsp;
+			<a href="{$Helper->getLink("mailing")}" title="" class="btn btn-danger">Annuler</a>
+		</div>{* /form-actions *}
+	</form>
+</div>{* /well *}
+<pre>
+{$mailing|print_r}
+</pre>
+<script type="text/javascript">
+<!--
+
+$(document).ready(function() {
+	$('#date_wish').mask("99/99/9999");
+	{literal}
+	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true, minDate:+1, maxDate:'+1M +10D' });
+	{/literal}
+});
+
+function champformcontact(){
+	if($('#cible-cible').val() == 2 || $('#cible-cible').val() == 3){
+		$('#champs-contacts').html('<i class="icon-spinner icon-spin icon-large"></i>');
+		
+		$.get(		
+			'{$Helper->getLink("mailing/getchampscontactsajax")}',{literal}
+			{nohtml:'nohtml'},{/literal}
+			function(data){
+				$('#champs-contacts').html(data);
+			}
+		);
+	}else{
+		$('#champs-contacts').html('');
+	}
+}
+
+jQuery(document).ready(function(){
+    $('#form-mailing-request').validate({
+        rules:{
+            "mailing[date_wish]": {
+                required:true,
+                remote:'{$Helper->getLink("mailing/checkdatewish/'+ $('#date_wish').val() +'?nohtml")}'
+            },
+        },
+		messages:{
+			"mailing[date_wish]":{
+				required: "Veuillez indiquer la date d envoie souhaitée",
+				remote: "Le nombre maximum de mailing programmé ce jour est atteint"
+			},
+		},
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('success');
+            $(element).parents('.form-group').addClass('error');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('error');
+            $(element).parents('.form-group').addClass('success');
+        }
+    });
+});
+//-->
+</script>

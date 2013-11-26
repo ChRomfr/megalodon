@@ -1,0 +1,57 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("Accueil")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("utilisateur")}" title="Utilisateur">Utilisateur</a></li>
+	<li class="active">Edition</li>
+</ol>
+
+<div class="well">
+	<h3>Edition {$user->identifiant}</h3>
+	<form method="post" action="" id="form-utilisateur-edit" class="form-horizontal">
+	
+		<div class="form-group">
+			<label class="control-label col-sm-2">Identifiant :</label>
+			<div class="col-sm-5">
+				<input type="text" name="user[identifiant]" id="user-identifiant" value="{$user->identifiant}" class="form-control" disabled/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="control-label col-sm-2">E-mail :</label>
+			<div class="col-sm-5">
+				<input type="email" name="user[email]" id="user-email" value="{$user->email}" class="form-control" disabled/>
+			</div>
+		</div>
+		
+		<fieldset>
+			<legend>Préférences générales</legend>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Afficher la carte :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="user[index_map_contacts]" id="index-map-contacts}" {if $user->index_map_contacts == 1}checked="checked"{/if} />
+				</div>
+			</div>
+
+			<legend>Preferences contacts</legend>
+			<div class="form-group">
+				<label class="control-label col-sm-2">Contact par page :</label>
+				<div class="col-sm-5">
+					<input type="text" name="user[contacts_per_page]" id="contacts-per-page}" value="{$user->contacts_per_page}" class="form-control"/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Historique du contact sur la fiche :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="user[historique_contact]" id="historique-contact}" {if $user->historique_contact == 1}checked="checked"{/if} />
+				</div>
+			</div>
+		</fieldset>
+		
+		<div class="text-center">
+			<hr/>
+			<input type="hidden" name="user[id]" id="user-id" value="{$user->id}" required />
+			<button type="submit" class="btn btn-primary">Enregistrer</button>
+		</div>
+	</form>
+</div>

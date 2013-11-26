@@ -1,0 +1,277 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
+	<li class="active">Nouvelle</li>
+</ol>
+
+<div class="well">
+	{if isset($Errors) && !empty($Errors)}
+	<div class="alert alert-danger"><a class="close" data-dismiss="alert" href="#" aria-hidden="true">&times;</a>{$Errors}</div>
+	{/if}
+
+	<form class="form-horizontal" role="form" method="post" id="form-campaign-add">
+		
+		<fieldset>
+			<legend>Campagne</legend>
+		
+			<div class="form-group">
+				<label class="control-label col-sm-2">Titre :</label>
+				<div class="col-sm-5">
+					<input type="text" name="campaign[title]" id="campaing-title" class="form-control" required/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Description :</label>
+				<div class="col-sm-5">
+					<textarea name="campaign[description]" id="campaing-description" class="form-control" rows="5"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Type :</label>
+				<div class="col-sm-5">
+					<select name="campaign[type_id]" id="campaign-type" required class="form-control">
+						<option value=""></option>
+						{foreach $campaign_type as $row}
+						<option value="{$row.id}">{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Date de début :</label>
+				<div class="col-sm-2">
+					<input type="text" name="campaign[date_start]" id="campaing-date-start" class="form-control"/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Date de fin :</label>
+				<div class="col-sm-2">
+					<input type="text" name="campaign[date_end]" id="campaing-date-end" class="form-control"/>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Objectif :</label>
+				<div class="col-sm-5">
+					<textarea name="campaign[objectif]" id="campaing-objectif" class="form-control" rows="5"></textarea>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="control-label col-sm-2">Assigné à :</label>
+				<div class="col-sm-5">
+					<select name="campaign[assign]" id="campaign-assign" required class="chozen form-control">
+						<option value=""></option>
+						{foreach $users as $row}
+						<option value="{$row.id}">{$row.identifiant}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			
+		</fieldset>
+		
+		<fieldset>
+			<legend>Cible</legend>
+			{* START CRITERES RECHERCHE *}
+					
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Departement:</label>
+				<div class="col-sm-5">
+					<select name="campaign[target][departement][]" class="form-control chozen" multiple>
+						<option value=""></option>
+						{foreach $global_departements as $k => $v}
+						<option value="{$v.dpt}" {if isset($smarty.get.filtre.departement) && $smarty.get.filtre.departement == $v}selected="selected"{/if}>{$v.dpt}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Categorie :</label>
+				<div class="col-sm-5">
+					<select name="campaign[target][categorie][]" class="form-control chozen" multiple>
+						{foreach $global_categories as $row}
+						<option value="{$row.id}"
+							{if isset($smarty.get.filtre.categorie)}
+								{foreach $smarty.get.filtre.categorie as $k => $v}
+									{if $row.id == $v}
+										selected="selected"
+									{/if}
+								{/foreach}
+							{/if}
+							>{$row.libelle}
+						</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Condition categorie :</label>
+				<div class="col-sm-2">
+					<select name="campaign[target][categorie_condition]" class="input-mini form-control">
+						<option value="OR">Ou</option>
+						<option value="AND">Et</option>
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Effectif : </label>
+				<div class="col-sm-5">
+					<div class="col-xs-2">
+						<input type="text" name="campaign[target][effectif_mini]" class="form-control"  /> 
+					</div>
+					<div class="col-xs-1">
+						à
+					</div>
+					<div class="col-xs-2">
+						<input type="text" name="campaign[target][effectif_max]" class="form-control" />
+					</div>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Poste :</label>
+				<div class="col-sm-5">		
+					<select name="campaign[target][poste]" class="form-control">
+						<option value=""></option>
+						{foreach $global_postes as $row}
+						<option value="{$row.id}">{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Service :</label>	
+				<div class="col-sm-5">				
+					<select name="campaign[target][service]" class="form-control">
+						<option value=""></option>
+						{foreach $global_services as $row}
+						<option value="{$row.id}">{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div> 
+			</div>
+			
+			<div id="champs-contacts"></div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Client :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][is_client]" value="1"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Societe :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][ctype][]" value="societes" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Contact societe :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][ctype][]" value="societe_contact" />
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Particulier :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][ctype][]" value="particulier" />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Telephone :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][tel_valid]" value="1" />
+				</div>
+			</div>
+
+			{* END CRITERES RECHERCHE *}
+		</fieldset>
+		
+		<hr/>
+		<div class="text-center">
+			<button type="submit" class="btn btn-primary">Enregistrer</button>
+		</div>
+		
+	</form>
+</div>{* /well *}
+
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#campaing-date-start').mask("99/99/9999");
+	$('#campaing-date-end').mask("99/99/9999");
+	{literal}
+	$("#campaing-date-start").datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true, minDate:+1, maxDate:'+1M +10D' });
+	$("#campaing-date-end").datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true, minDate:+1, maxDate:'+1M +10D' });
+	{/literal}
+	
+	$("#form-campaign-add").validate({
+		rules:{
+			"campaign[title]":{
+				required:true,
+			},
+			"campaign[description]":{
+				required:true,
+			},
+			"campaign[type_id]":{
+				required:true,
+			},
+			"campaign[objectif]":{
+				required:true
+			},
+			"campaign[assign]":{
+				required:true,
+			},
+			"campaign[date_start]":{
+				required:true,
+			},
+			"campaign[date_end]":{
+				required:true,
+			},
+			"campaign[target][ctype][]":{
+				required:true,
+				minlength:1,
+			}
+		},
+		messages:{
+			"campaign[title]":{
+				required:"Veuillez indiquer le titre de la campagne",
+			},
+			"campaign[description]":{
+				required:"Veuillez indiquer la description",
+			},
+			"campaign[objectif]":{
+				required:"Veuillez indiquer l'objectif",
+			},
+			"campaign[assign]":{
+				required:"Veuillez assigner la campagne a un ulisateur",
+			}
+		},
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-success');
+            $(element).parents('.form-group').addClass('text-danger');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-danger');
+            $(element).parents('.form-group').addClass('text-success');
+        }
+	});
+	
+});
+-->
+</script>
