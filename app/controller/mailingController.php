@@ -87,6 +87,11 @@ class mailingController extends Controller{
 	*	@return string code html de la page
 	*/
 	public function addAction(){
+
+		if( isAdmin() < 1 && !getAcl('mailing_demand') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
 	
 		if(!is_null($this->registry->Http->post('mailing'))){
 		
