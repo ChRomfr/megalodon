@@ -324,9 +324,11 @@
 			</table>
 			{/if}
 			<hr/>
-			<form method="post" action="{$Helper->getLink("contacts/file_add/{$contact.contact_id}?nohtml")}" target="uploadFrame" enctype="multipart/form-data" onsubmit="return sendUpload()">
-				<label>Fichier :</label>
-				<input type="file" name="file_contact" />
+			<form method="post" action="{$Helper->getLink("contacts/file_add/{$contact.contact_id}?nohtml")}" target="uploadFrame" enctype="multipart/form-data" onsubmit="return sendUpload()" class="form-inline" role="form">
+				<div class="form-group">
+					<label class="sr-only">Fichier</label>
+					<input type="file" name="file_contact" class="form-control" placeholder="Fichier a envoyé"/>
+				</div>
 				<button type="submit" class="btn btn-primary">Envoyer</button>
 			</form>
 			

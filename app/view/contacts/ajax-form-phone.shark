@@ -1,21 +1,21 @@
-<form method="post" action="{$Helper->getLink("contacts/AjaxAddPhone")}" id="form-add-phone" class="well form-horizontal">
-	<div class="control-group">
-		<label class="control-label">Telephone : </label>
-		<div class="controls">
-			<input type="text" name="phone[telephone]" class="input-medium" required/>
-			&nbsp;
-			<select name="phone[type]" required>
-				<option value=""></option>
-				<option value="1">Ligne directe</option>
-				<option value="2">Standard</option>
-				<option value="3">Domicile</option>
-				<option value="4">Mobile</option>
-				<option value="5">Fax</option>
-			</select>
-		</div>
+{strip}
+<form method="post" action="{$Helper->getLink("contacts/AjaxAddPhone")}" id="form-add-phone" class="well form-inline">
+	<div class="form-group">
+		<label class="control-label sr-only">Telephone : </label>
+		<input type="text" name="phone[telephone]" class="form-control" placeholder="Telephone" required/>
 	</div>
-	<div class="form-actions">
-		<input type="hidden" name="phone[contact_id]" value="{$cid}" />
-		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	<div class="form-group">
+		<label class="control-label sr-only" for="phone-type">Type</label>
+		<select name="phone[type]" required class="form-control" id="phone-type">
+			<option value=""></option>
+			<option value="1">Ligne directe</option>
+			<option value="2">Standard</option>
+			<option value="3">Domicile</option>
+			<option value="4">Mobile</option>
+			<option value="5">Fax</option>
+		</select>
 	</div>
+	<input type="hidden" name="phone[contact_id]" value="{$cid}" />
+	<button type="submit" class="btn btn-primary">Enregistrer</button>
 </form>
+{/strip}

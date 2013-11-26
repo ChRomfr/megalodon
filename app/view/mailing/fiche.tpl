@@ -176,5 +176,3 @@ jQuery(document).ready(function(){
 });
 //-->
 </script>
-<pre>
-{$mailing|print_r}
