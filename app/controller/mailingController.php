@@ -117,6 +117,11 @@ class mailingController extends Controller{
 	
 	public function editAction($id){		
 		
+		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
+
 		if(!is_null($this->registry->Http->post('mailing'))){
 		
 			//Traitement du formulaire
@@ -150,10 +155,9 @@ class mailingController extends Controller{
 	*/
 	public function deleteAction($id){
 	
-		// Verification autorisation
-		if( $_SESSION['utilisateur']['isAdmin'] == 0 || $_SESSION['utilisateur']['mailing_adm'] == 0 ){
-			$this->registry->smarty->assign('FlashMessage','Erreur vous n\'avez pas les autorisations pour acceder a cette page');
-			return $this->indexAction();
+		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
 		}
 		
 		// suppression des lignes dans la bases
@@ -168,6 +172,11 @@ class mailingController extends Controller{
 	}
 	
 	public function marksendAction($id){
+
+		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
 
 		$mailing = new mailing();
 		$mailing->get($id);
@@ -212,11 +221,10 @@ class mailingController extends Controller{
 	*	@return string code html de la page
 	*/
 	public function validedAction($id){
-	
-		// Verification autorisation
-		if( $_SESSION['utilisateur']['isAdmin'] == 0 || $_SESSION['utilisateur']['mailing_adm'] == 0 ){
-			$this->registry->smarty->assign('FlashMessage','Erreur vous n\'avez pas les autorisations pour acceder a cette page');
-			return $this->ficheAction($id);
+		
+		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
 		}
 		
 		$mailing = new mailing();
@@ -236,10 +244,10 @@ class mailingController extends Controller{
 	*	@return string code html de la page
 	*/
 	public function refusedAction($id){
-		// Verification autorisation
-		if( $_SESSION['utilisateur']['isAdmin'] == 0 || $_SESSION['utilisateur']['mailing_adm'] == 0 ){
-			$this->registry->smarty->assign('FlashMessage','Erreur vous n\'avez pas les autorisations pour acceder a cette page');
-			return $this->ficheAction($id);
+
+		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
 		}
 		
 		// Gestion du clic sur le bouton Annuler
@@ -283,21 +291,6 @@ class mailingController extends Controller{
 		}else{
 			return "false";
 		}
-	}
-	
-	/**
-	 * Affiche la requete pour contruire la table mailings
-	 * @return [type] [description]
-	 */
-	public function gettableAction(){
-		if($_SESSION['utilisateur']['isAdmin'] < 1){ exit; }
-		
-		$mailing = new mailing();
-		return "<textarea rows=\"20\" cols=\"60\">". $mailing->createTable(0) ."</textarea>";
-	}
-	
-	private function markdestinataire($cible){
-	
 	}
 	
 	/**
