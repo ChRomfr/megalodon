@@ -6,7 +6,7 @@
 </ol>
 
 <div class="well">
-	{if $smarty.session.utilisateur.mailing_adm > 0}
+	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
 		<a href="{$Helper->getLink("mailing/edit/{$mailing->id}")}" title="Modifier"><i class="icon icon-edit"></i></a>
 		&nbsp;
@@ -29,7 +29,7 @@
 			<td>
 				{if $mailing->valid == 0}
 					En attente
-					{if $smarty.session.utilisateur.mailing_adm == 1}
+					{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 						&nbsp;
 						<a href="javascript:valid({$mailing->id})" title="Valider"><i class="glyphicon glyphicon-ok"></i></a>
 						&nbsp;&nbsp;
@@ -124,11 +124,13 @@
 		
 	</table>
 	
+	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid) || isset($smarty.session.acl.contacts_export_csv)}
 	<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="icon-download icon-white"></i>&nbsp;Export cible CSV</a>
+	{/if}
 	&nbsp;&nbsp;
 	<a href="{$link_view}" title="Export des contacts" class="btn btn-info" target="_blank"><i class="icon-eye-open icon-white"></i>&nbsp;Voir cible</a>
 	
-	{if $smarty.session.utilisateur.isAdmin == 1 || $smarty.session.utilisateur.mailing_adm == 1}
+	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
 		{if $mailing->send == 0 && $mailing->valid == 1}
 		<a href="{$Helper->getLink("mailing/marksend/{$mailing->id}")}" title="Marquer le mailing comme envoye" class="btn btn-default">Marquer comme envoyé</a>
@@ -142,7 +144,7 @@
 {/strip}
 <script type="text/javascript">
 <!--
-{if $smarty.session.utilisateur.isAdmin == 1 || $smarty.session.utilisateur.mailing_adm == 1}
+{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 function valid(id){
 	if(confirm('Etes vous certain de voir valider ce maling ?')){
 		window.location.href = '{$Helper->getLink("mailing/valided/'+id+'")}';
