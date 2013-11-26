@@ -39,6 +39,7 @@ class contactsController extends Controller{
 		$this->registry->smarty->assign('Pagination',$Pagination);
 		
 		$this->registry->smarty->assign('contacts',	$contacts);
+		$this->registry->smarty->assign('nb_contacts', $nb_contact);
 		
 		echo $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax_load_contacts.shark');
 		

@@ -42,19 +42,19 @@
 	</tbody>
 </table>
 
+<div class="text-center">{$nb_contacts|number_format} contact(s)</div>
+
 {if isset($Pagination)}
-<div class="pull-left">
-	{$Pagination->render()}
-</div>
+<div class="pull-left">{$Pagination->render()}</div>
 {/if}
 
 <div class="pull-right">
-	{if $smarty.session.utilisateur.isAdmin > 0 || $smarty.session.utilisateur.contacts_export_csv == 1}
+	{if ($smarty.session.utilisateur.isAdmin > 0 || $smarty.session.utilisateur.contacts_export_csv == 1) && $nb_contacts > 0}
 	<a href="{$Helper->getLink("contacts/csv")}?{$smarty.server.QUERY_STRING}&amp;csv" title="CSV" target="_blank" class="btn btn-default"><i class="glyphicon glyphicon-export"></i>&nbsp;CSV</a>
 	&nbsp;
 	{/if}
 	
-	{if $smarty.session.utilisateur.isAdmin > 0}
+	{if $smarty.session.utilisateur.isAdmin > 0 && $nb_contacts > 0}
 	<button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-trash"></i>&nbsp;Supprimer</button>
 	{/if}
 </div>
