@@ -10,10 +10,10 @@ class campaignController extends Controller{
 		parent::__construct($registry);
 
 		if( isAdmin() < 1 || !getAcl('campaign_access') ){
-			$i = $this->load_controller('index');
-			return $i->indexAction();
+			header('HTTP/1.0 401 Unauthorized');
+			//header('Location: '. $this->registry->Helper->getLink("index"));
+			exit('This page require right to open <a href="'. $this->registry->Helper->getLink("index") .'" title="Retour">Retour</a>');			
 		}
-
 	}
 	
 	public function indexAction(){
