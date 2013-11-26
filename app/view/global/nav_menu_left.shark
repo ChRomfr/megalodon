@@ -11,7 +11,9 @@
 			<a href="#" data-toggle="dropdown">Mailing</a>
 			<ul class="dropdown-menu">
 				<li><a href="{$Helper->getLink("mailing")}" title="Liste des mailings">Liste</a></li>
+				{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_demand)}
 				<li><a href="{$Helper->getLink("mailing/calendrier")}" title="Calendrier">Calendrier</a></li>
+				{/if}
 				<li><a href="{$Helper->getLink("mailing/add")}" title="Nouvelle demande">Demande</a></li>
 			</ul>
 		</li>
