@@ -17,4 +17,21 @@ class personne extends Record{
 	public $poste_id;
 	
 	public $service_id;
+
+	public function save(){
+
+		if(empty($this->poste_id)){
+			$this->poste_id = NULL;
+		}
+
+		if(empty($this->service_id)){
+			$this->service_id = NULL;
+		}
+
+		if(empty($this->societe_id)){
+			$this->service_id = NULL;
+		}
+
+		return parent::save();
+	}
 }

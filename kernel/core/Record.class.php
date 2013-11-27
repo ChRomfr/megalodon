@@ -145,7 +145,7 @@ abstract class Record implements ArrayAccess{
             # On supprimer toutes proprietes empty
             
             foreach( $Obj as $k => $v ):
-                if( empty($v) && $v != '0'):
+                if( empty($v) && $v != '0' && !is_null($v)):
                     unset($Obj->$k);
                 endif;
             endforeach;

@@ -17,12 +17,8 @@
 <div class="form-group">
 	<label class="control-label col-sm-2">Societe :</label>
 	<div class="col-sm-5">
-		<select name="contact[per][societe_id]" id="contact-per-societe" class="chozen form-control">
-			<option value=""></option>
-			{foreach $entreprises as $row}
-			<option value="{$row.id}" {if isset($smarty.get.societe) && !empty($smarty.get.societe) && $smarty.get.societe == $row.contact_id}selected="selected"{/if}>{$row.raison_social}</option>
-			{/foreach}
-		</select>
+		<input type="text" id="search_societe" class="form-control"/>
+		<input type="hidden" name="contact[per][societe_id]" id="societe-id" />
 	</div>
 </div>
 
@@ -49,12 +45,29 @@
 		</select>
 	</div>
 </div>
-{literal}
+{/strip}
 <script type="text/javascript">
 <!--
 $(".chozen").chosen();
+
+jQuery(document).ready(function(){
+	// binds form submission and fields to the validation engine
+	jQuery("#formNewRepas").validationEngine();
+	
+	$('#search_societe').autocomplete({
+		source : '{$Helper->getLink("contacts/ajax_search_societe?nohtml=nohtml")}',
+		minLength: 2,
+		dataType: "json",
+		selectFirst: true,
+		delay: 0,
+		select: function(e, ui){
+			var selectObj = ui.item;
+			$(this).val(selectObj.label)
+			$("#societe-id").val( ui.item.value );
+			return false;
+		}
+	});	
+});
 //-->
 </script>
-{/literal}
 {/if}
-{/strip}

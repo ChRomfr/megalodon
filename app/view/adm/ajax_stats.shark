@@ -1,0 +1,4 @@
+<ul>
+	<li>Campagne en cour : {$stats.nb_campaign}</li>
+	<li>Mailings à venir : {$stats.nb_mailing}</li>
+</ul>

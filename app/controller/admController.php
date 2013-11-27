@@ -16,6 +16,9 @@ class admController extends Controller{
 	}
 
 	public function indexAction(){
+		$this->registry->load_web_lib('flot/jquery.flot.js','js');
+        $this->registry->load_web_lib('flot/jquery.flot.pie.js','js');
+
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'index.shark');
 	}
 
@@ -92,6 +95,38 @@ class admController extends Controller{
 		$this->registry->smarty->assign('user', $user);
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_edit.shark');
+	}
+
+	/**
+	 * Retourne les stats pour affichage dans l administration
+	 * @return [type] [description]
+	 */
+	public function ajax_statsAction(){
+		$stats = array();
+
+		// Recuperation des campagnes en cours
+		$stats['nb_campaign'] = $this->registry->db->count('campaign', array('date_start <=' => date('Y-m-d'), 'date_end >=' =>  date('Y-m-d')));
+
+		// Request mailing
+		$stats['nb_mailing'] = $this->registry->db->count('mailings', array('date_wish >=' => date('Y-m-d')));
+
+		$this->registry->smarty->assign('stats', $stats);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'ajax_stats.shark');
+	}
+
+	/**
+	 * Recuperation des données pour generation graphique
+	 * @return [type] [description]
+	 */
+	public function ajax_dataforgraph_repart_constactsAction(){
+		$data = array();
+
+		$data[] = array('label' => 'Societe', 'data' => $this->registry->db->count('contacts', array('ctype =' => 'societe')));
+		$data[] = array('label' => 'Particulier', 'data' => $this->registry->db->count('contacts', array('ctype =' => 'particulier')));
+		$data[] = array('label' => 'Contact', 'data' => $this->registry->db->count('contacts', array('ctype =' => 'societe_contact')));
+
+		return json_encode($data,JSON_NUMERIC_CHECK);
 	}
 
 }

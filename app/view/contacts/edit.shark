@@ -68,15 +68,12 @@
 
 	{* Information si contact lié a une societe *}
 		{if !empty($contact.societe)}
+		
 		<div class="form-group">
 			<label class="control-label col-sm-2">Societe :</label>
 			<div class="col-sm-5">
-				<select name="contact[per][societe_id]" id="contact-per-societe" class="chzn-select">
-					<option value=""></option>
-					{foreach $entreprises as $row}
-					<option value="{$row.id}" {if $row.id == $contact.societe_id}selected="selected"{/if}>{$row.raison_social}</option>
-					{/foreach}
-				</select>
+				<input type="text" value="{$contact.societe.raison_social}" disabled class="form-control"/>
+				<input type="hidden" name="contact[per][societe_id]" value="{$contact.societe_id}" />
 			</div>
 		</div>
 
@@ -173,11 +170,15 @@
 		{if !empty($contact.societe_id)}
 		<input type="hidden" name="societe_id" value="{$contact.societe_id}" />
 		{else}
-		<input type="hidden" name="personne_id" value="{$contact.personne_id}" />
+		<input type="hidden" name="contact[per][id]" value="{$contact.personne_id}" />
 		{/if}
 		
 		{if !empty($contact.raison_social)}
 		<input type="hidden" name="contact[ets][id]" value="{$contact.sid}" />
+		{/if}
+
+		{if !empty($contact.personne_id)}
+		<input type="hidden" name="contact[per][id]" value="{$contact.personne_id}" />
 		{/if}
 		
 		<button type="submit" class="btn btn-primary">Enregistrer</button>
@@ -233,5 +234,5 @@ jQuery(document).ready(function(){
 });
 //-->
 </script>
-
-{$contact|var_dump}
+<pre>
+{$contact|print_r}

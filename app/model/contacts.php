@@ -97,4 +97,16 @@ class contacts extends Record{
 		}
 
 	}
+
+	public function save(){
+		if(empty($this->email)){
+			$this->email = NULL;
+		}
+
+		if(empty($this->adresse1)){
+			$this->email = NULL;
+		}
+
+		return parent::save();
+	}
 }

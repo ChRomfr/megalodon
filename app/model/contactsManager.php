@@ -258,6 +258,8 @@ class contactsManager extends BaseModel{
 			$this->db->delete('contacts_email', null, array('entreprise_id =' => $row['id']));
 			$this->db->delete('contacts_log', null, array('contact_id =' => $row['id']));
 			$this->db->delete('telephones', null, array('contact_id =' => $row['id']));
+			$this->db->delete('campaign_contacts', null, array('contact_id =' => $row['id']));
+			$this->db->delete('campaign_contacts_suivi', null, array('contact_id =' => $row['id']));
 		}
 
 		return count($contacts);

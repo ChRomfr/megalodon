@@ -119,12 +119,13 @@ class campaignController extends Controller{
 
 	public function deleteAction($id){
 
-		if( $_SESSION['utilisateur']['isAdmin'] == 0){
+		if( isAdmin() < 1){
 			return $this->indexAction();
 		}
 
 		$this->registry->db->delete('campaign', $id);
 		$this->registry->db->delete('campaign_contacts', null, array('campaign_id =' => $id));
+		$this->registry->db->delete('campaign_contacts_suivi', null, array('campaign_id =' => $id));
 		$this->registry->db->delete('contacts_log', null, array('log =' => 'Enregistrement dans la campagne #'. $id));
 		$this->registry->smarty->assign('FlashMessage','Campagne supprimée');
 

@@ -23,15 +23,18 @@
 	<h4>{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</h4>
 	
 	<div class="clearfix"></div>
-	<table class="table">
+	<table class="table table-condensed">
 		
 		<tr>
 			<td>Adresse :</td>
 			<td>
-				{$contact.adresse1}<br/>
-				{if !empty($contact.adresse2)}{$contact.adresse2}<br/>{/if}
-				{$contact.code_postal}&nbsp;{$contact.ville}<br/>
-				{if !empty($contact.pays)}{$contact.pays}{/if}
+				<div class="pull-left">
+					{$contact.adresse1}<br/>
+					{if !empty($contact.adresse2)}{$contact.adresse2}<br/>{/if}
+					{$contact.code_postal}&nbsp;{$contact.ville}<br/>
+					{if !empty($contact.pays)}{$contact.pays}{/if}
+				</div>
+				<div id="map-contacts" style="width:300px; height:300px;" class="pull-right"></div><div class="clearfix"></div>
 			</td>
 		</tr>
 		
@@ -503,6 +506,7 @@
 </div>
 {/strip}
 
+<script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> 
 <script type="text/javascript">
 <!--
 function deleteContact(id){
@@ -585,5 +589,22 @@ function agenceRemove(aid, mother){
 	}
 }
 {/if}
+
+// Gmap3
+jQuery(document).ready(function(){
+	$("#map-contacts").gmap3({
+    	marker:{
+      	//address: "Haltern am See, Weseler Str. 151"
+      	latLng:[{$contact.lat}, {$contact.lng}]
+    	},
+    	map:{
+      		options:{
+        		zoom: 14
+  			}
+		}
+  	});
+});
+
+
 //-->
 </script>

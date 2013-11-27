@@ -4,7 +4,7 @@
 </ol>
 
 <div class="well">
-	<h4>Administration</h4>
+	<h3>Administration</h3>
 	
 	<ul class="bs-glyphicons">
 
@@ -50,4 +50,57 @@
 			</a>
 		</li>
 	</ul>
+	<hr/>
+	<h3>Statistiques</h3>
+	<div id="adm-stats"></div>
+	<hr/>
+	<div class="container">
+		<div class="row">
+			<div class="col-md-4">
+				<h4>Contacts par type</h4>
+				<div id="contacts-type-repart" style="height:300px;"></div>
+			</div>
+		</div><!-- /row -->
+	</div><!-- /container -->
+
 </div>
+
+<script type="text/javascript">
+<!--
+jQuery(document).ready(function(){
+	$.get(
+        '{$Helper->getLink("adm/ajax_stats")}',
+        {
+        	nohtml:'nohtml'
+        }
+		,{literal}        
+        function(data){
+        	$('#adm-stats').html(data);
+        }
+    );{/literal}
+
+	$.getJSON(
+    '{$Helper->getLink("adm/ajax_dataforgraph_repart_constacts")}', {literal}
+    {nohtml:'nohtml'},{/literal}   
+    function(data){     
+        $.plot($("#contacts-type-repart"), data,{
+            series: {
+                pie: {
+                        show: true
+                }
+            },
+            grid: {
+                hoverable: true,
+                clickable: true
+            },      
+            legend: {
+                show: false
+            }
+        }); 
+        
+    }
+);
+
+});
+//-->
+</script>
