@@ -1,4 +1,4 @@
-{* file : app/view/contact/add.tpl *}
+<!-- app/view/contact/add.tpl -->
 {strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
@@ -147,6 +147,7 @@
 				
 		</fieldset>
 		<div class="form-actions text-center">
+			<input type="hidden" name="contact[actif]" value="1" />
 			<button type="submit" class="btn btn-primary">Enregistrer</button>
 			&nbsp;&nbsp;&nbsp;
 			<a href="{$Helper->getLink("contacts")}" title="" class="btn btn-danger">Annuler</a>

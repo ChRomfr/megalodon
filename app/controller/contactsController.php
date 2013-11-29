@@ -154,7 +154,7 @@ class contactsController extends Controller{
 	private function societe_add($data, $cid){
 		// Entreprise
 		$societe = new societe($data);
-		$societe->contact_id = $contact->id;
+		$societe->contact_id = $cid;
 		$societe->save();
 
 		return $societe;
@@ -163,7 +163,7 @@ class contactsController extends Controller{
 	private function telephone_add($data, $cid){
 		$telephone = new telephone($data);
 		if($telephone->isValid()){
-			$telephone->contact_id = $contact->id;
+			$telephone->contact_id = $cid;
 			$telephone->save();
 		}
 	}
@@ -180,16 +180,7 @@ class contactsController extends Controller{
 			$data = $this->registry->Http->post('contact');
 			
 			$contact = new contacts($data);
-
-			// Determination du ctype
-			if(isset($data['ets'])){
-				$contact->ctype = 'societe';
-			}elseif(isset($data['per']['societe_id'])){
-				$contact->ctype = 'societe_contact';
-			}else{
-				$contact->ctype = 'particulier';
-			}
-			
+		
 			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
 
 			//$contact->save();
@@ -1188,4 +1179,35 @@ class contactsController extends Controller{
 		return $this->detailAction($mother);
 	}
 
+
+	public function ajax_geoloc_contactAction($contact_id){
+		$contact = new contacts();
+		$contact->get($contact_id);
+
+		if(empty($contact))
+			return 'Error return data of contact';
+
+		if(!empty($contact->date_last_geoloc) && (date("Y-m-d H:i:s") - $contact->date_last_geoloc) > 15 ){
+			require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'GoogleMapAPIv3.class.php';
+			$gmap = new GoogleMapApi();
+			
+			$coord = $gmap->geocoding($contact->adresse1 .' '. $contact->code_postal . ' '. $contact->ville);
+
+			if(is_numeric($coord[2])){
+				$contact->lat = $coord[2];
+				$contact->lng = $coord[3];
+				$contact->date_last_geoloc = date("Y-m-d H:i:s");
+				$contact->save();
+
+				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $contact_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Geoloc - Recuperation des coordonnées GPS'));
+				$clog->save();
+
+				return 'Geoloc ok';
+			}else{
+				return 'Error geoloc : ' . print_r($coord, true);
+			}
+		}
+			
+		return 'Error : Contact geoloc in short time';	
+	}
 }

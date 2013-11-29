@@ -1,5 +1,5 @@
+<!-- app/view/contacts/detail.tpl -->
 {strip}
-{* app/view/contacts/detail.tpl *}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
 	<li><a href="{$Helper->getLink("contacts")}" title="Contacts">Contacts</a></li>
@@ -10,20 +10,28 @@
 
 <div class="well">
 
+	{if $contact.actif == 0}
+	<div class="bs-callout bs-callout-warning">
+		<p class="text-center"><strong>Contact désactivé</strong></p>
+	</div>
+	{/if}
+
 	<div class="pull-right">
+		<a href="" title="Ajouter un telephone" data-toggle="tooltip"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
-		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="icon icon-edit"></i></a>
-		&nbsp;&nbsp;
+		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
+		&nbsp;&nbsp;&nbsp;&nbsp;
 		{/if}
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_delete)}
-		<a href="javascript:deleteContact({$contact.contact_id})" title="Supprimer ce contact"><i class="icon icon-trash"></i></a>
+		<a href="javascript:deleteContact({$contact.contact_id})" title="Supprimer ce contact"><i class="fa fa-trash-o fa-lg"></i></a>
 		{/if}
 	</div>
 	
 	<h4>{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</h4>
 	
 	<div class="clearfix"></div>
-	<table class="table table-condensed">
+
+	<table class="table table-condensed table-striped">
 		
 		<tr>
 			<td>Adresse :</td>
@@ -34,7 +42,9 @@
 					{$contact.code_postal}&nbsp;{$contact.ville}<br/>
 					{if !empty($contact.pays)}{$contact.pays}{/if}
 				</div>
+				{if !empty($contact.lat) && !empty($contact.lng)}
 				<div id="map-contacts" style="width:300px; height:300px;" class="pull-right"></div><div class="clearfix"></div>
+				{/if}
 			</td>
 		</tr>
 		
@@ -51,24 +61,7 @@
 			</td>
 			<td>{$row.telephone}&nbsp;&nbsp;<a href="javascript:DeletePhone({$row.id});" title="Supprimer"><i class="icon icon-trash"></i></a></td>
 		</tr>
-		{foreachelse}
-		<tr>
-			<td colspan="2" class="text-center">
-				    <div class="alert alert-info">
-					    <button type="button" class="close" data-dismiss="alert">&times;</button>
-					    <strong>/!\</strong> Aucun téléphone.
-				   </div>
-			   	
-			</td>
-		</tr>
 		{/foreach}
-		<tr>
-			<td colspan="2">
-				<div class="text-center">
-					<a href="javascript:GetFormAddPhone({$contact.contact_id});" title="" class="btn btn-default">Ajouter un téléphone</a>
-				</div>
-			</td>
-		</tr>
 		
 		{if !empty($contact.email)}
 		<tr>
@@ -122,7 +115,7 @@
 		<tr>
 			<td>Catégories :</td>
 			<td>
-				<ul class="unstyled">
+				<ul class="list-unstyled">
 					{foreach $contact.categories as $row}
 					<li>{$row.libelle}</li>
 					{/foreach}
@@ -152,7 +145,7 @@
 		{/if}
 		
 	</table>
-	
+	<hr/>
 	{* START TAB *}
 	<div class="tab-content">
 		
@@ -592,6 +585,11 @@ function agenceRemove(aid, mother){
 
 // Gmap3
 jQuery(document).ready(function(){
+
+	$(document).ready(function(){
+        $('a').tooltip();
+    });
+
 	$("#map-contacts").gmap3({
     	marker:{
       	//address: "Haltern am See, Weseler Str. 151"
@@ -603,6 +601,18 @@ jQuery(document).ready(function(){
   			}
 		}
   	});
+
+	{if empty($contact.lat) || empty($contact.lng)}
+	$.get(
+        '{$Helper->getLink("contacts/ajax_geoloc_contact/{$contact.contact_id}")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            console.log(data);
+        }
+        
+    );
+    {/if}
+
 });
 
 

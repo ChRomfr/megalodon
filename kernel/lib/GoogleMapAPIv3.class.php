@@ -379,10 +379,11 @@ class GoogleMapAPI
 
 	public function geocoding($address)
 	{
-		$encodeAddress = urlencode($this->withoutSpecialChars($address));
+
+		$encodeAddress = urlencode($address);
 
 		$url = "http://maps.googleapis.com/maps/api/geocode/xml?sensor=false&address=". $encodeAddress;
-
+		
 		if (function_exists('curl_init')) {
 			$data = $this->getContent($url);
 		} else {
@@ -398,7 +399,7 @@ class GoogleMapAPI
 			return $coord;
 		}
 
-		return "Error";
+		return print_r($results, true);
 	}
 
 	/**

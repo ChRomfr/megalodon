@@ -266,16 +266,20 @@ class contactsManager extends BaseModel{
 	}
 
 	public function getByEmptyCoords($limit = null){
+			$date_15_days = date("Y-m-d H:i:s", (time() - 1296000));
+
 			$this->db
 				->select('c.*')
 				->from('contacts c')
-				->where_free('(lat IS NULL OR lat = "") AND adresse1 != "" AND code_postal != "" AND ville != "" AND date_last_geoloc = ""');
+				->where_free('(lat IS NULL OR lat = "") AND adresse1 != "" AND code_postal != "" AND ville != "" AND (date_last_geoloc = "" OR date_last_geoloc < "'. $date_15_days .'" OR date_last_geoloc IS NULL)');
 				
 		if( !is_null($limit) && is_numeric($limit) ){
 			$this->db->limit($limit);
 		}
 		
 		return $this->db->get();
+
+		print_r($this->db->queries);
 	}
 	
 	public function getAgences($parent_id){

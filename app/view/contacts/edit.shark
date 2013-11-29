@@ -164,6 +164,32 @@
 		</div>
 	</div>
 	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Actif :</label>
+		<div class="col-sm-5">
+			<select name="contact[actif]" id="client" class="form-control">
+				<option value="0" {if $contact.actif == 0}selected="selected"{/if}>Non</option>
+				<option value="1" {if $contact.actif == 1}selected="selected"{/if}>Oui</option>
+			</select>
+		</div>
+	</div>
+
+	{if isAdmin() > 0}
+	<div class="form-group">
+		<label class="control-label col-sm-2">Lat :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[lat]" value="{$contact.lat}" class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-sm-2">Lng :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[lng]" value="{$contact.lng}" class="form-control"/>
+		</div>
+	</div>
+	{/if}
+
 	<div class="text-center">
 		<hr/>
 		<input type="hidden" name="contact[id]" value="{$contact.contact_id}" />
@@ -181,6 +207,15 @@
 		<input type="hidden" name="contact[per][id]" value="{$contact.personne_id}" />
 		{/if}
 		
+		{if isAdmin() < 1}
+		<input type="hidden" name="contact[lat]" value="{$contact.lat}" />
+		<input type="hidden" name="contact[lng]" value="{$contact.lng}" />
+		{/if}
+		<input type="hidden" name="contact[isDelete]" value="{$contact.isDelete}" />
+		<input type="hidden" name="contact[valid]" value="{$contact.valid}" />
+		<input type="hidden" name="contact[ctype]" value="{$contact.ctype}" />
+		<input type="hidden" name="contact[date_last_geoloc]" value="{$contact.date_last_geoloc}" />
+
 		<button type="submit" class="btn btn-primary">Enregistrer</button>
 	</div>
 </form>
@@ -218,13 +253,13 @@ jQuery(document).ready(function(){
 		},
 		highlight:function(element)
         {
-            $(element).parents('.form-group').removeClass('success');
-            $(element).parents('.form-group').addClass('error');
+            $(element).parents('.form-group').removeClass('text-success');
+            $(element).parents('.form-group').addClass('text-danger');
         },
         unhighlight: function(element)
         {
-            $(element).parents('.form-group').removeClass('error');
-            $(element).parents('.form-group').addClass('success');
+            $(element).parents('.form-group').removeClass('text-danger');
+            $(element).parents('.form-group').addClass('text-success');
         }
 	});
 

@@ -72,6 +72,12 @@ class contacts extends Record{
 	public $isDelete;
 
 	public $ctype;
+
+	/**
+	*	isDelete marque l element en corbeille
+	*	@Db: {"name":"type", "type":"INT", "length":"1" ,"default":1}
+	*/
+	public $actif;
 	
 	public function isValid(){
 		if(empty($this->client) ){
