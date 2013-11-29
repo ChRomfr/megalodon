@@ -28,7 +28,21 @@ class connexionController extends BaseconnexionController{
             
             if($Result == 'session_ok'){
             	getACLs();
-            	//return $this->redirect( $this->registry->Helper->getLink("index") );
+            	
+            	// Enregistrement date dernier connexion dans l utilisateur
+            	$this->registry->db->update('user', array('last_connexion' => time()), array('id =' => $_SESSION['utilisateur']['id']));
+
+            	// Enregistrement de la session dans la base
+            	$session = array(
+            		'session_id' => $_SESSION['session_id'], 
+            		'user_id' => $_SESSION['utilisateur']['id'],
+            		'last_update' => time(),
+            		'url'	=>	$_SERVER['REQUEST_URI'],
+            		'ip'	=>	$_SERVER['REMOTE_ADDR']
+            	);
+
+            	$this->registry->db->insert('sessions', $session );
+            	
             	$index = $this->load_controller('index');
 
 				$this->registry->smarty->assign('FlashMessage','Vous etes maintenant connecté !');

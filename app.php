@@ -113,6 +113,18 @@ if($registry->session->check() == false || $_SESSION['utilisateur']['id'] == 'Vi
 	$registry->router->controller = 'connexion';
 }
 
+if( $_SESSION['utilisateur']['id'] != 'Visiteur' ){
+	$session = array(
+		'session_id' => $_SESSION['session_id'], 
+		'user_id' => $_SESSION['utilisateur']['id'],
+		'last_update' => time(),
+		'url'	=>	$_SERVER['REQUEST_URI'],
+		'ip'	=>	$_SERVER['REMOTE_ADDR']
+	);
+
+	$registry->db->update('sessions', $session, array('session_id =' => $_SESSION['session_id']) );
+}
+
 
 
 
