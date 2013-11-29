@@ -30,14 +30,17 @@
 <head>
 <title>Meg - Mailing Export Gl0b@L</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta http-equiv="x-ua-compatible" content="IE=10">
 <link rel="icon" type="image/png" href="{$config.url}themes/sharkphp/images/sharkphp.png" />
 <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$config.url}themes/sharkphp/images/sharkphp.ico" /><![endif]-->
 <link rel="stylesheet" href="{$config.url}themes/font-awesome/css/font-awesome.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="{$config.url}themes/bootstrap3/css/bootstrap.css" type="text/css" media="screen" />
+<!--
 <link rel="stylesheet" href="{$config.url}themes/dashboard/css/opa-icons.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="{$config.url}themes/dashboard/css/charisma-app.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="{$config.url}themes/dashboard/css/uniform.default.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="{$config.url}themes/dashboard/dashboard.css" type="text/css" media="screen" />
+//-->
 <link rel="stylesheet" href="{$config.url}themes/afpi2/css/afpi2.css" type="text/css" media="screen" />
 {if !empty($css_add)}
 {foreach $css_add as $k => $v}
@@ -142,13 +145,13 @@
 				</div>
 			</div><!-- /row-fluid -->
 			<hr/>
-			<div class="fleft">
+			<div class="pull-left">
 				
 			</div>
-			<div class="fright">
+			<div class="pull-right">
 				Réaliser avec <a href="http://www.sharkphp.com" title="Another CMS/FRAMEWORK">Sharkphp <img src="{$config.url}web/images/sharkphp.png" alt="" style="width:20px;" /></a>
 			</div>
-			<div class="clear"></div>
+			<div class="clearfix"></div>
 		</div><!-- /container -->
 	</footer>
 	{* END footer *}
@@ -159,19 +162,28 @@
 <!--
 $(".chzn-select").chosen();
 $(".chozen").chosen();
-$(document).ready(function() {
-	$("a.fbimage").fancybox();
-});
+//$(document).ready(function() {
+//	$("a.fbimage").fancybox();
+//});
 {if isset($FlashMessage) && !empty($FlashMessage)}
 $(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{$FlashMessage}</div>');
 {/if}
 //-->
 </script>
+
 {if $smarty.const.IN_PRODUCTION === false}
-<div class="pull-right">
-	<a href="#dvlpModal" role="button" class="btn btn-primary" data-toggle="modal">Infos dev</a>
-</div>
-{$infosdev}
+	<div class="pull-right">
+		<a href="#dvlpModal" role="button" class="btn btn-primary" data-toggle="modal">Infos dev</a>
+	</div>
+	<hr/>
+	<div style="size:9px; margin:auto; width:1000px;">
+		<div>
+		Page generee en : {$dvlp_tps_generation} sec | 
+		Requete SQL : {$dvlp_nb_queries}| 
+		Utilisation memoire : {$dvlp_memory} mo
+		</div>
+	</div>
+	{$infosdev}
 {/if}
 </body>
 </html>

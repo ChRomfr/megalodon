@@ -40,9 +40,9 @@ $registry->addJS('jquery-last.min.js');								# Jquery
 $registry->addJS('jquery-migrate-1.1.0.min.js'); 					# Jquery BC
 $registry->addJS('jquery-ui-last.custom.min.js');					# Jquery ui
 $registry->addCSS($jquery_theme . '/jquery-ui-last.custom.min.css');
-$registry->addJS('fancybox/jquery.mousewheel-3.0.4.pack.js');
-$registry->addJS('fancybox/jquery.fancybox-1.3.4.pack.js');
-$registry->addCSS('fancybox/jquery.fancybox-1.3.4.css');
+//$registry->addJS('fancybox/jquery.mousewheel-3.0.4.pack.js');
+//$registry->addJS('fancybox/jquery.fancybox-1.3.4.pack.js');
+//$registry->addCSS('fancybox/jquery.fancybox-1.3.4.css');
 $registry->addJS('jquery.maskedinput.min.js');
 $registry->addJS('mustache.js');
 $registry->load_web_lib('tablesorter/jquery.tablesorter.min.js','js');
@@ -83,18 +83,14 @@ if( !$registry->HTTPRequest->getExists('nohtml') && !$registry->HTTPRequest->get
 	));
 
 
-		
-	# Affichage du resultat
+	if( !IN_PRODUCTION ){
+		$registry->smarty->assign('dvlp_tps_generation', round( microtime(true) - $chrono1, 6));
+		$registry->smarty->assign('dvlp_memory', round(memory_get_usage() / (1024*1024),2));
+		$registry->smarty->assign('dvlp_nb_queries', $db->num_queries);
+	}
+
+	// Generation de la page avec le layout du theme
 	echo $registry->smarty->display(ROOT_PATH . 'themes' . DS . $config->config['theme'] . DS . 'layout.tpl');
-	
-	if( IN_PRODUCTION == false ):
-		# Affichage dy chrono et information sur execution et site en non production
-		echo'<div style="size:9px; margin:auto; width:1000px;"><div>
-			Page generee en : '. round( microtime(true) - $chrono1, 6) . ' sec | 
-			Requete SQL : '. $db->num_queries .' | 
-			Utilisation memoire : ' . round(memory_get_usage() / (1024*1024),2) .' mo
-			</div>';
-	endif;
 
 elseif( $registry->HTTPRequest->getExists('print') && !$registry->HTTPRequest->getExists('nohtml')):
 	# Affichage specifique pour les impressions
