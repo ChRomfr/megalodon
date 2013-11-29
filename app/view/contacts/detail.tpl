@@ -17,7 +17,7 @@
 	{/if}
 
 	<div class="pull-right">
-		<a href="" title="Ajouter un telephone" data-toggle="tooltip"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:GetFormAddPhone({$contact.contact_id})" title="Ajouter un telephone"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
 		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
 		&nbsp;&nbsp;&nbsp;&nbsp;
