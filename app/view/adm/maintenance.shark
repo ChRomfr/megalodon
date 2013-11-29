@@ -1,0 +1,42 @@
+<!-- view/adm/maintenance -->
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("")}" title="Administration">Administration</a></li>
+	<li>Maintenance</li>
+</ol>
+
+<div class="well">
+	<h4>Sessions</h4>
+	<hr/>
+	<div class="text-center"><a href="javascript:clean_sessions();" title="" class="btn btn-primary">Supprimer</a></div>
+	<div id="result-sessions"></div>
+</div>
+
+<div class="well">
+	<h4>Cache</h4>
+	<hr/>
+	<div class="text-center"><a href="javascript:clean_cache();" title="" class="btn btn-primary">Supprimer</a></div>
+	<div id="result-cache"></div>
+</div>
+
+<script type="text/javascript">
+function clean_cache(){
+	$.get(
+        '{$Helper->getLink("adm/ajax_clean_cache")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $('#result-cache').html('<br/><div class="text-center">Cache supprimé</div>');
+        }
+    );
+}
+
+function clean_sessions(){
+	$.get(
+        '{$Helper->getLink("adm/ajax_clean_sessions")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $('#result-sessions').html('<br/><div class="text-center">Sessions supprimé</div>');
+        }
+    );
+}
+</script>

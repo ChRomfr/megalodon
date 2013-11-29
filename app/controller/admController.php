@@ -22,6 +22,28 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'index.shark');
 	}
 
+	public function maintenanceAction(){
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'maintenance.shark');
+	}
+
+	public function ajax_clean_cacheAction(){
+		$files = getFilesInDir(ROOT_PATH . 'cache');
+		foreach($files as $key => $value){
+			@unlink(ROOT_PATH . 'cache' . DS . $value);
+		}
+
+		return 'Cache cleaned';
+	}	
+
+	public function ajax_clean_sessionsAction(){
+		$files = getFilesInDir(ROOT_PATH . 'cache' . DS . '_sessions');
+		foreach($files as $key => $value){
+			@unlink(ROOT_PATH . 'cache' . DS . '_sessions' . DS . $value);
+		}
+
+		return 'Sessions cleaned';
+	}
+
 	public function configurationAction(){
 		if(!is_null($this->registry->Http->post('config'))){
             
