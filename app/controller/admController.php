@@ -23,6 +23,11 @@ class admController extends Controller{
 	}
 
 	public function maintenanceAction(){
+		// Recuperations des utilisateurs en lignes
+		$sessions = $this->registry->db->select('s.*, u.identifiant')->from('sessions s')->left_join('user u', 's.user_id = u.id')->where(array('last_update >' => time() - 300))->get();
+
+		$this->registry->smarty->assign('sessions', $sessions);
+
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'maintenance.shark');
 	}
 

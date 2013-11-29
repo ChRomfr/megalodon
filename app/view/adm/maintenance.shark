@@ -10,6 +10,28 @@
 	<hr/>
 	<div class="text-center"><a href="javascript:clean_sessions();" title="" class="btn btn-primary">Supprimer</a></div>
 	<div id="result-sessions"></div>
+	<br/>
+	<hr/>
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>Utilisateur</th>
+				<th>IP</th>
+				<th>Dernier page vue</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $sessions as $session}
+			<tr>
+				<td>{$session.identifiant}</td>
+				<td>{$session.ip}</td>
+				<td>{$session.url}</td>
+				<td>{date("Y-m-d H:i:s",$session.last_update)}
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
 </div>
 
 <div class="well">
