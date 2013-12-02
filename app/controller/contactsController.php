@@ -105,12 +105,7 @@ class contactsController extends Controller{
 		}
 		
 		$this->getFormValidatorJs();
-		
-		if(!is_null($this->registry->Http->get('societe'))){			
-			$this->load_manager('contacts');
-			$this->registry->smarty->assign('ets',$this->manager->contacts->getById($this->registry->Http->get('societe')));			
-		}
-		
+
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'add.tpl');
 	}
 
@@ -321,14 +316,15 @@ class contactsController extends Controller{
 		$societe = $this->registry->Http->get('societe');
 		
 		if($type == 'entreprise'){
-			$this->registry->smarty->assign(array(
-				'apes'	=>	$this->registry->db->get('ape',null,'code'),
-			));
+			$this->registry->smarty->assign('apes',$this->registry->db->get('ape',null,'code'));
 			
 			return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'form_add_pro.tpl');
 		}elseif($type == 'personne'){
 			if($type_socio == 1){
-				$this->registry->smarty->assign('entreprises', $this->registry->db->get('societe'));
+				if(!is_null($this->registry->Http->get('societe'))){				
+					$this->load_manager('contacts');
+					$this->registry->smarty->assign('ets',$this->manager->contacts->getById($this->registry->Http->get('societe')));			
+				}
 			}
 			
 			return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'form_add_par.tpl');
@@ -1209,5 +1205,22 @@ class contactsController extends Controller{
 		}
 			
 		return 'Error : Contact geoloc in short time';	
+	}
+
+	public function ajax_form_suiviAction($contact_id){
+
+		$this->registry->smarty->assign('contact_id', $contact_id);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-suivi.shark');
+	}
+
+	public function ajax_form_sendemailAction($contact_id){
+		$contact = new contacts();
+		$contact->get($contact_id);
+
+		$this->registry->smarty->assign('contact', $contact);
+		$this->registry->smarty->assign('contact_id', $contact_id);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-send-email.shark');
 	}
 }

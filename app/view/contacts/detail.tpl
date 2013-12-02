@@ -17,6 +17,7 @@
 	{/if}
 
 	<div class="pull-right">
+		<a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:GetFormAddPhone({$contact.contact_id})" title="Ajouter un telephone"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
 		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
@@ -66,7 +67,7 @@
 		{if !empty($contact.email)}
 		<tr>
 			<td>Email :</td>
-			<td><a href="#modal-email" title="" data-toggle="modal"><button class="btn"><i class="glyphicon glyphicon-envelope"></i></button></a>&nbsp;{$contact.email}</td>
+			<td><a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><button class="btn"><i class="glyphicon glyphicon-envelope"></i></button></a>&nbsp;{$contact.email}</td>
 		</tr>
 		{/if}
 		
@@ -161,15 +162,17 @@
 			{if $smarty.session.utilisateur.isAdmin > 0}<li><a href="#tabDoublons" data-toggle="tab">Doublons</a></li>{/if}
         </ul>
 
+        <!-- START tab-suivis -->
         <div id="tabSuivi" class="tab-pane">
         	<div class="pull-right">
-        		<a href="#modal-suivi" title="" data-toggle="modal" data-target="#modal-suivi"><i class="icon icon-plus"></i></a>
+        		<!-- <a href="#modal-suivi" title="" data-toggle="modal" data-target="#modal-suivi"><i class="fa fa-plus fa-lg"></i></a> -->
+        		<a href="javascript:get_form_suivi({$contact.contact_id});" title=""><i class="fa fa-plus fa-lg"></i></a> 
         	</div>
         	<div class="clearfix"></div>
         	{if count($contact.suivis) == 0}
-        		<div class="text-center alert">Ce contact n'a aucun suivi</div>
+        		<div class="text-center alert-warning">Ce contact n'a aucun suivi</div>
         	{else}
-        	<table class="table">
+        	<table class="table table-striped">
         		<thead>
         			<tr>
         				<th>Suivi</th>
@@ -186,8 +189,8 @@
         				<td>{$row.suivi|nl2br}</td>
         				<td>{$row.date_suivi}</td>
         				<td>{$row.identifiant}</td>
-        				{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
-        				<td><a href="javascript:deleteSuivi({$row.id});" title="Supprimer"><i class="icon icon-trash"></i></a></td>
+        				{if $smarty.session.utilisateur.isAdmin > 0}
+        				<td><a href="javascript:deleteSuivi({$row.id});" title="Supprimer"><i class="fa fa-trash-o"></i></a></td>
         				{/if}
         			</tr>
         			{/foreach}
@@ -195,6 +198,7 @@
         	</table>
         	{/if}
         </div>
+        <!-- END tab-suivis -->
 
         <div id="tabMailingSend" class="tab-pane">
         	{if count($contact.mailings) == 0}
@@ -385,7 +389,7 @@
 		{if !empty($contact.raison_social)}
 		<div id="tabContactsOfSociete" class="tab-pane">
 			<div class="pull-right">
-				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title=""><i class="icon icon-plus"></i></a>
+				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title="Ajouter un contact"><i class="fa fa-plus"></i></a>
 			</div>
 			<div class="clearfix"></div>
 			<table class="table">
@@ -417,69 +421,6 @@
 
 </div>{* /well *}
 
-<div id="modal-email" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-				<h3 id="myModalLabel">Envoie email</h3>
-			</div>
-
-			<div class="modal-body">
-				<form method="post" action="{$Helper->getLink("contacts/sendemail/{$contact.contact_id}")}" id="form-email-ets" class="form" role="form">
-					<div class="form-group">
-						<label>A :</label>
-						<span class="uneditable-input">{$contact.email}</span>
-						<input type="hidden" name="mail[a]" value="{$contact.email}" class="form-control"/>
-					</div>
-					
-					<div class="form-group">
-						<label>De :</label>
-						<select name="mail[de]" required class="form-control">
-							<option value="{$smarty.session.utilisateur.email}">{$smarty.session.utilisateur.email}</option>
-						</select>
-					</div>
-					
-					<div class="control-form">
-						<label>Sujet :</label>
-						<input type="text" name="mail[sujet]" id="sujet" required class="form-control"/>
-					</div>
-					<div class="control-form">
-						<label>Message :</label>
-						<textarea name="mail[body]" required id="body-email" cols="40" rows="6" class="form-control"></textarea>
-					</div>
-			</div>
-			<div class="modal-footer">
-				<button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
-				<button type="submit" class="btn btn-primary">Envoyer</button>
-			</div>
-				</form>
-		</div><!-- /modal-content -->
-	</div><!-- /modal-dialog -->
-</div>
-
-{* MODAL AJOUT SUIVI *}
-<div id="modal-suivi" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-				<div class="modal-header">
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-					<h3 id="myModalLabel">Nouveau suivi</h3>
-				</div>
-				<div class="modal-body">
-					<form method="post" action="{$Helper->getLink("contacts/suiviadd/{$contact.contact_id}")}" id="form-suivi-add" class="form">
-						<label>Suivi :</label>
-						<textarea name="suivi[suivi]" id="suivi" class="input-xxlarge" required></textarea>
-				</div>
-				<div class="modal-footer">
-					<button class="btn" data-dismiss="modal" aria-hidden="true">Annuler</button>
-					<button type="submit" class="btn btn-primary">Envoyer</button>
-				</div>
-					</form>
-		</div><!-- /modal-content -->
-	</div><!-- /modal-dialog -->
-</div>
-
 {* MODAL GENERIQUE *}
 <div id="modal-fiche-contacts"	class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 	<div class="modal-dialog">
@@ -506,6 +447,34 @@ function deleteContact(id){
 	if(confirm('Etes vous sur de voiloir supprimer ?')){
 		window.location.href = '{$Helper->getLink("contacts/delete/'+id+'")}';
 	}
+}
+
+function get_form_suivi(cid){
+	$.get(
+        '{$Helper->getLink("contacts/ajax_form_suivi/'+cid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-fiche-contacts-body").html(data);
+        }
+        
+    );
+
+    $('#modal-fiche-contact-label').html('Nouveau suivi');
+    $('#modal-fiche-contacts').modal('show');
+}
+
+function get_form_send_email(cid){
+	$.get(
+        '{$Helper->getLink("contacts/ajax_form_sendemail/'+cid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-fiche-contacts-body").html(data);
+        }
+        
+    );
+
+    $('#modal-fiche-contact-label').html('Envoie email');
+    $('#modal-fiche-contacts').modal('show');
 }
 
 function sendUpload(){    

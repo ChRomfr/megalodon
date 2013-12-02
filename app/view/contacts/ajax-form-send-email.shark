@@ -1,0 +1,29 @@
+<!-- START ajax-form-send-email -->
+<form method="post" action="{$Helper->getLink("contacts/sendemail/{$contact_id}")}" id="form-email-ets" class="form-horizontal well" role="form">
+	<div class="form-group">
+		<label>A :</label>
+		<span class="uneditable-input">{$contact.email}</span>
+		<input type="hidden" name="mail[a]" value="{$contact->email}" class="form-control"/>
+	</div>
+	
+	<div class="form-group">
+		<label>De :</label>
+		<select name="mail[de]" required class="form-control">
+			<option value="{$smarty.session.utilisateur.email}">{$smarty.session.utilisateur.email}</option>
+		</select>
+	</div>
+	
+	<div class="control-form">
+		<label>Sujet :</label>
+		<input type="text" name="mail[sujet]" id="sujet" required class="form-control"/>
+	</div>
+	<div class="control-form">
+		<label>Message :</label>
+		<textarea name="mail[body]" required id="body-email" cols="40" rows="6" class="form-control"></textarea>
+	</div>
+	<div class="text-center">
+		<hr/>
+		<button type="submit" class="btn btn-primary">Envoyer</button>
+	</div>
+</form>
+<!-- END ajax-form-send-email -->
