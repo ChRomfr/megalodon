@@ -223,16 +223,22 @@
         	{/if}
         </div>
 		
+		<!-- START tab Doublons -->
 		{if $smarty.session.utilisateur.isAdmin > 0}
 		<div id="tabDoublons" class="tab-pane">
 		{if isset($matchings)}
-			{* formulaire de fusion *}			
-			<form method="get" action="{$Helper->getLink("contacts/fusion_contact")}" class="form-inline">
-				<input type="text" name="c2" required class="input-small" placeholder="ID du doublon"/>&nbsp;
+
+			{if count($matchings) > 0}			
+			<form method="get" action="{$Helper->getLink("contacts/fusion_contact")}" class="form-inline" role="form">
+				<div class="form-group">
+					<label class="sr-only">ID du doublon</label>
+					<input type="text" name="c2" required class="form-control" placeholder="ID du doublon"/>
+				</div>
 				<button class="btn btn-primary" type="submit">Fusionner</button>
-				<input type="hidden" name="c1" value="{$contact.contact_id}" />
+				<input type="hidden" name="c1" value="{$contact.contact_id}" />				
 			</form>
-			
+			{/if}
+
 			{* Tableau des matching *}
 			<table class="table table-striped table-condensed">
 				<thead>
@@ -249,7 +255,7 @@
 				{foreachelse}
 				<tr>
 					<td colspan="2">
-						<div class="alert alert-success">Aucun doublon trouvé</div>
+						<div class="text-center alert alert-success">Aucun doublon trouvé</div>
 					</td>
 				</tr>
 				{/foreach}
@@ -257,7 +263,8 @@
 		{/if}
 		</div>
 		{/if}
-		
+		<!-- END tab Doublons -->
+
 		{if !empty($contact.raison_social) && $contact.mother == 1}
 		<div id="tabAgences" class="tab-pane">
 			
