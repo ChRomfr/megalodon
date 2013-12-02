@@ -24,16 +24,17 @@ class mailingController extends Controller{
 
 		$this->load_manager('mailing');
 
-		$mailings = $this->manager->mailing->get();
-		
+		$mailings = $this->manager->mailing->get();		
 
-		$this->registry->smarty->assign(array(
-			'mailings'		=>	$mailings,
-		));
+		$this->registry->smarty->assign('mailings',	$mailings);
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'index.tpl');
 	}
 	
+	/**
+	 * Retour le calendrier des mailings
+	 * @return [type] [description]
+	 */
 	public function calendrierAction(){
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
@@ -42,6 +43,10 @@ class mailingController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'calendar.tpl');
 	}
 	
+	/**
+	 * Recupere au format json les infos des mailigns
+	 * @return [type] [description]
+	 */
 	public function getmailingforcalendarAction(){
 		$mailings = array();
 		
@@ -69,6 +74,13 @@ class mailingController extends Controller{
 		$this->load_manager('mailing');
 		$mailing = new mailing($this->manager->mailing->getById($id));
 		$mailing->cible = unserialize($mailing->cible);
+
+		if( isset($mailing->cible['ctype']) ){
+			foreach($mailing->cible['ctype'] as $k => $v){
+				$mailing->cible[$v] = 1;
+			}
+			unset($mailing->cible['ctype']);
+		}
 		
 		$link_csv = $this->getlinktocvs($mailing->cible);
 		$link_view = str_replace('csv','',$link_csv);
@@ -142,6 +154,13 @@ class mailingController extends Controller{
 		
 		$mailing->date_wish = DateMysqlToFR($mailing->date_wish);
 		$mailing->cible = unserialize($mailing->cible);
+
+		if( isset($mailing->cible['ctype']) ){
+			foreach($mailing->cible['ctype'] as $k => $v){
+				$mailing->cible[$v] = 1;
+			}
+		}
+		
 		
 		$this->registry->smarty->assign('mailing', $mailing);
 		$this->getFormValidatorJs();
@@ -187,7 +206,16 @@ class mailingController extends Controller{
 		}
 		
 		$ccontacts = $this->load_controller('contacts');
-		$where = $ccontacts->getWhere(unserialize($mailing->cible));
+		$mailing->cible = unserialize($mailing->cible);
+
+		if( isset($mailing->cible['ctype']) ){
+			foreach($mailing->cible['ctype'] as $k => $v){
+				$mailing->cible[$v] = 1;
+			}
+			unset($mailing->cible['ctype']);
+		}
+
+		$where = $ccontacts->getWhere($mailing->cible);
 
 		$this->load_manager('contacts');
 
@@ -293,13 +321,23 @@ class mailingController extends Controller{
 		}
 	}
 
-
+	/**
+	 * Recupere le nombre de contact correspondant a la cible
+	 * @param  [type] $mailing_id [description]
+	 * @return [type]             [description]
+	 */
 	public function ajax_get_nbcontactsAction($mailing_id){
 
 		$mailing = new mailing();
 		$mailing->get($mailing_id);
 
 		$mailing->cible = unserialize($mailing->cible);
+
+		if( isset($mailing->cible['ctype']) ){
+			foreach($mailing->cible['ctype'] as $k => $v){
+				$mailing->cible[$v] = 1;
+			}
+		}
 
 		$ccontacts = $this->load_controller('contacts');
 		$where = $ccontacts->getWhere($mailing->cible);

@@ -1,3 +1,4 @@
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
 	<li><a href="{$Helper->getLink("mailing")}" title="">Mailing</a></li>	
@@ -150,21 +151,21 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Societe :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="mailing[cible][societes]" value="1" />
+					<input type="checkbox" name="mailing[cible][ctype][]" value="societes" />
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Contact societe :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="mailing[cible][societe_contact]" value="1" />
+					<input type="checkbox" name="mailing[cible][ctype][]" value="societe_contact" />
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Particulier :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="mailing[cible][particulier]" value="1" />
+					<input type="checkbox" name="mailing[cible][ctype][]" value="particulier" />
 				</div>
 			</div>
 
@@ -180,17 +181,16 @@
 		</fieldset>
 		
 		<div class="text-center">
-		<hr/>
-		<button type="submit" class="btn btn-primary">Enregistrer</button>
-		&nbsp;&nbsp;
-		<a href="{$Helper->getLink("mailing")}" title="" class="btn btn-danger">Annuler</a
-		</div>{* /form-actions *}
+			<hr/>
+			<button type="submit" class="btn btn-primary">Enregistrer</button>
+			&nbsp;&nbsp;
+			<a href="{$Helper->getLink("mailing")}" title="" class="btn btn-danger">Annuler</a>
+		</div>
 	</form>
 </div>{* /well *}
-
+{/strip}
 <script type="text/javascript">
 <!--
-
 $(document).ready(function() {
 	$('#date_wish').mask("99/99/9999");
 	{literal}
@@ -221,6 +221,10 @@ jQuery(document).ready(function(){
                 required:true,
                 remote:'{$Helper->getLink("mailing/checkdatewish/'+ $('#date_wish').val() +'?nohtml")}'
             },
+            "mailing[cible][ctype][]":{
+				required:true,
+				minlength:1,
+			}
         },
 		messages:{
 			"mailing[date_wish]":{
@@ -230,13 +234,13 @@ jQuery(document).ready(function(){
 		},
 		highlight:function(element)
         {
-            $(element).parents('.form-group').removeClass('success');
-            $(element).parents('.form-group').addClass('error');
+            $(element).parents('.form-group').removeClass('text-success');
+            $(element).parents('.form-group').addClass('text-danger');
         },
         unhighlight: function(element)
         {
-            $(element).parents('.form-group').removeClass('error');
-            $(element).parents('.form-group').addClass('success');
+            $(element).parents('.form-group').removeClass('text-danger');
+            $(element).parents('.form-group').addClass('text-success');
         }
     });
 });

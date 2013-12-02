@@ -6,16 +6,18 @@
 </ol>
 
 <div class="well">
+
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
-		<a href="{$Helper->getLink("mailing/edit/{$mailing->id}")}" title="Modifier"><i class="icon icon-edit"></i></a>
-		&nbsp;
-		<a href="javascript:deletemailing({$mailing->id})" title="Supprimer"><i class="icon icon-trash"></i></a>
+		<a href="{$Helper->getLink("mailing/edit/{$mailing->id}")}" title="Modifier"><i class="fa fa-edit fa-lg"></i></a>
+		&nbsp;&nbsp;&nbsp;
+		<a href="javascript:deletemailing({$mailing->id})" title="Supprimer"><i class="fa fa-trash-o fa-lg"></i></a>
 	</div>
 	{/if}
+
 	<h3>{$mailing->libelle}</h3>
 	<div class="clearfix"></div>
-	<table class="table">
+	<table class="table table-striped table-condensed">
 		<tr>
 			<td>Description :</td>
 			<td>{$mailing->description|nl2br}</td>
@@ -44,7 +46,7 @@
 	</table>
 	<hr/>
 	<h4>Cibles du mailing</h4>
-	<table class="table">
+	<table class="table table-striped table-condensed">
 		<tr>
 			<td>Cible :</td>
 			<td>
@@ -55,8 +57,7 @@
 				</ul>
 				
 			</td>
-		</tr>
-		
+		</tr>		
 	
 		{if isset($mailing->cible['departement']) && !empty($mailing->cible['departement'])}
 		<tr>
@@ -126,10 +127,10 @@
 	<div id="nb-contacts-for-mailing"></div>
 	
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid) || isset($smarty.session.acl.contacts_export_csv)}
-	<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="icon-download icon-white"></i>&nbsp;Export cible CSV</a>
+	<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="glyphicon glyphicon-export"></i>&nbsp;Export cible CSV</a>
 	{/if}
 	&nbsp;&nbsp;
-	<a href="{$link_view}" title="Export des contacts" class="btn btn-info" target="_blank"><i class="icon-eye-open icon-white"></i>&nbsp;Voir cible</a>
+	<a href="{$link_view}" title="Export des contacts" class="btn btn-info" target="_blank"><i class="fa fa-eye"></i>&nbsp;Voir cible</a>
 	
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
