@@ -77,7 +77,7 @@
 			{if !empty($contact.siret)}
 			<tr>
 				<td>SIRET :</td>
-				<td>{$contact.siret}</td>
+				<td><a href="http://www.bilansgratuits.fr/entreprise/fiche/{$contact.siret}.htm" title="Voir fiche sur bilan gratuit" target="_blank">{$contact.siret}</a></td>
 			</tr>
 			{/if}
 			
