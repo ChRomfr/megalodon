@@ -1,0 +1,9 @@
+{if !empty($mytasks)}
+<hr/>
+Mes taches
+	<ul>
+	{foreach $mytasks as $row}
+		<li>{if !empty($row.link)}<a href="{$row.link}" title="">{/if}{$row.task}{if !empty($task.link)}</a>{/if}</li>
+	{/foreach}
+	</ul>
+{/if}

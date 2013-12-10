@@ -186,11 +186,22 @@ function getemailerror(){
 }
 
 function deletenoname(){
+    getsavoirinutile('result-opt');
 	$.get(
         '{$Helper->getLink("contacts/maintenance_massdelete_noname")}',{literal}
         {nohtml:'nohtml'},{/literal}
         function(data){
             $('#result-opt').html('<div class="text-center">'+ data +'</div>');
+        }
+    );
+}
+
+function getsavoirinutile(elem){
+    $.get(
+        '{$Helper->getLink("ajax/getSavoirInutile")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $('#'+elem).html(data);
         }
     );
 }

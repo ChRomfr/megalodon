@@ -9,34 +9,56 @@
 
 {if !isset($contacts)}
 <div class="well">
-	<form method="post" action="#" enctype="multipart/form-data" class="form">
-		<fieldset>
-			
-			Pré requis : 
-				<ul>
-					<li>Fichier au format CSV</li>
-					<li>Une adresse email par ligne</li>
-				</ul>
-			<br/>
-			<div class="form-group">
-				<label class="col-sm-2 control-label">Fichier :</label>
-				<div class="col-sm-5">
-				<input type="file" name="file_dc" id="file_dc" class="form-control" required/>
-				</div>
-			</div>	
-			
-		</fieldset>
-		<div class="text-center">
-			<hr/>
-			<input type="hidden" name="token" value="{$smarty.session.token}" />
-			<input type="hidden" name="dc" value="1" />
-			<button type="submit" class="btn btn-primary">Envoyer</button>
-			&nbsp;&nbsp;
-			<a href="{$Helper->getLink("adm/contacts_maintenance")}" class="btn btn-danger">Annuler</a>
-		</div>
-	</form>
+	<div id="c_form_s1">
+		<form method="post" action="#" enctype="multipart/form-data" class="form" onsubmit="return submit_form_step1();">
+			<fieldset>
+				
+				Pré requis : 
+					<ul>
+						<li>Fichier au format CSV</li>
+						<li>Une adresse email par ligne</li>
+					</ul>
+				<br/>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Fichier :</label>
+					<div class="col-sm-5">
+					<input type="file" name="file_dc" id="file_dc" class="form-control" required/>
+					</div>
+				</div>	
+				
+			</fieldset>
+			<div class="text-center">
+				<hr/>
+				<input type="hidden" name="token" value="{$smarty.session.token}" />
+				<input type="hidden" name="dc" value="1" />
+				<button type="submit" class="btn btn-primary">Envoyer</button>
+				&nbsp;&nbsp;
+				<a href="{$Helper->getLink("adm/contacts_maintenance")}" class="btn btn-danger">Annuler</a>
+			</div>
+		</form>
+	</div>
+	<div id="c_form_s1_submit" style="display:none">
+		<div class="bs-callout bs-callout-warning">
+      		<h4>Traitement du fichier</h4>
+      		<p>Analyse du fichier et recherche dans la base des adresses email...</p>
+    	</div>
+
+		<div class="progress">
+      		<div class="progress-bar progress-striped active" style="width: 0%;"></div>
+    	</div>
+
+    	{if isset($savoir_inutile)}
+    	<div id="savoir-inutile">
+	    	<div class="bs-callout bs-callout-info">
+	      		<h4>{$savoir_inutile.title}</h4>
+	      		<p>{$savoir_inutile.description}</p>
+	    	</div>
+    	</div>
+    	{/if}
+	</div>
 </div>
 {else}
+<div class="well">
 <form method="post" action="{$Helper->getLink("adm/contacts_delete_by_email_step2")}">
 
 <table class="table table-condensed table-striped">
@@ -65,6 +87,8 @@
 			</td>
 			{if $smarty.session.utilisateur.isAdmin > 0}
 			<td>
+				<a href="javascript:add_task({$row.contact_id});" title="Ajouter une tache"><i class="fa fa-flag"></i></a>
+				&nbsp;&nbsp;&nbsp;
 				<input type="checkbox" name="contacts[][{$row.contact_id}]" />
 			</td>
 			{/if}
@@ -81,5 +105,44 @@
 
 <div class="clearfix"></div>
 </form>
+</div>
 {/if}
 {/strip}
+<script>
+<!--
+function submit_form_step1(){
+	$('#c_form_s1').css('display','none');
+	$('#c_form_s1_submit').css('display','block');
+
+	var progress = setInterval(function() {
+      var $bar = $('.progress-bar');
+      
+      if ($bar.width()=='100%') {
+          //clearInterval(progress);
+          $bar.width('100%');
+          //$('.progress').removeClass('active');
+      } else {
+          $bar.width($bar.width()+40);
+      }
+      //$bar.text($bar.width()/4 + "%");
+  }, 100);
+
+	return true;
+}
+
+function add_task(contact_id){
+	$.get(
+        '{$Helper->getLink("ajax/add_task")}',{literal}
+        {
+        	nohtml:'nohtml',
+        	third_type:'contacts',
+        	third_id:contact_id,
+        	task:'Verifie adresse email',
+        },{/literal}
+        function(data){
+            alert('Tache ajoute');
+        }
+    );
+}
+//-->
+</script>

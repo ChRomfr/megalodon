@@ -562,3 +562,21 @@ function getSemaineData($date){
 
     return $data;
 }
+
+function getSavoirInutile(){
+	$Data = new Feed("http://www.savoir-inutile.com/feed/plugins");
+	$Data->cacheTime = 0;
+	foreach ($Data->find(1) as $item){
+		
+		$Array = array(
+			'title'				=>	trim($item->title),
+			'link'				=>	isset($item->link) ? trim($item->link) : trim($item->url),
+			'description'		=>	$item->description,
+			'date'				=>	$item->date,
+			'image'				=>	$item->image,
+		);
+		
+	}
+
+	return $Array;
+}

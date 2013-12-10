@@ -32,7 +32,9 @@
 			{/foreach}
 		{/if}
 		
-		{$global_form_search}		
+		{$global_form_search}	
+
+		<div id="nav-menu-my-task"></div>	
 						
 	</ul>{* /nav *}
 </div>{* /well *}

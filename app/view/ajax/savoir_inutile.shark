@@ -1,0 +1,6 @@
+<div id="savoir-inutile">
+	<div class="bs-callout bs-callout-info">
+  		<h4>{$savoir_inutile.title}</h4>
+  		<p>{$savoir_inutile.description}</p>
+	</div>
+</div>

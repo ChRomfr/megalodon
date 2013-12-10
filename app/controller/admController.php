@@ -207,6 +207,10 @@ class admController extends Controller{
 		}// end post
 
 		printform:
+		/*echo "<pre>";
+		print_r(getSavoirInutile());
+		echo "</pre>";*/
+		$this->registry->smarty->assign('savoir_inutile', getSavoirInutile());
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_delete_by_email_step1.shark');
 
 	}

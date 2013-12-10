@@ -6,7 +6,9 @@
 
 <div class="well">
 	<div id="index2_contacts">
-		<div>Chargements ...</div>
+    <div class="progress">
+      <div class="progress-bar progress-striped active" style="width: 0%;"></div>
+    </div>
 	</div>
 </div>
 {/strip}
@@ -14,6 +16,19 @@
 <!--
 jQuery(document).ready(function(){
 	paramUrl = getParameters();
+
+  var progress = setInterval(function() {
+      var $bar = $('.progress-bar');
+      
+      if ($bar.width()=='100%') {
+          //clearInterval(progress);
+          $bar.width('100%');
+          //$('.progress').removeClass('active');
+      } else {
+          $bar.width($bar.width()+40);
+      }
+      //$bar.text($bar.width()/4 + "%");
+  }, 100);
 
 	$.get(
         '{$Helper->getLink("contacts/ajax_load_contacts")}',paramUrl
