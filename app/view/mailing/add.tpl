@@ -193,9 +193,15 @@
 <!--
 $(document).ready(function() {
 	$('#date_wish').mask("99/99/9999");
+	{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
+	{literal}
+	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true });
+	{/literal}
+	{else}
 	{literal}
 	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true, minDate:+1, maxDate:'+1M +10D' });
 	{/literal}
+	{/if}
 });
 
 function champformcontact(){

@@ -173,11 +173,11 @@ class contactsController extends Controller{
 		// Traitement du formulaire
 		if(!is_null($this->registry->Http->post('contact'))){
 			$data = $this->registry->Http->post('contact');
-			
-			$contact = new contacts($data);
-		
-			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
 
+			$contact = new contacts($data);
+			$contact->id = $id;
+			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
+			
 			//$contact->save();
 
 			if( isset($data['per']) ){
@@ -185,11 +185,13 @@ class contactsController extends Controller{
 				$personne = new personne($data['per']);
 				$personne->contact_id = $contact->id;
 				$personne->save();
-			}elseif(isset($data['ets'])){
+			}
+			if(isset($data['ets'])){
 				// Entreprise
 				$societe = new societe($data['ets']);
 				$societe->contact_id = $contact->id;
 				$societe->save();
+				echo "DANS SOCIETE";
 			}
 			
 			return $this->detailAction($id);

@@ -26,6 +26,7 @@
 		<button class="btn btn-primary" onclick="startOptimisation();" id="btn-opt">Optimiser</button>&nbsp;
 		<button class="btn btn-primary" onclick="getemailerror();" id="btn-checkemail">Verifier les emails</button>&nbsp;
 		<button class="btn btn-primary" onclick="deletenoname();" id="btn-deletenoname">Supprimer les contacts sans nom</button>&nbsp;
+        <a href="{$Helper->getLink("adm/contacts_delete_by_email_step1")}" title="" class="btn btn-primary">Suppression par email</a>
 	</div>
 	<div id="result-opt"></div>
 </div>

@@ -1,29 +1,32 @@
-<ul class="breadcrumb">
+{strip}
+<ol class="breadcrumb">
 	<li class="active">Accueil</li>
-</ul>
+</ol>
 
-	<div class="col-md-5 well">
-		<h4>Statistiques</h4>
-		<ul>
-			<li>Contacts : {$stats.nb_ctcs}</li>
-			<li>Societe : {$stats.nb_sct}</li>
-			<li>Personne : {$stats.nb_per}</li>
-			<li>Email : {$stats.nb_email}</li>
-		</ul>
-	</div><!-- /span5 -->
-	<div class="col-md-5 well">
+<div class="col-md-5 well">
+	<h4>Statistiques</h4>
+	<ul>
+		<li>Contacts : {$stats.nb_ctcs}</li>
+		<li>Societe : {$stats.nb_sct}</li>
+		<li>Personne : {$stats.nb_per}</li>
+		<li>Email : {$stats.nb_email}</li>
+	</ul>
+</div>
+<div class="col-md-1"></div>
+<div class="col-md-6 well">
 	{if $smarty.session.utilisateur.mailing_adm == 1}
-		<div id="calmailingindex"style="width:95%;"></div>
+	<div id="calmailingindex"style="width:95%;"></div>
 	{/if}
-	</div>{* /span5 *}
+</div>
+<div class="clearfix"></div>
 
-	{if $smarty.session.utilisateur.index_map_contacts == 1}
-	<div class="col-md-10 well">
-		<h4>Cartes des contacts</h4>
-		<div id="map-city" class="gmap3" style="height:500px;"></div>
-	</div>{* /span10 well *}
-	{/if}
-
+{if $smarty.session.utilisateur.index_map_contacts == 1}
+<div class="col-md-12 well">
+	<h4>Cartes des contacts</h4>
+	<div id="map-city" class="gmap3" style="height:500px;"></div>
+</div>
+{/if}
+{/strip}
 {if $smarty.session.utilisateur.index_map_contacts == 1}
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 {/if}

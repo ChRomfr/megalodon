@@ -1,0 +1,85 @@
+<!-- view/adm/contacts_delete_by_email_step1.shark -->
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>
+	<li><a href="{$Helper->getLink("adm/contacts_maintenance")}" title="Contacts">Contacts</a></li>
+	<li class="active">Suppression par fichier</li>
+</ol>
+
+{if !isset($contacts)}
+<div class="well">
+	<form method="post" action="#" enctype="multipart/form-data" class="form">
+		<fieldset>
+			
+			Pré requis : 
+				<ul>
+					<li>Fichier au format CSV</li>
+					<li>Une adresse email par ligne</li>
+				</ul>
+			<br/>
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Fichier :</label>
+				<div class="col-sm-5">
+				<input type="file" name="file_dc" id="file_dc" class="form-control" required/>
+				</div>
+			</div>	
+			
+		</fieldset>
+		<div class="text-center">
+			<hr/>
+			<input type="hidden" name="token" value="{$smarty.session.token}" />
+			<input type="hidden" name="dc" value="1" />
+			<button type="submit" class="btn btn-primary">Envoyer</button>
+			&nbsp;&nbsp;
+			<a href="{$Helper->getLink("adm/contacts_maintenance")}" class="btn btn-danger">Annuler</a>
+		</div>
+	</form>
+</div>
+{else}
+<form method="post" action="{$Helper->getLink("adm/contacts_delete_by_email_step2")}">
+
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>Contact</th>
+			<th>Ville</th>
+			<th>Email</th>
+			<th>Type</th>
+			{if $smarty.session.utilisateur.isAdmin > 0}
+			<th></th>
+			{/if}
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $contacts as $row}
+		<tr>
+			<td><a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Detail"> {if !empty($row.prenom)}{$row.nom} {$row.prenom}{else}{$row.raison_social}{/if}</a></td>
+			<td>{$row.ville}</td>
+			<td>{$row.email}</td>
+			<td>
+				{if $row.ctype == 'societe'}Societe
+				{elseif $row.ctype == 'societe_contact'}Pro
+				{else}Par
+				{/if}
+			</td>
+			{if $smarty.session.utilisateur.isAdmin > 0}
+			<td>
+				<input type="checkbox" name="contacts[][{$row.contact_id}]" />
+			</td>
+			{/if}
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+
+<div class="pull-right">	
+	{if $smarty.session.utilisateur.isAdmin > 0}
+	<button type="submit" class="btn btn-info"><i class="glyphicon glyphicon-trash"></i>&nbsp;Supprimer</button>
+	{/if}
+</div>
+
+<div class="clearfix"></div>
+</form>
+{/if}
+{/strip}

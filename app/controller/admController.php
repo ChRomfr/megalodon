@@ -156,4 +156,98 @@ class admController extends Controller{
 		return json_encode($data,JSON_NUMERIC_CHECK);
 	}
 
+	public function contacts_delete_by_email_step1Action(){
+
+		if(!is_null($this->registry->Http->post('dc'))){
+			$dir = ROOT_PATH . 'web' . DS . 'upload' . DS . 'csv' . DS;
+		
+			require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'upload' . DS . 'class.upload.php';
+			
+			if(!is_dir($dir))
+				@mkdir($dir);			
+			
+	        $fichier = new Upload($_FILES['file_dc']);
+	        $name = uniqid();
+	        if($fichier->uploaded){
+	            $fichier->file_overwrite 		= true;
+	            $fichier->file_new_name_body  	= $name;
+				$fichier->file_new_name_ext		= 'csv';
+	            $fichier->process($dir);
+
+	            // On traite le fichier
+	            $lines = file(ROOT_PATH . 'web' . DS . 'upload' . DS . 'csv' . DS . $name .'.csv');
+
+	            // On verifie que le fichier comporte des lignes
+	            if(count($lines) == 0){
+	            	$this->registry->smarty->assign('FlashMessage', 'Le fichier envoye ne contient aucune ligne');
+					goto printform;
+				}
+
+				$this->load_manager('contacts');
+				$contacts = array();
+
+				foreach($lines as $k => $v){
+					$result = $this->manager->contacts->getByEmail(trim($v));
+
+					if(!empty($result))
+						$contacts[] = $result;
+				}
+
+				$this->registry->smarty->assign('contacts', $contacts);
+
+				goto printform;
+				echo"<pre>";
+				print_r($contacts);
+				echo"</pre>";
+			
+			}else{
+				$this->registry->smarty->assign('FlashMessage', 'Une erreur est survenu pendant le transfert du fichier');
+				goto printform;
+			}
+		}// end post
+
+		printform:
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_delete_by_email_step1.shark');
+
+	}
+
+	public function contacts_delete_by_email_step2Action(){
+
+		// Verification droit utilisateur
+		if( $_SESSION['utilisateur']['isAdmin'] == 0){
+			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas les droits pour effectuer cette action !');
+			return $this->indexAction();
+		}
+
+		// Verification que le formulaire est appellé de la bonne page avec un contenu
+		if(is_null($this->registry->Http->post('contacts'))){
+			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas selectionner de contact !');
+			return $this->indexAction();
+		}
+
+		// Recuperation des contacts dans une variable
+		$datas = $this->registry->Http->post('contacts');
+		
+		// On boucle sur les données pour les mettre a la corbeille
+		foreach($datas as $data){
+			foreach($data as $k => $v){
+				$contact = new contacts();
+				$contact->get($k);
+				$old_email = $contact->email;
+				$contact->email = NULL;
+				$contact->save();
+
+				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $k, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression email par fichier. Ancien adresse email : '. $old_email));
+				$clog->save();
+				echo "<pre>"; print_r($contact); echo "</pre>";
+			}
+			
+		}
+
+		// Message a l utilisateur
+		$this->registry->smarty->assign('FlashMessage','Emails supprimes');
+
+		// On lui affiche de nouveau la liste des contacts
+		return $this->contacts_maintenanceAction();
+	}
 }

@@ -1,9 +1,9 @@
 <!-- Formulaire ajout suivi depuis fiche -->
-<form method="post" action="{$Helper->getLink("contacts/suiviadd/{$contact_id}")}" id="form-suivi-add" class="form-horizontal">
+<form method="post" action="{$Helper->getLink("contacts/suiviadd/{$contact_id}")}" id="form-suivi-add" class="form-horizontal well">
 	<div class="form-group">
 		<label for="suivi" class="control-label col-sm-2">Suivi :</label>
-		<div class="col-sm-5">
-			<textarea name="suivi[suivi]" id="suivi" class="form-control" required></textarea>
+		<div class="col-sm-10">
+			<textarea name="suivi[suivi]" id="suivi" class="form-control" required rows="4" cols="50"></textarea>
 		</div>
 	</div>
 	<div class="text-center">

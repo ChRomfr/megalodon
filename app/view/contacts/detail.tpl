@@ -17,7 +17,9 @@
 	{/if}
 
 	<div class="pull-right">
+		{if !empty($contact.email)}
 		<a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+		{/if}
 		<a href="javascript:GetFormAddPhone({$contact.contact_id})" title="Ajouter un telephone"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
 		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
@@ -158,27 +160,27 @@
 			<li><a href="#tabContactsEmailSend" data-toggle="tab">Emails</a></li>
 			<li><a href="#tabMailingSend" data-toggle="tab">Mailings</a></li>
 			<li><a href="#tabContactsFiles" data-toggle="tab">Fichiers</a></li>
-			{if $smarty.session.utilisateur.historique_contact == 1}<li class="active"><a href="#tabContactsLogs" data-toggle="tab">Histoirique</a></li>{/if}
+			{if $smarty.session.utilisateur.historique_contact == 1}<li class="active"><a href="#tabContactsLogs" data-toggle="tab">Historique</a></li>{/if}
 			{if $smarty.session.utilisateur.isAdmin > 0}<li><a href="#tabDoublons" data-toggle="tab">Doublons</a></li>{/if}
         </ul>
 
         <!-- START tab-suivis -->
         <div id="tabSuivi" class="tab-pane">
         	<div class="pull-right">
-        		<!-- <a href="#modal-suivi" title="" data-toggle="modal" data-target="#modal-suivi"><i class="fa fa-plus fa-lg"></i></a> -->
         		<a href="javascript:get_form_suivi({$contact.contact_id});" title=""><i class="fa fa-plus fa-lg"></i></a> 
         	</div>
         	<div class="clearfix"></div>
         	{if count($contact.suivis) == 0}
-        		<div class="text-center alert-warning">Ce contact n'a aucun suivi</div>
+        		<div class="text-center alert alert-warning">Ce contact n'a aucun suivi</div>
         	{else}
-        	<table class="table table-striped">
+        	<br/>
+        	<table class="table table-striped table-condensed">
         		<thead>
         			<tr>
         				<th>Suivi</th>
         				<th>Date</th>
         				<th>Auteur</th>
-        				{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
+        				{if $smarty.session.utilisateur.isAdmin > 0}
         				<th>&nbsp;</th>
         				{/if}
         			</tr>

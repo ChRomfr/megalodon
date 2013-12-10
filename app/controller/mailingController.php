@@ -206,16 +206,16 @@ class mailingController extends Controller{
 		}
 		
 		$ccontacts = $this->load_controller('contacts');
-		$mailing->cible = unserialize($mailing->cible);
+		$cible = unserialize($mailing->cible);
 
-		if( isset($mailing->cible['ctype']) ){
-			foreach($mailing->cible['ctype'] as $k => $v){
-				$mailing->cible[$v] = 1;
+		if( isset($cible['ctype']) ){
+			foreach($cible['ctype'] as $k => $v){
+				$cible[$v] = 1;
 			}
-			unset($mailing->cible['ctype']);
+			unset($cible['ctype']);
 		}
 
-		$where = $ccontacts->getWhere($mailing->cible);
+		$where = $ccontacts->getWhere($cible);
 
 		$this->load_manager('contacts');
 

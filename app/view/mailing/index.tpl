@@ -10,7 +10,7 @@
 			<tr>
 				<th>#</th>
 				<th>Mailing</th>
-				<th>Status</th>
+				<th>Statut</th>
 				<th>Demandeur</th>
 				<th>Date de demande</th>
 				<th>Date d'envoie</th>
@@ -22,8 +22,9 @@
 				<td>{$mailing.id}</td>
 				<td><a href="{$Helper->getLink("mailing/fiche/{$mailing.id}")}" title="Detail">{$mailing.libelle}</a></td>
 				<td>
-					{if $mailing.valid == 0}<span class="label label-info">A valider</span>
-					{elseif $mailing.valid == 1}<span class="label label-success">Accepter</span>
+					{if !empty($mailing.date_send)}<span class="label label-success">Envoyé</span>
+					{elseif $mailing.valid == 0}<span class="label label-default">A valider</span>
+					{elseif $mailing.valid == 1}<span class="label label-info">Accepter</span>
 					{elseif $mailing.valid == 2}<span class="label label-warning">Refuser</span>
 					{/if}
 				</td>
