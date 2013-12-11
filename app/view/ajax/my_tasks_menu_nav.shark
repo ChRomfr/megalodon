@@ -1,9 +1,14 @@
 {if !empty($mytasks)}
 <hr/>
 Mes taches
-	<ul>
+	<ul class="stasks-list">
 	{foreach $mytasks as $row}
-		<li>{if !empty($row.link)}<a href="{$row.link}" title="">{/if}{$row.task}{if !empty($task.link)}</a>{/if}</li>
+		<li>
+			<div class="stasks-checkbox"><input type="checkbox" value="{$row.id}" /></div>
+			<div class="stasks-task">{if !empty($row.link)}<a href="{$row.link}" title="">{/if}{$row.task}{if !empty($task.link)}</a>{/if}</li></div>
+			<div class="stasks-config"></div>
+			<div class="clearfix"></div>
+		</li>
 	{/foreach}
 	</ul>
 {/if}

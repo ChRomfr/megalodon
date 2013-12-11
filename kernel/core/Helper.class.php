@@ -79,4 +79,15 @@ class Helper{
 			exit;
 		}
 	}
+
+	/**
+	 * Permet l ajout d une notification
+	 * @param  [type]  $message  [description]
+	 * @param  string  $type     [description]
+	 * @param  integer $oppacity [description]
+	 * @return [type]            [description]
+	 */
+	public function pnotify($title, $message, $type = 'info', $oppacity = 8){
+		$this->registry->smarty->assign('pnotify', array('title' => $title, 'message' => $message, 'type' => $type, 'oppacity' => $oppacity));
+	}
 }

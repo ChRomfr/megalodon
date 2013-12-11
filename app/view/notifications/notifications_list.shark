@@ -1,0 +1,45 @@
+{foreach $notifications as $row}
+<li id="{$row.id}" class="notification-item {if $row.is_read == 0}notification-unread{/if}" style="position: relative;">
+    <a id="{$row.id}" {if $row.is_read == 0}onmouseover="setread({$row.id})"{/if} href="{$Helper->getLink("notifications/read/{$row.id}")}">
+        <div class="notification-message">
+            <div class="avatar pull-left"></div>
+            <div class="message">{$row.message}</div>
+            <div class="timestamp">{$row.date_notification}</div>
+            <div style="clear: both;"></div>
+        </div>
+    </a>
+   <a href="{$Helper->getLink("notifications/delete/{$row.id}")}" title="Supprimer" class="notification-deletelink">x</a>
+</li>
+{foreachelse}
+<li class="notification-empty text-center">
+    <h4>No notifications</h4>
+</li>
+{/foreach}
+<script>
+    $('.deletelink').click(function() {
+        
+        var deleteurl = $(this).attr('href');
+        var theparent = $(this).parent();
+        
+        $.ajax({
+            url: deleteurl,
+            success: function(data) {
+                theparent.slideUp();
+                poll();
+            }
+        });
+        return false;
+    });
+
+   function setread(notification_id){
+        var readurl = "{$Helper->getLink("notifications/setread")}";
+        $.ajax({
+            url: readurl + '/' + notification_id,
+            success: function(data) {
+                theparent.slideUp();
+                poll();
+            }
+        });
+        return false
+   }
+</script>

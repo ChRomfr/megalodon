@@ -76,6 +76,30 @@
 			{if $smarty.session.utilisateur.id != 'Visiteur'}
 			<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i></a></li>
 			<li><a href="{$Helper->getLink("connexion/logout")}" title="Deconnexion"><i class="glyphicon glyphicon-off"></i></a></li>
+			<li class="dropdown">		
+				<a id="notification-icon" class="notifications notification-icon dropdown-toggle" data-toggle="dropdown" href="#">				    	
+					<i class="glyphicon glyphicon-globe"></i>
+					<span class="notification-counter" id="notification-counter" style="display: none;">0</span>
+				</a>
+
+			    <ul id="notification-items" class="dropdown-menu" aria-labelledby="notification-icon">
+					{if isset($clear_notification)}
+					<li class="notification-button">
+						Clear notification
+					</li>
+					<li class="divider"></li>
+					{/if}
+			        
+			        <li id="notification-spinner"><img src="{$config.url}web/lib/notifications/img/loading.gif" alt="Loading" /></li>
+			        
+			        {if isset($all_notification)}
+			            <li class="divider"></li>
+			            <li class="notification-button">
+			                All notifications
+			            </li>
+			        {/if}			        
+			    </ul>			
+			</li>
 			{/if}
           </ul>
         </div><!--/.nav-collapse -->
@@ -135,6 +159,21 @@
 <!--
 $(".chzn-select").chosen();
 $(".chozen").chosen();
+
+{if isset($FlashMessage) && !empty($FlashMessage)}
+$(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{$FlashMessage}</div>');
+{/if}
+
+{if $smarty.session.utilisateur.id != 'Visiteur'}
+var interval = 10000;
+var pagetitle = "";
+var userid = "{$smarty.session.utilisateur.id}";
+var count_url = "{$Helper->getLink("notifications/getcount")}";
+var list_url = "{$Helper->getLink("notifications/getlist")}";
+$(document).ready(function(){
+    startNotifications();
+});
+
 $(document).ready(function() {
 	$.get(
         '{$Helper->getLink("ajax/my_tasks")}',{literal}
@@ -146,9 +185,19 @@ $(document).ready(function() {
         }
     );
 });
-{if isset($FlashMessage) && !empty($FlashMessage)}
-$(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{$FlashMessage}</div>');
 {/if}
+
+{if isset($pnotify)}
+$(function(){
+	$.pnotify({
+	    title: '{$pnotify.title}',
+	    text: '{$pnotify.message}',
+	    type: '{$pnotify.type}',
+	    opacity: .{$pnotify.oppacity}
+	});
+});
+{/if}
+
 //-->
 </script>
 

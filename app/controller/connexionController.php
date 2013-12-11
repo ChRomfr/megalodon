@@ -34,18 +34,18 @@ class connexionController extends BaseconnexionController{
 
             	// Enregistrement de la session dans la base
             	$session = array(
-            		'session_id' => $_SESSION['session_id'], 
-            		'user_id' => $_SESSION['utilisateur']['id'],
-            		'last_update' => time(),
-            		'url'	=>	$_SERVER['REQUEST_URI'],
-            		'ip'	=>	$_SERVER['REMOTE_ADDR']
+            		'session_id' 	=> 	$_SESSION['session_id'], 
+            		'user_id' 		=> 	$_SESSION['utilisateur']['id'],
+            		'last_update' 	=> 	time(),
+            		'url'			=>	$_SERVER['REQUEST_URI'],
+            		'ip'			=>	$_SERVER['REMOTE_ADDR']
             	);
 
             	$this->registry->db->insert('sessions', $session );
             	
             	$index = $this->load_controller('index');
 
-				$this->registry->smarty->assign('FlashMessage','Vous etes maintenant connecté !');
+				$this->registry->Helper->pnotify('Bienvenu', 'Vous êtes maintenance connecté !', 'success');
 
 				return $index->indexAction();
             }

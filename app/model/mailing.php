@@ -104,6 +104,8 @@ class mailing extends Record{
 	 * @Db: {"name":"caller","type":"VARCHAR","length":150}
 	 */
 	public $caller;
+
+	public $type_id;
 	
 	/**
 	*	@NoDb: {"nodb":1}
@@ -114,5 +116,10 @@ class mailing extends Record{
 	*	@NoDb: {"nodb":1}
 	*/
 	public $demandeur;
+
+	/**
+	*	@NoDb: {"nodb":1}
+	*/
+	public $type;
 
 }

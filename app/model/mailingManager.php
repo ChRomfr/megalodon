@@ -15,10 +15,11 @@ class mailingManager extends BaseModel{
 	
 	public function getById($id){
 	
-		return	$this->db->select('m.*, u1.identifiant as validateur, u2.identifiant as demandeur')
+		return	$this->db->select('m.*, u1.identifiant as validateur, u2.identifiant as demandeur, mt.libelle as type')
 					->from('mailings m')
 					->left_join('user u1', 'm.demand_by = u1.id')
 					->left_join('user u2', 'm.valid_by = u2.id')
+					->left_join('mailings_type mt', 'm.type_id = mt.id')
 					->where(array('m.id =' => $id))
 					->get_one();
 	}

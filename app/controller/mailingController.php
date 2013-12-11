@@ -122,8 +122,9 @@ class mailingController extends Controller{
 			$this->registry->smarty->assign('FlashMessage','Demande enregistrée');
 			return $this->indexAction();
 		}
-
+		$types = new mailing_type();
 		$this->getFormValidatorJs();
+		$this->registry->smarty->assign('types', $types->get());
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'add.tpl');
 	}
 	
@@ -161,9 +162,12 @@ class mailingController extends Controller{
 			}
 		}
 		
-		
-		$this->registry->smarty->assign('mailing', $mailing);
+		$types = new mailing_type();
 		$this->getFormValidatorJs();
+
+		$this->registry->smarty->assign('types', $types->get());
+		$this->registry->smarty->assign('mailing', $mailing);
+		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'edit.shark');
 	}
 	
@@ -255,14 +259,52 @@ class mailingController extends Controller{
 			header('Location: '. $this->registry->Helper->getLink("mailing"));
 		}
 		
+		// Sauvegarde du mailing
 		$mailing = new mailing();
 		$mailing->get($id);
 		$mailing->valid = 1;
 		$mailing->valid_on = date("Y-m-d H:i:s");
 		$mailing->valid_by = $_SESSION['utilisateur']['id'];
-		$mailing->save();		
+		$mailing->save();
+
+		// Recuperation des utilisateurs validateur
+		$users = $this->registry->db->get('acl', array('acl =' => 'mailing_valid'));
+
+		// Ajout tache au mailing_valid
+		$task = array(
+			'creat_by'	=>	0,
+			'user_id'	=>	'',
+			'third_type'	=>	'mailings',
+			'third_id'		=>	$id,
+			'date_add'		=>	date("Y-m-d"),
+			'date_expire'	=>	$mailing->date_wish,
+			'priority'		=>	3,
+			'process'		=>	0,
+			'task'			=>	'Envoyé le mailing '. $mailing->libelle .' (#'.$id.')',
+			'link'			=>	$this->registry->Helper->getLink('mailing/fiche/'. $id),
+		);
+
+		foreach($users as $user){
+			$task['user_id'] = $user['user_id'];
+			$this->registry->db->insert('tasks', $task);
+		}
 		
-		$this->registry->smarty->assign('FlashMessage','Mailing valide');
+		// Ajout notification au demandeur	
+		$notification = array(
+			'sender_id'			=>	0,
+			'user_id'			=>	$mailing->demand_by,
+			'is_read'			=>	0,
+			'is_delete'			=>	0,
+			'date_notification'	=>	date("Y-m-d H:i:s"),
+			'message'			=>	'Votre demande de <a href="'.$this->registry->Helper->getLink('mailing/fiche/'. $id).'" title="">mailing</a> a ete validé',
+			'third_type'		=>	'mailings',
+			'third_id'			=>	$id,
+		);	
+
+		$this->registry->db->insert('notifications', $notification);
+		
+		$this->registry->Helper->pnotify('Mailing', 'Mailing validé');
+
 		return $this->ficheAction($id);		
 	}
 	

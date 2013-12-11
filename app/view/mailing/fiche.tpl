@@ -43,6 +43,10 @@
 				{/if}
 			</td>
 		</tr>
+		<tr>
+			<td>Type :</td>
+			<td><strong>{$mailing->type}</strong></td>
+		</tr>
 	</table>
 	<hr/>
 	<h4>Cibles du mailing</h4>

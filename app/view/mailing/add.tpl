@@ -52,6 +52,18 @@
 				</div>			
 			</div>
 			{/if}
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Type:</label>
+				<div class="col-sm-5">
+					<select name="mailing[type_id]" class="form-control">
+						<option value=""></option>
+						{foreach $types as $type}
+						<option value="{$type.id}">{$type.libelle}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
 			
 		</fieldset>
 		<fieldset>

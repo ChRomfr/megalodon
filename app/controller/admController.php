@@ -254,4 +254,43 @@ class admController extends Controller{
 		// On lui affiche de nouveau la liste des contacts
 		return $this->contacts_maintenanceAction();
 	}
+
+	public function mailingtypeAction(){
+		$types = new mailing_type();
+		
+		$this->registry->smarty->assign('types', $types->get());
+		
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailingtype.shark');
+	}
+
+	/**
+	 * Affiche et traite le formulaire pour ajouter un type de mailing
+	 * @return [type] [description]
+	 */
+	public function mailingtype_addAction(){
+
+		if(!is_null($this->registry->Http->post('type'))){
+			$type = new mailing_type($this->registry->Http->post('type'));
+			if(!empty($type->libelle)){
+				$type->save();
+				$this->registry->Helper->pnotify('Type ajouté', 'Nouveau type de mailing ajouté');
+			}
+			return $this->mailingtypeAction();
+		}
+
+		// envoie du formulaire
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailingtype_add.shark');
+	}
+
+	public function mailingtype_editAction(){
+
+	}
+
+	public function mailingtype_deleteAction($type_id){
+		$type = new mailing_type();
+		$type->get($type_id);
+		$type->delete($type->id);
+		$this->registry->Helper->pnotify('Type supprime', 'Le type a été supprimé');
+		return $this->mailingtypeAction();
+	}
 }
