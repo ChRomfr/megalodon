@@ -14,7 +14,6 @@ class categorieController extends Controller{
 			return $i->indexAction();
 		}
 	}
-
 	
 	public function indexAction(){
 

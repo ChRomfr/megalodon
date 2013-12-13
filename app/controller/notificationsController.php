@@ -24,4 +24,15 @@ class notificationsController extends Controller{
 		$this->registry->db->update('notifications', array('is_read' => 1), array('user_id =' => $user_id));
 	}
 
+	public function viewallAction($user_id = null){
+		if( empty($user_id) )
+			$user_id = $_SESSION['utilisateur']['id'];
+
+		$notifications = $this->registry->db->get('notifications', array('user_id =' => $user_id, 'is_delete =' => 0), 'date_notification DESC' ,100);
+
+		$this->registry->smarty->assign('notifications', $notifications);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'notifications' . DS . 'viewall.shark');
+	}
+
 }

@@ -50,7 +50,9 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">M€G</a>
+          <a class="navbar-brand" href="#">
+          	<img alt="M&euros;H" src="http://www.sharkphp.com/web/images/sharkphp_white.png" style="height:20px;">
+          </a>
         </div>
         <div class="navbar-collapse collapse">
 		<!--
@@ -72,10 +74,19 @@
             </li>
           </ul>
 		  -->
+		  <form class="navbar-form navbar-left" role="search" method="get" action="{$Helper->getLink("contacts/index")}">
+			  <div class="form-group">
+			    <input type="text" name="filtre[query]" value="{if isset($smarty.get.filtre.query) && !empty($smarty.get.filtre.query)}{$smarty.get.filtre.query}{/if}" class="form-control" placeholder="Search">
+			  </div>
+			  <input type="hidden" name="filtre[societe_contact]" value="1" />
+			  <input type="hidden" name="filtre[societes]" value="1" />
+			  <input type="hidden" name="filtre[particulier]" value="1" />
+			  <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
+			</form>
+
           <ul class="nav navbar-nav navbar-right">
 			{if $smarty.session.utilisateur.id != 'Visiteur'}
-			<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i></a></li>
-			<li><a href="{$Helper->getLink("connexion/logout")}" title="Deconnexion"><i class="glyphicon glyphicon-off"></i></a></li>
+			
 			<li class="dropdown">		
 				<a id="notification-icon" class="notifications notification-icon dropdown-toggle" data-toggle="dropdown" href="#">				    	
 					<i class="glyphicon glyphicon-globe"></i>
@@ -100,8 +111,22 @@
 			        {/if}			        
 			    </ul>			
 			</li>
+
+			<li class="dropdown">
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> <b class="caret"></b></a>
+				<ul class="dropdown-menu">
+					<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i> Profil</a></li>
+					<li class="divider"></li>
+					<li><a href="{$Helper->getLink("tasks/mytasks")}" title="Mes tâches"><i class="fa fa-tasks"></i> Tâches</a></li>
+					<li><a href="{$Helper->getLink("notifications/viewall")}" title="Notifications"><i class="fa fa-globe"></i> Notifications</a></li>
+					<li class="divider"></li>
+					<li><a href="{$Helper->getLink("connexion/logout")}" title="Deconnexion"><i class="glyphicon glyphicon-off"></i> Deconnexion</a></li>
+				</ul>
+			</li>
+			
 			{/if}
           </ul>
+          
         </div><!--/.nav-collapse -->
       </div>
     </div>

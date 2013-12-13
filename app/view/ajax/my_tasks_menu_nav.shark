@@ -1,14 +1,33 @@
 {if !empty($mytasks)}
 <hr/>
-Mes taches
-	<ul class="stasks-list">
+<i class="fa fa-tasks"></i>Mes taches
+	<ul class="list-group" id="nav-task-list">
 	{foreach $mytasks as $row}
-		<li>
-			<div class="stasks-checkbox"><input type="checkbox" value="{$row.id}" /></div>
-			<div class="stasks-task">{if !empty($row.link)}<a href="{$row.link}" title="">{/if}{$row.task}{if !empty($task.link)}</a>{/if}</li></div>
-			<div class="stasks-config"></div>
-			<div class="clearfix"></div>
+		<li class="list-group-item">
+			<input type="checkbox" value="{$row.id}" onclick="task_process({$row.id})"/>
+			{if !empty($row.link)}<a href="{$row.link}" title="">{/if}<span id="task-id-{$row.id}">{$row.task}{if !empty($task.link)}{/if}</span></a>
 		</li>
 	{/foreach}
 	</ul>
 {/if}
+<script type="text/javascript">
+<!--
+function task_process(tid){
+	$.get(
+        '{$Helper->getLink("tasks/set_process/'+tid+'")}',{literal}
+		{nohtml:'nohtml'},        
+        function(data){
+        	$('#task-id-'+tid+'').css('text-decoration','line-through');
+        	$(function(){
+	    	    $.pnotify({
+				    title: 'Tache terminée',
+				    text: 'Tache marqué comme terminée.',
+				    type: 'success',
+				    hide: true,
+				});
+			});
+        }
+    );{/literal}
+}
+//-->
+</script>

@@ -1,0 +1,24 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title=="Accueil">Accueil</a></li>
+	<li class="active">Notifications</li>
+</ol>
+
+<div class="well">
+	<h4><i class="fa fa-globe"></i>&nbsp;&nbsp;Notifications</h4>
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>Notifications</th>
+				<th>Date</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $notifications as $notification}
+			<tr>
+				<td>{$notification.message}</td>
+				<td>{$notification.date_notification}</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>

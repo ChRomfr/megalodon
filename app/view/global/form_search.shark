@@ -4,7 +4,7 @@
 <div class="pull-right" id="select-view-form">
 	<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>
 </div>
-<li class="nav-header hidden-tablet">Filtre</li>
+<li class="nav-header hidden-tablet"><i class="fa fa-search"></i>&nbsp;&nbsp;Recherche</li>
 <div class="clearfix"></div>
 
 <form method="get" action="{$Helper->getLink("contacts/index")}" style="display:none;" id="global-search-form" role="form">
@@ -83,12 +83,12 @@
 	<div class="form-group">
 		<label>Effectif : </label>
 		<div class="row">
-			<div class="col-xs-2">
+			<div class="col-xs-3">
 				<input type="text" name="filtre[effectif_mini]" class="form-control" {if isset($smarty.get.filtre.effectif_mini) && !empty($smarty.get.filtre.effectif_mini)}value="{$smarty.get.filtre.effectif_mini}"{/if} /> 
 			</div>
 			<div class="col-xs-1">à </div>
-			<div class="col-xs-2">
-				<input type="text" name="filtre[effectif_max]" class="form-control col-xs-2" {if isset($smarty.get.filtre.effectif_max) && !empty($smarty.get.filtre.effectif_max)}value="{$smarty.get.filtre.effectif_max}"{/if} />
+			<div class="col-xs-3">
+				<input type="text" name="filtre[effectif_max]" class="form-control col-xs-3" {if isset($smarty.get.filtre.effectif_max) && !empty($smarty.get.filtre.effectif_max)}value="{$smarty.get.filtre.effectif_max}"{/if} />
 			</div>
 		</div>
 	</div>

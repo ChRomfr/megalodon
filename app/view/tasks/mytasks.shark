@@ -1,0 +1,29 @@
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
+	<li class="active">Mes tâches</li>
+</ol>
+
+<div class="well">
+	<h4><i class="fa fa-tasks"></i>&nbsp;&nbsp;Mes tâches</h4>
+	<br/>
+	<table class="table">
+		<thead>
+			<tr>
+				<th></th>
+				<th>Date création</th>
+				<th>Echéance</th>
+				<th>Tache</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $tasks as $task}
+			<tr>
+				<td>{if $task.priority == 3}<i class="fa fa-exclamation-triangle alert-danger"></i>{/if}</td>
+				<td>{if $task.process == 1}<strike>{/if}{$task.date_add}{if $task.process == 1}</strike>{/if}</td>
+				<td>{$task.date_expire}</td>
+				<td>{if $task.process == 1}<strike>{/if}{$task.task}{if $task.process == 1}</strike>{/if}</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>

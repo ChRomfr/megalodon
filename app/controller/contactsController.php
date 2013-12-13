@@ -99,7 +99,7 @@ class contactsController extends Controller{
 				}
 			}
 						
-			$this->registry->smarty->assign('FlashMessage','Contact enregistre');
+			$this->registry->Helper->pnotify('Contact', 'Contact enregistré');
 
 			return $this->detailAction($contact->id);
 		}
@@ -118,7 +118,7 @@ class contactsController extends Controller{
 		$contact = new contacts($data);
 		$contact->isValid();
 		$contact->isDelete = 0;
-
+		
 		// Determination du ctype
 		if(isset($data['ets'])){
 			$contact->ctype = 'societe';

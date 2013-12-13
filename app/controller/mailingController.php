@@ -282,6 +282,7 @@ class mailingController extends Controller{
 			'process'		=>	0,
 			'task'			=>	'Envoyé le mailing '. $mailing->libelle .' (#'.$id.')',
 			'link'			=>	$this->registry->Helper->getLink('mailing/fiche/'. $id),
+			'guid'			=>	uniqid(),
 		);
 
 		foreach($users as $user){
