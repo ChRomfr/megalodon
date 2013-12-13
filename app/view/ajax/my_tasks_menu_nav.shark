@@ -1,6 +1,6 @@
 {if !empty($mytasks)}
 <hr/>
-<i class="fa fa-tasks"></i>Mes taches
+<i class="fa fa-tasks"></i>&nbsp;&nbsp;Mes taches
 	<ul class="list-group" id="nav-task-list">
 	{foreach $mytasks as $row}
 		<li class="list-group-item">

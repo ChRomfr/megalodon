@@ -1,7 +1,7 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("mailing")}" title="Mailing">Mailing</a></li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("mailing")}" title="Mailing"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Mailing</a></li>
 	<li class="active">#{$mailing->id} - {$mailing->libelle}</li>
 </ol>
 
@@ -43,10 +43,21 @@
 				{/if}
 			</td>
 		</tr>
+
+		{if !empty($mailing->type)}
 		<tr>
 			<td>Type :</td>
 			<td><strong>{$mailing->type}</strong></td>
 		</tr>
+		{/if}
+
+		{if !empty($mailing->number)}
+		<tr>
+			<td>Numero :</td>
+			<td>{$mailing->number}</td>
+		</tr>
+		{/if}
+		
 	</table>
 	<hr/>
 	<h4>Cibles du mailing</h4>

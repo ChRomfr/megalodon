@@ -1,10 +1,11 @@
+{strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
-	<li class="active">Administration</li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li class="active"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</li>
 </ol>
 
 <div class="well">
-	<h3>Administration</h3>
+	<h4><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</h4>
 	
 	<ul class="bs-glyphicons">
 
@@ -58,20 +59,23 @@
 		</li>
 	</ul>
 	<hr/>
-	<h3>Statistiques</h3>
+	<h4><i class="fa fa-signal"></i>&nbsp;&nbsp;Statistiques</h4>
 	<div id="adm-stats"></div>
 	<hr/>
-	<div class="container">
+	
 		<div class="row">
-			<div class="col-md-4">
-				<h4>Contacts par type</h4>
-				<div id="contacts-type-repart" style="height:300px;"></div>
+			<div class="col-md-5">
+				<div class="panel panel-primary">
+				  <div class="panel-heading">
+				    <h3 class="panel-title">Contacts par type</h3>
+				  </div>
+				  <div class="panel-body">
+				    <div id="contacts-type-repart" style="height:300px;"></div>
+				  </div>
+				</div>				
 			</div>
-		</div><!-- /row -->
-	</div><!-- /container -->
-
-</div>
-
+		</div></div>
+{/strip}
 <script type="text/javascript">
 <!--
 jQuery(document).ready(function(){

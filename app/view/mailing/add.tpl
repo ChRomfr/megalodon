@@ -1,7 +1,7 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
-	<li><a href="{$Helper->getLink("mailing")}" title="">Mailing</a></li>	
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("mailing")}" title="Mailing"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Mailing</a></li>	
 	<li class="active">
 		{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
 			Nouveau mailing
@@ -57,7 +57,7 @@
 				<label class="col-sm-2 control-label">Type:</label>
 				<div class="col-sm-5">
 					<select name="mailing[type_id]" class="form-control">
-						<option value=""></option>
+						<option value="0"></option>
 						{foreach $types as $type}
 						<option value="{$type.id}">{$type.libelle}</option>
 						{/foreach}

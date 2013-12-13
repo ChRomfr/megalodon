@@ -2,7 +2,7 @@
 <div class="well  well-lg sidebar-offcanvas" id="sidebar" role="navigation">
 	<!--<ul class="nav nav-tabs nav-stacked main-menu"> -->
 		<ul class="nav nav-pills nav-stacked">
-		<li class="nav-header hidden-tablet">Navigation</li>
+		<li class="nav-header hidden-tablet"><!--Navigation--></li>
 		<li><a href="{$Helper->getLink("contacts")}" title="Contacts">Contacts</a></li>
 		{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.campaign_access)}
 		<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>

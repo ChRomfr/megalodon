@@ -1,16 +1,23 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li class="active">Mailings</li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li class="active"><i class="fa fa-envelope"></i>&nbsp;&nbsp;Mailings</li>
 </ol>
 
 <div class="well">
-	<table class="table table-striped">
+	{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_demand)}
+	<div class="pull-right">
+		<a href="{$Helper->getLink("mailing/add")}" title="Nouveau"><i class="fa fa-plus fa-lg"></i></a>
+	</div>
+	{/if}
+	<div class="clearfix"></div>
+	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
 				<th>#</th>
 				<th>Mailing</th>
 				<th>Statut</th>
+				<th>Type</th>
 				<th>Demandeur</th>
 				<th>Date de demande</th>
 				<th>Date d'envoie</th>
@@ -28,6 +35,7 @@
 					{elseif $mailing.valid == 2}<span class="label label-warning">Refuser</span>
 					{/if}
 				</td>
+				<td>{$mailing.type}</td>
 				<td>{$mailing.demandeur}</td>
 				<td>{$mailing.date_wish}</td>
 				<td>{$mailing.date_send}</td>
@@ -35,5 +43,9 @@
 		{/foreach}
 		</tbody>
 	</table>
+	{if isset($Pagination)}
+	<div class="pull-left">{$Pagination->render()}</div>
+	{/if}
+	<div class="clearfix"></div>
 </div>{* /well *}
 {/strip}

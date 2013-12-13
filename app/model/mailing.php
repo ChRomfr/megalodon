@@ -106,6 +106,12 @@ class mailing extends Record{
 	public $caller;
 
 	public $type_id;
+
+	/**
+	 * numero de newsletter
+	 * @var [type]
+	 */
+	public $number;
 	
 	/**
 	*	@NoDb: {"nodb":1}

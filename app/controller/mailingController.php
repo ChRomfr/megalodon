@@ -22,9 +22,16 @@ class mailingController extends Controller{
 	*/
 	public function indexAction(){
 
-		$this->load_manager('mailing');
+		$per_page = 30;
+		$this->load_manager('mailing');	
 
-		$mailings = $this->manager->mailing->get();		
+		$nb = $this->manager->mailing->count();
+		$mailings = $this->manager->mailing->get($per_page, getOffset($per_page));	
+
+		$Pagination = new Zebra_Pagination();
+		$Pagination->records($nb);
+		$Pagination->records_per_page($per_page);
+		$this->registry->smarty->assign('Pagination',$Pagination);	
 
 		$this->registry->smarty->assign('mailings',	$mailings);
 
@@ -117,9 +124,32 @@ class mailingController extends Controller{
 			$mailing->valid = 0;
 			$mailing->date_wish = FormatDateToMySql($mailing->date_wish);
 			
-			$mailing->save();
+			$mid = $mailing->save();
 			
-			$this->registry->smarty->assign('FlashMessage','Demande enregistrée');
+			$this->registry->Helper->pnotify('Mailing','Votre demande a été enregistrée.');
+			
+			// Récuperation des gestionnaires de mailings pour notifications
+			$users = $this->registry->db->get('acl', array('acl =' => 'mailing_valid'));
+
+			// Notification
+			$notification = array(
+				'sender_id'			=>	0,
+				'user_id'			=>	0,
+				'is_read'			=>	0,
+				'is_delete'			=>	0,
+				'date_notification'	=>	date("Y-m-d H:i:s"),
+				'message'			=>	'<a href="'.$this->registry->Helper->getLink('mailing/fiche/'. $mid).'" title=""><i class="fa fa-envelope"></i>&nbsp;Une nouvelle demande de mailing vient d\'être effectuée.</a>',
+				'third_type'		=>	'mailings',
+				'third_id'			=>	$mid
+			);
+
+			// Envoie des notifications
+			foreach ($users as $user) {
+				$notification['user_id'] = $user['user_id'];
+				$this->registry->db->insert('notifications', $notification);
+			}
+
+			// Affichage de la page
 			return $this->indexAction();
 		}
 		$types = new mailing_type();

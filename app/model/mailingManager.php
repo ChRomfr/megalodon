@@ -1,11 +1,16 @@
 <?php
 
 class mailingManager extends BaseModel{
+
+	public function count($where = null){
+		return $this->db->count('mailings', $where);
+	}
 	
 	public function get($limit = 100, $offset = 0, $where = null){
-		return	$this->db->select('m.*, u1.identifiant as demandeur')
+		return	$this->db->select('m.*, u1.identifiant as demandeur, mt.libelle as type')
 				->from('mailings m')
 				->left_join('user u1','m.demand_by = u1.id')
+				->left_join('mailings_type mt','m.type_id = mt.id')
 				->where($where)
 				->order('m.date_wish DESC')
 				->limit($limit)
