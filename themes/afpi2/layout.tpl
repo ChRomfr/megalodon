@@ -8,12 +8,6 @@
 <!--[if IE]><link rel="shortcut icon" type="image/x-icon" href="{$config.url}themes/sharkphp/images/sharkphp.ico" /><![endif]-->
 <link rel="stylesheet" href="{$config.url}themes/font-awesome/css/font-awesome.css" type="text/css" media="screen" />
 <link rel="stylesheet" href="{$config.url}themes/bootstrap3/css/bootstrap.css" type="text/css" media="screen" />
-<!--
-<link rel="stylesheet" href="{$config.url}themes/dashboard/css/opa-icons.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="{$config.url}themes/dashboard/css/charisma-app.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="{$config.url}themes/dashboard/css/uniform.default.css" type="text/css" media="screen" />
-<link rel="stylesheet" href="{$config.url}themes/dashboard/dashboard.css" type="text/css" media="screen" />
-//-->
 <link rel="stylesheet" href="{$config.url}themes/afpi2/css/afpi2.css" type="text/css" media="screen" />
 {if !empty($css_add)}
 {foreach $css_add as $k => $v}
@@ -37,7 +31,6 @@
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->
 </head>
-<!-- <body data-spy="scroll" data-target=".navbar"> -->
 <body>
 {strip}
 	{* Bar de navigation *}
@@ -55,25 +48,6 @@
           </a>
         </div>
         <div class="navbar-collapse collapse">
-		<!--
-          <ul class="nav navbar-nav">
-            <li class="active"><a href="#">Home</a></li>
-            <li><a href="#about">About</a></li>
-            <li><a href="#contact">Contact</a></li>
-            <li class="dropdown">
-              <a href="#" class="dropdown-toggle" data-toggle="dropdown">Dropdown <b class="caret"></b></a>
-              <ul class="dropdown-menu">
-                <li><a href="#">Action</a></li>
-                <li><a href="#">Another action</a></li>
-                <li><a href="#">Something else here</a></li>
-                <li class="divider"></li>
-                <li class="dropdown-header">Nav header</li>
-                <li><a href="#">Separated link</a></li>
-                <li><a href="#">One more separated link</a></li>
-              </ul>
-            </li>
-          </ul>
-		  -->
 		  <form class="navbar-form navbar-left" role="search" method="get" action="{$Helper->getLink("contacts/index")}">
 			  <div class="form-group">
 			    <input type="text" name="filtre[query]" value="{if isset($smarty.get.filtre.query) && !empty($smarty.get.filtre.query)}{$smarty.get.filtre.query}{/if}" class="form-control" placeholder="Search">
@@ -113,7 +87,7 @@
 			</li>
 
 			<li class="dropdown">
-				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> <b class="caret"></b></a>
+				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> {if !empty($smarty.session.utilisateur.prenom)}&nbsp;<strong>{$smarty.session.utilisateur.prenom}</strong>{/if} <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i> Profil</a></li>
 					<li class="divider"></li>

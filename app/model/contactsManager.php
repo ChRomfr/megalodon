@@ -173,29 +173,19 @@ class contactsManager extends BaseModel{
 		
 		// Recuperation societe si personne / pro
 		if(!empty($result['societe_id'])){
-			$result['societe'] = $this->db->get_one('societe', array('id =' => $result['societe_id']));
+			//$result['societe'] = $this->db->get_one('societe', array('id =' => $result['societe_id']));
+			$result['societe'] = $this->db->get_one('societe', array('contact_id =' => $result['societe_id']));
 		}
-		
-		// Recuperation personne si societe
-		if(!empty($result['raison_social'])){
-			$result['contacts']	=	$this->db->select('c.*, p.*, po.libelle as poste, se.libelle as service, c.id as cid')
-									->from('contacts c')
-									->left_join('personne p','c.id = p.contact_id')
-									->left_join('poste po','p.poste_id = po.id')
-									->left_join('service se','p.service_id = se.id')
-									->where(array('p.societe_id =' => $result['sid'], 'c.isDelete !=' => 1))
-									->get();
-		}
-		
+				
 		// Recuperation des logs
-		if( $history == 1){
+		/*if( $history == 1){
 			$result['logs']	=	$this->db->select('cl.*,u.identifiant as log_user')
 									->from('contacts_log cl')
 									->left_join('user u','cl.user_id = u.id')
 									->where(array('cl.contact_id =' => $id))
 									->order('cl.date_log DESC')
 									->get();
-		}
+		}*/
 								
 		// Recuperation des emails
 		$result['emails'] = $this->db->select('ce.*, u.identifiant as email_user')
@@ -206,12 +196,12 @@ class contactsManager extends BaseModel{
 							->get();
 
 		// Recuperation des mailings
-		$result['mailings'] = 	$this->db->select('m.id, m.libelle')
+		/*$result['mailings'] = 	$this->db->select('m.id, m.libelle')
 								->from('mailings m')
 								->left_join('contacts_mailing cm','cm.mailing_id = m.id')
 								->where(array('cm.contact_id =' => $id))
 								->get();
-
+		*/
 		// Recuperation des suivis
 		$result['suivis'] 	= 	$this->db->select('s.*, u.identifiant')
 								->from('contacts_suivi s')
@@ -232,6 +222,27 @@ class contactsManager extends BaseModel{
 		print_r($result);*/
 		
 		return $result;
+	}
+
+	public function getContactsOfSociete($contact_id){
+		return 	$this->db->select('c.*, p.*, po.libelle as poste, se.libelle as service, c.id as cid')
+					->from('contacts c')
+					->left_join('personne p','c.id = p.contact_id')
+					->left_join('poste po','p.poste_id = po.id')
+					->left_join('service se','p.service_id = se.id')
+					//->where(array('p.societe_id =' => $result['sid'], 'c.isDelete !=' => 1))
+					->where(array('p.societe_id =' => $contact_id, 'c.isDelete !=' => 1))
+					->get();
+	}
+
+
+	public function getLogs($contact_id){
+		return $this->db->select('cl.*,u.identifiant as log_user')
+					->from('contacts_log cl')
+					->left_join('user u','cl.user_id = u.id')
+					->where(array('cl.contact_id =' => $contact_id))
+					->order('cl.date_log DESC')
+					->get();
 	}
 
 	public function getByEmail($email, $history = 1){

@@ -116,12 +116,8 @@
 	<div class="form-group">
 		<label>APE :</label>
 		<br/>
-		<select name="filtre[ape_id]" id="filtre-ape-id" class="form-control chozen">
-			<option value=""></option>
-			{foreach $global_ape as $row}
-			<option value="{$row.id}" {if isset($smarty.get.filtre.ape_id) && $smarty.get.filtre.ape_id == $row.id}selected="selected"{/if}>{$row.code}</option>
-			{/foreach}
-		</select>
+		<input type="text" id="form-input-search-ape" class="form-control" />
+		<input type="hidden" name="filtre[ape_id]" id="form-search-ape" value=""/>
 	</div>
 	
 	{* Filtre sur les types *}
@@ -155,5 +151,21 @@ function hidesearchform(){
 	$('#global-search-form').css('display','none');
 	$('#select-view-form').html('<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>');
 }
+
+jQuery(document).ready(function(){
+	$('#form-input-search-ape').autocomplete({
+		source : '{$Helper->getLink("ajax/search_ape?nohtml=nohtml")}',
+		minLength: 2,
+		dataType: "json",
+		selectFirst: true,
+		delay: 0,
+		select: function(e, ui){
+			var selectObj = ui.item;
+			$(this).val(selectObj.label)
+			$("#form-search-ape").val( ui.item.value );
+			return false;
+		}
+	});	
+});
 //-->
 </script>

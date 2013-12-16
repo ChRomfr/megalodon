@@ -67,4 +67,15 @@ class ajaxController extends Controller{
 		$this->registry->smarty->assign('mytasks', $tasks);
 		return $this->registry->smarty->fetch(VIEW_PATH . 'ajax' . DS . 'my_tasks_menu_nav.shark');
 	}
+	
+	/**
+	*	Permet de recherche l id d un code ape dans la base
+	*	@param string code ape a recherche
+	*	@return json liste des codes APE et IP correspondant a la recherche
+	*/
+	public function search_apeAction(){
+		$search = $this->registry->HTTPRequest->getData('term');
+		$results = $this->registry->db->select('code as label, id as value')->from('ape')->where_free('code LIKE "%'. $search .'%"')->limit(10)->get();
+		return json_encode($results);
+	}
 }

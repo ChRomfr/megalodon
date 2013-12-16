@@ -203,26 +203,10 @@
         <!-- END tab-suivis -->
 
         <div id="tabMailingSend" class="tab-pane">
-        	{if count($contact.mailings) == 0}
-        		<div class="text-center alert">Ce contact n'a reçu aucun mailing</div>
-        	{else}
-			<table class="table table-striped table-condensed">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Mailing</th>
-					</tr>
-				</thead>
-				<tbody>
-				{foreach $contact.mailings as $row}
-					<tr>
-						<td>{$row.id}</td>
-						<td>{$row.libelle}</td>
-					</tr>
-				{/foreach}
-				</tbody>
+			<table class="table table-striped table-condensed" id="table-contacts-mailings">
+				<thead><tr><th>#</th><th>Mailing</th></tr></thead>
+				<tbody></tbody>
 			</table>
-        	{/if}
         </div>
 		
 		<!-- START tab Doublons -->
@@ -285,7 +269,7 @@
 						<td><a href="{$Helper->getLink("contacts/detail/{$row.contacts_id}")}" title="Detail">{$row.contacts_id}</a></td>
 						<td>{$row.raison_social}</td>
 						<td>{$row.ville}</td>
-						<td><a href="javascript:agenceRemove({$row.contacts_id}, {$contact.contact_id})" title=""><i class="icon icon-trash"></i></td>
+						<td><a href="javascript:agenceRemove({$row.contacts_id}, {$contact.contact_id})" title=""><i class="fa fa-trash-o"></i></td>
 					</tr>
 				{/foreach}
 				</tbody>
@@ -325,7 +309,7 @@
 						<td>{$file.identifiant}</td>
 						<td>{$file.date_add}</td>
 						{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
-						<td><a href="javascript:deleteFile({$file.id});" title="Supprimer ce fichier"><i class="icon icon-trash"></i></a></td>
+						<td><a href="javascript:deleteFile({$file.id});" title="Supprimer ce fichier"><i class="fa fa-trash-o"></i></a></td>
 						{/if}
 					</tr>
 					{/foreach}
@@ -349,7 +333,7 @@
 		
 		{if $smarty.session.utilisateur.historique_contact == 1}
 		<div id="tabContactsLogs" class="tab-pane active">
-			<table class="table table-condensed">
+			<table class="table table-condensed" id="table-contacts-logs">
 				<thead>
 					<tr>
 						<th>Date</th>
@@ -357,15 +341,7 @@
 						<th>Log</th>
 					</tr>
 				</thead>
-				<tbody>
-				{foreach $contact.logs as $row}
-					<tr>
-						<td>{$row.date_log}</td>
-						<td>{$row.log_user}</td>
-						<td>{$row.log}</td>
-					</tr>
-				{/foreach}
-				</tbody>
+				<tbody></tbody>
 			</table>
 		</div>
 		{/if}
@@ -401,7 +377,7 @@
 				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title="Ajouter un contact"><i class="fa fa-plus"></i></a>
 			</div>
 			<div class="clearfix"></div>
-			<table class="table">
+			<table class="table" id="table-contacts-societe">
 				<thead>
 					<tr>
 						<th>Contact</th>
@@ -410,21 +386,11 @@
 						<th>Poste</th>
 					</tr>
 				</thead>
-				<tbody>
-					{foreach $contact.contacts as $row}
-					<tr>
-						<td><a href="{$Helper->getLink("contacts/detail/{$row.cid}")}" title="">{$row.prenom}&nbsp;{$row.nom}</a></td>
-						<td>{$row.email}</td>
-						<td>{$row.service}</td>
-						<td>{$row.poste}</td>
-					</tr>
-					{/foreach}
-				</tbody>
+				<tbody></tbody>
 			</table>
-		</div>{* /tabContactsOfSociete *}
-		{/if}
-		
-	</div>{* /tab-content *}
+		</div>
+		{/if}		
+	</div>
 	{* END TAB *}
 	
 
@@ -464,8 +430,7 @@ function get_form_suivi(cid){
         {nohtml:'nohtml'},{/literal}
         function(data){
             $("#modal-fiche-contacts-body").html(data);
-        }
-        
+        }        
     );
 
     $('#modal-fiche-contact-label').html('Nouveau suivi');
@@ -478,8 +443,7 @@ function get_form_send_email(cid){
         {nohtml:'nohtml'},{/literal}
         function(data){
             $("#modal-fiche-contacts-body").html(data);
-        }
-        
+        }        
     );
 
     $('#modal-fiche-contact-label').html('Envoie email');
@@ -487,7 +451,7 @@ function get_form_send_email(cid){
 }
 
 function sendUpload(){    
-	$("#uploadStatus").html('<div class="alert alert-info"><img src="{$config.url}web/images/lightbox-ico-loading.gif" alt="" /><br/>Enregistrement en cour ...</div></div>');
+	$("#uploadStatus").html('<div class="alert alert-info"><i class="fa fa-spinner fa-spin fa-lg"></i><br/>Enregistrement en cour ...</div></div>');
 	return true;
 }
 
@@ -496,8 +460,14 @@ function endUpload(result){
 		$("#uploadStatus").html('<div class="alert alert-error">Une erreur est survenu pendant le traitement</div>');
 		$("#FormBienEdit").css('display','block');
 	}else{
-		alert('Fichier enregistré');
-		//$("#uploadStatus").html('<div class="alert alert-success">Bien enregistre</div>');
+		$(function(){
+			$.pnotify({
+				title: 'Fichier',
+				text: 'Fichier ajouté au contact',
+				type: 'success',
+				opacity: .8
+			});
+		});
 		ReloadFiles({$contact.contact_id});
 	    $('#uploadStatus').html('');
 	}
@@ -523,10 +493,8 @@ function GetFormAddPhone(cid){
         {nohtml:'nohtml'},{/literal}
         function(data){
             $("#modal-fiche-contacts-body").html(data);
-        }
-        
+        }        
     );
-
     $('#modal-fiche-contact-label').html('Nouveau telephone');
     $('#modal-fiche-contacts').modal('show');
 }
@@ -563,7 +531,6 @@ function agenceRemove(aid, mother){
 
 // Gmap3
 jQuery(document).ready(function(){
-
 	$(document).ready(function(){
         $('a').tooltip();
     });
@@ -585,14 +552,53 @@ jQuery(document).ready(function(){
         '{$Helper->getLink("contacts/ajax_geoloc_contact/{$contact.contact_id}")}',{literal}
         {nohtml:'nohtml'},{/literal}
         function(data){
-            console.log(data);
-        }
-        
+        }        
     );
     {/if}
-
 });
 
+{if !empty($contact.raison_social)}
+(function($){
+    $.get(
+        '{$Helper->getLink("contacts/get_contacts_societe/{$contact.contact_id}")}', {literal}
+        {nohtml:'nohtml'},
+        function(data){ 
+            var tpl = '<tr><td><a href="javascript:gotofiche({{contact_id}})" title="">{{prenom}} {{nom}}</a></td><td>{{email}}</td><td>{{service}}</td><td>{{poste}}</td></tr>';
+            for( var i in data ){
+                $('#table-contacts-societe').append( Mustache.render(tpl, data[i]) );
+            };
+        },'json'); {/literal}
+})(jQuery);
+{/if}
 
+{if $smarty.session.utilisateur.historique_contact == 1}
+(function($){
+    $.get(
+        '{$Helper->getLink("contacts/get_logs_of_contact/{$contact.contact_id}")}', {literal}
+        {nohtml:'nohtml'},
+        function(data){ 
+            var tpl = '<tr><td>{{date_log}}</td><td>{{log_user}}</td><td>{{& log}}</td></tr>';
+            for( var i in data ){
+                $('#table-contacts-logs').append( Mustache.render(tpl, data[i]) );
+            };
+        },'json'); {/literal}
+})(jQuery);
+{/if}
+
+(function($){
+    $.get(
+        '{$Helper->getLink("contacts/get_mailings_of_contact/{$contact.contact_id}")}', {literal}
+        {nohtml:'nohtml'},
+        function(data){ 
+            var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td></tr>';
+            for( var i in data ){
+                $('#table-contacts-mailings').append( Mustache.render(tpl, data[i]) );
+            };
+        },'json'); {/literal}
+})(jQuery);
+
+function gotofiche(cid){
+	window.location.href = '{$Helper->getLink("contacts/detail/'+cid+'")}';
+}
 //-->
 </script>

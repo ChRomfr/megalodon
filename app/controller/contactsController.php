@@ -78,6 +78,10 @@ class contactsController extends Controller{
 			// Recuperation indormations formulaire
 			$Data = $this->registry->Http->post('contact');
 
+			/*echo"<br/><br/><br/><pre>";
+			print_r($Data);
+
+			exit;*/
 			// Enregistrement du contacts dans la base
 			$contact = $this->contact_add($Data);
 
@@ -1224,5 +1228,42 @@ class contactsController extends Controller{
 		$this->registry->smarty->assign('contact_id', $contact_id);
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-send-email.shark');
+	}
+
+	/**
+	 * [get_contacts_societeAction description]
+	 * @param  [type] $contact_id [description]
+	 * @return [type]             [description]
+	 */
+	public function get_contacts_societeAction($contact_id){
+
+		$this->load_manager('contacts');
+		$contacts = $this->manager->contacts->getContactsOfSociete($contact_id);
+
+		return json_encode($contacts);
+	}
+
+	/**
+	 * [get_logs_of_contactsAction description]
+	 * @param  [type] $contact_id [description]
+	 * @return [type]             [description]
+	 */
+	public function get_logs_of_contactAction($contact_id){
+		$this->load_manager('contacts');
+		$logs = $this->manager->contacts->getLogs($contact_id);
+
+		return json_encode($logs);
+	}
+
+	/**
+	 * [get_mailings_of_contactAction description]
+	 * @param  [type] $contact_id [description]
+	 * @return [type]             [description]
+	 */
+	public function get_mailings_of_contactAction($contact_id){
+		$this->load_manager('mailing');
+		$mailings = $this->manager->mailing->getByContactId($contact_id);
+
+		return json_encode($mailings);
 	}
 }

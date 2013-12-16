@@ -28,4 +28,12 @@ class mailingManager extends BaseModel{
 					->where(array('m.id =' => $id))
 					->get_one();
 	}
+
+	public function getByContactId($contact_id){
+		return 	$this->db->select('m.id, m.libelle')
+				->from('mailings m')
+				->left_join('contacts_mailing cm','cm.mailing_id = m.id')
+				->where(array('cm.contact_id =' => $contact_id))
+				->get();
+	}
 }
