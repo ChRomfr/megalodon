@@ -81,6 +81,9 @@ class mailingController extends Controller{
 		$this->load_manager('mailing');
 		$mailing = new mailing($this->manager->mailing->getById($id));
 		$mailing->cible = unserialize($mailing->cible);
+		
+		if(!empty($mailing->date_send))
+			$this->registry->smarty->assign('nb_destinataires', $this->registry->db->count('contacts_mailing', array('mailing_id =' => $id)));			
 
 		if( isset($mailing->cible['ctype']) ){
 			foreach($mailing->cible['ctype'] as $k => $v){

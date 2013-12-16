@@ -392,8 +392,6 @@
 		{/if}		
 	</div>
 	{* END TAB *}
-	
-
 </div>{* /well *}
 
 {* MODAL GENERIQUE *}
@@ -404,9 +402,7 @@
 				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
 				<h3 id="modal-fiche-contact-label"></h3>
 			</div>
-			<div class="modal-body" id="modal-fiche-contacts-body">
-				
-			</div>
+			<div class="modal-body" id="modal-fiche-contacts-body"></div>
 			<div class="modal-footer">
 				<button class="btn" data-dismiss="modal" aria-hidden="true">Fermer</button>
 			</div>
@@ -485,6 +481,12 @@ function deleteFile(fid){
 		window.location.href = '{$Helper->getLink("contacts/file_delete/'+fid+'")}';
 	}
 }
+
+function DeletePhone(pid){
+	if(confirm('Etes vous sur de vouloir supprimer ce téléphone ?')){
+		window.location.href = '{$Helper->getLink("contacts/phone_delete/'+pid+'")}';
+	}
+}
 {/if}
 
 function GetFormAddPhone(cid){
@@ -499,16 +501,8 @@ function GetFormAddPhone(cid){
     $('#modal-fiche-contacts').modal('show');
 }
 
-function DeletePhone(pid){
-	if(confirm('Etes vous sur de vouloir supprimer ce téléphone ?')){
-		window.location.href = '{$Helper->getLink("contacts/phone_delete/'+pid+'")}';
-	}
-}
-
 function ReloadFiles(cid){
-	// Clean table
 	$('#table-contacts-files').find("tr:gt(0)").remove();
-	// Ajax query
 	$.get(
         '{$Helper->getLink("contacts/get_files/'+cid+'")}',{literal}
         {nohtml:'nohtml',json: 'json'},
@@ -537,7 +531,6 @@ jQuery(document).ready(function(){
 
 	$("#map-contacts").gmap3({
     	marker:{
-      	//address: "Haltern am See, Weseler Str. 151"
       	latLng:[{$contact.lat}, {$contact.lng}]
     	},
     	map:{

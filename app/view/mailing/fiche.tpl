@@ -29,17 +29,22 @@
 		<tr>
 			<td>Status :</td>
 			<td>
-				{if $mailing->valid == 0}
-					En attente
-					{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
-						&nbsp;
-						<a href="javascript:valid({$mailing->id})" title="Valider"><i class="glyphicon glyphicon-ok"></i></a>
-						&nbsp;&nbsp;
-						<a href="javascript:unvalid({$mailing->id})" title="Refuser"><i class="glyphicon glyphicon-remove"></i></a>
+				{if !empty($mailing->date_send)}
+				Envoyé le {$mailing->date_send} à {$nb_destinataires} destinataires
+				{else}
+				
+					{if $mailing->valid == 0}
+						En attente
+						{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
+							&nbsp;
+							<a href="javascript:valid({$mailing->id})" title="Valider"><i class="glyphicon glyphicon-ok"></i></a>
+							&nbsp;&nbsp;
+							<a href="javascript:unvalid({$mailing->id})" title="Refuser"><i class="glyphicon glyphicon-remove"></i></a>
+						{/if}
+					{elseif $mailing->valid == 1}Accepter
+					{elseif $mailing->valid == 2}Refuser<p class="muted">{$mailing->refus}</p>
+					{else}error status
 					{/if}
-				{elseif $mailing->valid == 1}Accepter
-				{elseif $mailing->valid == 2}Refuser<p class="muted">{$mailing->refus}</p>
-				{else}error status
 				{/if}
 			</td>
 		</tr>
@@ -139,13 +144,18 @@
 		{/if}
 		
 	</table>
-	<div id="nb-contacts-for-mailing"></div>
 	
-	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid) || isset($smarty.session.acl.contacts_export_csv)}
-	<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="glyphicon glyphicon-export"></i>&nbsp;Export cible CSV</a>
+	{if empty($mailing->date_send)}
+	<div id="nb-contacts-for-mailing"></div>
 	{/if}
-	&nbsp;&nbsp;
-	<a href="{$link_view}" title="Export des contacts" class="btn btn-info" target="_blank"><i class="fa fa-eye"></i>&nbsp;Voir cible</a>
+	
+	{if empty($mailing->date_send)}
+		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid) || isset($smarty.session.acl.contacts_export_csv)}
+		<a href="{$link_csv}" title="Export des contacts" class="btn btn-success"><i class="glyphicon glyphicon-export"></i>&nbsp;Export cible CSV</a>
+		{/if}
+		&nbsp;&nbsp;
+		<a href="{$link_view}" title="Export des contacts" class="btn btn-info" target="_blank"><i class="fa fa-eye"></i>&nbsp;Voir cible</a>
+	{/if}
 	
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
@@ -180,15 +190,16 @@ function deletemailing(id){
 }
 {/if}
 
+{if !empty($mailing->date_send)}
 jQuery(document).ready(function(){
 	$.get(
         '{$Helper->getLink("mailing/ajax_get_nbcontacts/{$mailing.id}")}',{literal}
         {nohtml:'nohtml'},{/literal}
         function(data){
            $("#nb-contacts-for-mailing").html('<div class="text-center">Nombre de contacts : ' + data + '</div>');
-           console.log(data);
         }       
     );
 });
+{/if}
 //-->
 </script>
