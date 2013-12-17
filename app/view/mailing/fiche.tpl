@@ -62,6 +62,13 @@
 			<td>{$mailing->number}</td>
 		</tr>
 		{/if}
+
+		{if !empty($mailing->caller)}
+		<tr>
+			<td>Demandeur :</td>
+			<td>{$mailing->caller}</td>
+		</tr>
+		{/if}
 		
 	</table>
 	<hr/>

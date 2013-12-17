@@ -1,8 +1,9 @@
 {strip}
-<ul class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a><span class="divider">>></span></li>
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title=""><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</a></li>
 	<li class="active">Organimes</li>
-</ul>
+</ol>
 
 <div class="well">
 	<div class="pull-right">

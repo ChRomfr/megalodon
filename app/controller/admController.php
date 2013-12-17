@@ -73,6 +73,10 @@ class admController extends Controller{
         return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'configuration.shark');
 	}
 
+    public function contactsAction(){
+        
+        return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'contacts.tpl');
+    }
 
 	public function contacts_maintenanceAction(){
 		$this->registry->smarty->assign('contacts_corbeille', $this->registry->db->count('contacts', array('isDelete =' => 1)));

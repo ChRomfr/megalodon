@@ -1,13 +1,23 @@
 {strip}
 <ol class="breadcrumb">
-    <li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-    <li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>
-    <li class="active">Configuration</li>
+    <li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</a></li>
+    <li class="active"><i class="fa fa-wrench"></i>&nbsp;&nbsp;Configuration</li>
 </ol>
 
 <div class="well">
     <form method="post" action="" id="form-edit-config" class="form-horizontal">
         
+        <fieldset>
+            <legend id="configuration-general">Générale</legend>
+            <div class="form-group">
+                <label class="control-label col-sm-2">Pays par défaut:</label>
+                <div class="col-sm-5">
+                    <input type="text" name="config[default_countre]" id="config-default-contry" value="{$config.default_country}" class="form-control"/>
+                </div>
+            </div>
+        </fieldset>
+
         <fieldset>
             <legend id="configuration-auth">Authentification</legend>
             

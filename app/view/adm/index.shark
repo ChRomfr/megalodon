@@ -10,23 +10,9 @@
 	<ul class="bs-glyphicons">
 
 		<li>
-			<a href="{$Helper->getLink("categorie")}" title="">
-				<span class="fa fa-sitemap fa-3x"></span>
-				<span class="glyphicon-class">Catégories</span>
-			</a>
-		</li>
-
-		<li>
-			<a href="{$Helper->getLink("adm/contacts_maintenance")}" title="">
+			<a href="{$Helper->getLink("adm/contacts")}" title="">
 				<span class="fa fa-users fa-3x"></span>
 				<span class="glyphicon-class">Contacts</span>
-			</a>
-		</li>
-
-		<li>
-			<a href="{$Helper->getLink("importafpi")}" title="">
-				<span class="fa fa-upload fa-3x"></span>
-				<span class="glyphicon-class">Importer</span>
 			</a>
 		</li>
 
@@ -34,13 +20,6 @@
 			<a href="{$Helper->getLink("adm/mailingtype")}" title="Mailing">
 				<span class="fa fa-envelope fa-3x"></span>
 				<span class="glyphicon-class">Mailing</span>
-			</a>
-		</li>
-
-		<li>
-			<a href="{$Helper->getLink("organisme")}" title="">
-				<span class="fa fa-puzzle-piece fa-3x"></span>
-				<span class="glyphicon-class">Organismes</span>
 			</a>
 		</li>
 

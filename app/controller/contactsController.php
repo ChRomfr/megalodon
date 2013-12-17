@@ -1134,6 +1134,23 @@ class contactsController extends Controller{
 		return json_encode($results);
 	}
 
+	/**
+	 * Recherche dans la base par rapport a la var GET term passe en parametre et retourne le resultat
+	 * en JSON pour etre traite en JS
+	 * @return json ARRAY du matching
+	 */
+	public function ajax_search_globalAction(){
+		$search = $this->registry->HTTPRequest->getData('term');
+		$results =	$this->registry->db->select('concat_ws(" ",s.raison_social, p.prenom, p.nom)as label, c.id as value')
+					->from('contacts c')
+					->left_join('societe s', 's.contact_id = c.id')
+					->left_join('personne p', 'p.contact_id = c.id')
+					->where_free('s.raison_social LIKE "%'. $search .'%" OR p.nom LIKE "%'.$search.'%" OR c.email LIKE "%'.$search.'%"')
+					->limit(10)
+					->get();
+		return json_encode($results);
+	}
+
 
 	public function phone_deleteAction($pid){
 

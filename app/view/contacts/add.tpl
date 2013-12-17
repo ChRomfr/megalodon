@@ -67,7 +67,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2">Pays :</label>
 					<div class="col-xs-5">
-						<input type="text" name="contact[pays]" id="contact-pays" {if isset($ets)}value="{$ets.pays}"{/if} class="form-control"/>
+						<input type="text" name="contact[pays]" id="contact-pays" {if isset($ets)}value="{$ets.pays}"{else}value="{$config.default_country}"{/if} class="form-control"/>
 					</div>
 				</div>
 				

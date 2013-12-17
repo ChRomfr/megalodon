@@ -50,7 +50,7 @@
         <div class="navbar-collapse collapse">
 		  <form class="navbar-form navbar-left" role="search" method="get" action="{$Helper->getLink("contacts/index")}">
 			  <div class="form-group">
-			    <input type="text" name="filtre[query]" value="{if isset($smarty.get.filtre.query) && !empty($smarty.get.filtre.query)}{$smarty.get.filtre.query}{/if}" class="form-control" placeholder="Search">
+			    <input type="text" name="filtre[query]" value="{if isset($smarty.get.filtre.query) && !empty($smarty.get.filtre.query)}{$smarty.get.filtre.query}{/if}" class="form-control" placeholder="Search" id="search-top-layout">
 			  </div>
 			  <input type="hidden" name="filtre[societe_contact]" value="1" />
 			  <input type="hidden" name="filtre[societes]" value="1" />
@@ -158,6 +158,23 @@
 <!--
 $(".chzn-select").chosen();
 $(".chozen").chosen();
+
+jQuery(document).ready(function(){	
+	$('#search-top-layout').autocomplete({
+		source : '{$Helper->getLink("contacts/ajax_search_global?nohtml=nohtml")}',
+		minLength: 2,
+		dataType: "json",
+		selectFirst: true,
+		delay: 0,
+		select: function(e, ui){
+			var selectObj = ui.item;
+			//$(this).val(selectObj.label)
+			//$("#societe-id").val( ui.item.value );
+			window.location.href = '{$Helper->getLink("contacts/detail/'+ui.item.value+'")}';
+			return false;
+		}
+	});	
+})
 
 {if isset($FlashMessage) && !empty($FlashMessage)}
 $(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{$FlashMessage}</div>');

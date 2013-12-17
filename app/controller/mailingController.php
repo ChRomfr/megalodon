@@ -45,7 +45,6 @@ class mailingController extends Controller{
 	public function calendrierAction(){
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
-        $this->registry->load_web_lib('fullcalendar/fullcalendar.print.css','css');
         $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'calendar.tpl');
 	}
@@ -59,14 +58,16 @@ class mailingController extends Controller{
 		
 		$this->load_manager('mailing');
 
-		$Datas = $this->registry->db->get('mailings', array('valid =' => 1));
+		$Datas = $this->registry->db->get('mailings', array('valid != ' => 2));
 		
 		foreach($Datas as $Data){
         	$mailings[] = array(
-				'id' => $Data['id'], 
-				'title' => $Data['libelle'], 
-				'start' => $Data['date_wish'],
-				'url' => $this->registry->Helper->getLink('mailing/fiche/'. $Data['id']));
+				'id' 			=> 	$Data['id'], 
+				'title' 		=> 	$Data['libelle'], 
+				'start' 		=> 	$Data['date_wish'],
+				'url' 			=> 	$this->registry->Helper->getLink('mailing/fiche/'. $Data['id']),
+				'backgroundColor'	=>	$Data['valid'] == 0 ? '#999999' : '#5cb85c',
+			);
         }
 		
 		return json_encode($mailings);

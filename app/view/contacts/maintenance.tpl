@@ -1,9 +1,10 @@
 {* app/view/contacts/maintenance.tpl *}
-
-<ul class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li class="active">Maintenance</li>
-</ul>
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</a></li>
+    <li><a href="{$Helper->getLink("adm/contacts")}" title="Contacts"><i class="fa fa-users"></i>&nbsp;&nbsp;Contacts</a></li>   
+    <li class="active">Maintenance</li>
+</ol>
 
 <div class="well">
 	<h4>Contacts à la corbeille</h4>

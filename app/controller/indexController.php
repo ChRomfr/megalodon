@@ -13,7 +13,6 @@ class indexController extends Controller{
 		
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
-        $this->registry->load_web_lib('fullcalendar/fullcalendar.print.css','css');
         $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
 
 		$stats = array(
