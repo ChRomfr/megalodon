@@ -1,0 +1,15 @@
+<!-- START adm/form_contacts_postes -->
+<form method="post" action="{if isset($poste)}{$Helper->getLink("adm/contacts_postes_edit/{$poste.id}")}{else}{$Helper->getLink("adm/contacts_postes_add")}{/if}" id="form-contacts-postes" class="form-horizontal">
+
+	<div class="form-group">
+		<label class="label-control col-md-2">Libelle :</label>
+		<div class="col-md-5">
+			<input type="text" name="poste[libelle]" id="poste-libelle" required {if isset($poste)}value="{$poste.libelle}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+</form>
+<!-- END adm/form_contacts_postes -->

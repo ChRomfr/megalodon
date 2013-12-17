@@ -84,6 +84,44 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'maintenance.tpl');
 	}
 
+	public function contacts_postesAction(){
+		$this->registry->smarty->assign('postes', $this->registry->db->get('poste', null, 'libelle'));
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_postes.tpl');
+	}
+
+	public function contacts_postes_deleteAction($pid){
+		// Suppression du poste dans la base
+		$this->registry->db->delete('poste', $pid);
+
+		// Mise a jour des contacts
+		$this->registry->db->update('personne', array('poste_id' => NULL), array('poste_id =' => $pid));
+
+		// Notification
+		$this->registry->Helper->pnotify('Poste','Poste supprimé. Les contacts ont été mise a jour.');
+
+		return $this->contacts_postesAction();
+	}
+
+	/**
+	 * Traite le formulaire d ajout d'un poste dans la base
+	 * @return [type] [description]
+	 */
+	public function contacts_postes_addAction(){
+		if(!is_null($this->registry->Http->post('poste'))){
+			$poste = $this->registry->Http->post('poste');
+			$this->registry->db->insert('poste', $poste);
+			$this->registry->Helper->pnotify('Postes', 'Poste ajouté à la base');
+		}
+
+		return $this->contacts_postesAction();
+	}
+
+	public function contacts_postes_load_formAction($poste_id = null){
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'form_contacts_postes.shark');
+	}
+
 	public function users_indexAction(){
 		$users = $this->registry->db->get('user');
 

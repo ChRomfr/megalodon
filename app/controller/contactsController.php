@@ -1151,7 +1151,6 @@ class contactsController extends Controller{
 		return json_encode($results);
 	}
 
-
 	public function phone_deleteAction($pid){
 
 		$phone =  new telephone();

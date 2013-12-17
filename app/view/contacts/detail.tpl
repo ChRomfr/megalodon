@@ -347,6 +347,7 @@
 		{/if}
 		
 		<div id="tabContactsEmailSend" class="tab-pane">
+			<br/>
 			<table class="table table-condensed">
 				<thead>
 					<tr>
