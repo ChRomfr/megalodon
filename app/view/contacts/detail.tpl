@@ -1,8 +1,8 @@
 <!-- app/view/contacts/detail.tpl -->
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("contacts")}" title="Contacts">Contacts</a></li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-users"></i>&nbsp;&nbsp;Contacts</a></li>
 	<li class="active">
 		{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}
 	</li>
@@ -62,7 +62,7 @@
 				{elseif $row.type == 5}Fax
 				{/if}
 			</td>
-			<td>{$row.telephone}&nbsp;&nbsp;<a href="javascript:DeletePhone({$row.id});" title="Supprimer"><i class="icon icon-trash"></i></a></td>
+			<td>{$row.telephone}&nbsp;&nbsp;<a href="javascript:DeletePhone({$row.id});" title="Supprimer"><i class="fa fa-trash-o"></i></a></td>
 		</tr>
 		{/foreach}
 		

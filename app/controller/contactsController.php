@@ -1161,7 +1161,7 @@ class contactsController extends Controller{
 		$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $phone->contact_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Telephone - suppression du telephone #'. $phone->id . ' - '. $phone->telephone));
 		$clog->save();
 
-		$this->registry->smarty->assign('FlashMessage','Téléphone supprimé');
+		$this->registry->Helper->pnotify('Téléphone', 'Téléphone retiré du contact');		
 
 		return $this->detailAction($phone->contact_id);
 	}
