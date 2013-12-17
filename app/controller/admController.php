@@ -136,9 +136,15 @@ class admController extends Controller{
 
 		// Request mailing
 		$stats['nb_mailing'] = $this->registry->db->count('mailings', array('date_wish >=' => date('Y-m-d')));
-
+        
+        // Recuperation du nombre de contacts
+        $stats['nb_contacts'] = $this->registry->db->count('contacts', array('isDelete = ' => 0));
+        $stats['nb_contacts_clients'] = $this->registry->db->count('contacts', array('isDelete =' => 0, 'client =' => 1));
+        
+        // Envoie des stats a smarty
 		$this->registry->smarty->assign('stats', $stats);
-
+        
+        // Envoie du code HTML
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'ajax_stats.shark');
 	}
 
@@ -154,6 +160,25 @@ class admController extends Controller{
 		$data[] = array('label' => 'Contact', 'data' => $this->registry->db->count('contacts', array('ctype =' => 'societe_contact')));
 
 		return json_encode($data,JSON_NUMERIC_CHECK);
+	}
+	
+    /**
+    * Genere les stats pour graphique
+    * @return json  
+    */
+	public function ajax_dataforgraph_repart_mailing_typeAction(){
+        $data = array();
+        
+        // Recuperation des types
+        $types = $this->registry->db->get('mailings_type');
+        
+        // Parcours les types
+        foreach($types as $type){
+            $data[] = array('label' => $type['libelle'], 'data' => $this->registry->db->count('mailings', array('type_id =' => $type['id'])));
+        }
+        
+        // envoie du resultat au format JSON
+        return json_encode($data, JSON_NUMERIC_CHECK);
 	}
 
 	public function contacts_delete_by_email_step1Action(){

@@ -1,3 +1,4 @@
+{strip}
 <table class="table table-condensed table-striped">
 	<tr>
 		<td>Campagne en cour :</td><td>{$stats.nb_campaign}</td>
@@ -5,4 +6,11 @@
 	<tr>
 		<td>Mailings à venir :</td><td>{$stats.nb_mailing}</td>
 	</tr>
+    <tr>
+        <td>Contacts :</td><td>{$stats.nb_contacts}</td>
+    </tr>
+    <tr>
+        <td>Clients :</td><td>{$stats.nb_contacts_clients} ({round(($stats.nb_contacts_clients*100)/$stats.nb_contacts)}%)</td>
+    </tr>
 </table>
+{/strip}

@@ -74,6 +74,18 @@
 				  </div>
 				</div>				
 			</div>
+            
+            <div class="col-md-5">
+                <div class="panel panel-primary">
+                  <div class="panel-heading">
+                    <h3 class="panel-title">Mailings par type</h3>
+                  </div>
+                  <div class="panel-body">
+                    <div id="mailings-type-repart" style="height:300px;"></div>
+                  </div>
+                </div>                
+            </div>
+            
 		</div></div>
 {/strip}
 <script type="text/javascript">
@@ -91,26 +103,48 @@ jQuery(document).ready(function(){
     );{/literal}
 
 	$.getJSON(
-    '{$Helper->getLink("adm/ajax_dataforgraph_repart_constacts")}', {literal}
-    {nohtml:'nohtml'},{/literal}   
-    function(data){     
-        $.plot($("#contacts-type-repart"), data,{
-            series: {
-                pie: {
-                        show: true
-                }
-            },
-            grid: {
-                hoverable: true,
-                clickable: true
-            },      
-            legend: {
-                show: false
-            }
-        }); 
-        
-    }
-);
+		'{$Helper->getLink("adm/ajax_dataforgraph_repart_constacts")}', {literal}
+		{nohtml:'nohtml'},{/literal}   
+		function(data){     
+			$.plot($("#contacts-type-repart"), data,{
+				series: {
+					pie: {
+							show: true
+					}
+				},
+				grid: {
+					hoverable: true,
+					clickable: true
+				},      
+				legend: {
+					show: false
+				}
+			}); 
+			
+		}
+	);
+	
+	$.getJSON(
+		'{$Helper->getLink("adm/ajax_dataforgraph_repart_mailing_type")}', {literal}
+		{nohtml:'nohtml'},{/literal}   
+		function(data){     
+			$.plot($("#mailings-type-repart"), data,{
+				series: {
+					pie: {
+							show: true
+					}
+				},
+				grid: {
+					hoverable: true,
+					clickable: true
+				},      
+				legend: {
+					show: false
+				}
+			}); 
+			
+		}
+	);
 
 });
 //-->
