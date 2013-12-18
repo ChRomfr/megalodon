@@ -90,6 +90,11 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_postes.tpl');
 	}
 
+	/**
+	 * Traite la suppression d'un poste dans la base
+	 * @param  [type] $pid [description]
+	 * @return [type]      [description]
+	 */
 	public function contacts_postes_deleteAction($pid){
 		// Suppression du poste dans la base
 		$this->registry->db->delete('poste', $pid);
@@ -117,7 +122,31 @@ class admController extends Controller{
 		return $this->contacts_postesAction();
 	}
 
+	/**
+	 * Traite le formulaire d'edition d'un poste
+	 * @param  [type] $poste_id [description]
+	 * @return [type]           [description]
+	 */
+	public function contacts_postes_editAction($poste_id){
+		if(!is_null($this->registry->Http->post('poste'))){
+			$poste = $this->registry->Http->post('poste');
+			$this->registry->db->update('poste', $poste, array('id =' => $poste_id));
+			$this->registry->Helper->pnotify('Postes', 'Poste modifié');
+		}
+
+		return $this->contacts_postesAction();
+	}
+
+	/**
+	 * Retourne le formulaire pour ajouter/modifier un poste dans la base
+	 * @param  [type] $poste_id [description]
+	 * @return [type]           [description]
+	 */
 	public function contacts_postes_load_formAction($poste_id = null){
+
+		if(!empty($poste_id)){
+			$this->registry->smarty->assign('poste', $this->registry->db->get_one('poste', array('id =' => $poste_id)));
+		}
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'form_contacts_postes.shark');
 	}

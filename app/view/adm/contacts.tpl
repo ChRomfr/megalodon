@@ -40,7 +40,7 @@
 		</li>
 
 		<li>
-			<a href="#" title="">
+			<a href="{$Helper->getLink("adm/contacts_postes")}" title="Dictionnaire des potes">
 				<span class="fa fa-suitcase fa-3x"></span>
 				<span class="glyphicon-class">Postes</span>
 			</a>

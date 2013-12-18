@@ -28,6 +28,8 @@
 				<td>{$poste.id}</td>
 				<td>{$poste.libelle}</td>
 				<td>
+					<a href="javascript:get_form_edit_poste({$poste.id})" title="Modifier"><i class="fa fa-edit"></i><a>
+					&nbsp;&nbsp;
 					<a href="javascript:delete_poste({$poste.id});" title="Supprimer"><i class="fa fa-trash-o"></i></a>
 				</td>
 			</tr>
@@ -53,6 +55,18 @@ function get_form_new_poste(){
         }        
     );
     $('#modal-global-label').html('<i class="fa fa-suitcase"></i>&nbsp;&nbsp;Nouveau poste');
+    $('#modal-global').modal('show');
+}
+
+function get_form_edit_poste(pid){
+	$.get(
+        '{$Helper->getLink("adm/contacts_postes_load_form/'+pid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-suitcase"></i>&nbsp;&nbsp;Modification poste');
     $('#modal-global').modal('show');
 }
 //-->
