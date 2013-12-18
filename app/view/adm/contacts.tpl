@@ -47,7 +47,7 @@
 		</li>
 
 		<li>
-			<a href="#" title="">
+			<a href="{$Helper->getLink("adm/contacts_services")}" title="Dictionnaire des services">
 				<span class="fa fa-flag fa-3x"></span>
 				<span class="glyphicon-class">Services</span>
 			</a>
