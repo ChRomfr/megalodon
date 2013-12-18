@@ -422,6 +422,151 @@ class mailingController extends Controller{
 			
 		return $this->manager->contacts->count($where);
 	}
+
+	public function import_statsAction($mailing_id){
+
+		$this->registry->smarty->assign('mailing_id', $mailing_id);
+
+		if(!is_null($this->registry->Http->post('fs'))){
+			// Traitement du fichier
+			$dir = ROOT_PATH . 'web' . DS . 'upload' . DS . 'csv' . DS;
+		
+			require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'upload' . DS . 'class.upload.php';
+			
+			if(!is_dir($dir))
+				@mkdir($dir);			
+			
+	        $fichier = new Upload($_FILES['file_stats']);
+	        $name = uniqid();
+
+	        if($fichier->uploaded){
+	            $fichier->file_overwrite 		= true;
+	            $fichier->file_new_name_body  	= $name;
+				$fichier->file_new_name_ext		= 'csv';
+	            $fichier->process($dir);
+
+	            // On traite le fichier
+	            $lines = file(ROOT_PATH . 'web' . DS . 'upload' . DS . 'csv' . DS . $name .'.csv');
+
+	            // On verifie que le fichier comporte des lignes
+	            if(count($lines) == 1){
+	            	$this->registry->smarty->assign('FlashMessage', 'Le fichier envoye ne contient aucune ligne');
+					goto printform;
+				}
+
+				$this->load_manager('contacts');
+				$contacts = array();
+
+				$i = 0;
+				$stats_file = array(
+					'not_in_db'		=>	0,
+					'open'			=>	0,
+					'not_open'		=>	0,
+					'db_contact'	=>	$this->registry->db->count('contacts_mailing', array('mailing_id =' => $mailing_id)),
+					'file_contact'	=>	count($lines),
+				);
+				
+				foreach($lines as $row){
+					// On traite pas la 1er ligne car entete
+					if($i == 0)
+						goto nextboucle;
+
+					$data = str_getcsv($row,';');
+
+					// Recherche du contact dans la base
+					$result = $this->registry->db->get_one('contacts', array('email =' => $data[0]));
+					
+					if(!$result){
+						$stats_file['not_in_db']++;
+						goto nextboucle;
+					}
+						
+					$result_mailing = array(
+						'mailing_id'		=>	$mailing_id,
+						'contact_id'		=>	$result['id'],
+						'open'				=>	0,
+						'date_open'			=>	NULL,
+						'in_stat'			=>	1,
+					);
+					
+					if($data['1'] == 'oui' || $data['1'] == 'o' || $data['1'] == 'yes' || $data['1'] == 'y'){
+						$result_mailing['open'] = 1; 
+						$stats_file['open']++;
+					}else{
+						$stats_file['not_open']++;
+					}
+
+					//$this->registry->db->update('contacts_mailing', $result_mailing, array('contact_id' => $result['id'], 'mailing_id =' => $mailing_id));
+
+					nextboucle:
+					$i++;
+				}
+			
+				$this->registry->smarty->assign('stats', $stats_file);
+			}
+		}
+
+		printform:
+		$this->registry->smarty->assign('savoir_inutile', getSavoirInutile());
+		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'import_stats.shark');
+	}
+
+	public function get_contacts_not_in_statsAction($mailing_id){
+		$contacts =  $this->registry->db->select(' DISTINCT(c.id), concat_ws("",s.raison_social, p.nom) as nom, p.prenom, c.email')
+						->from('contacts_mailing cm')
+						->left_join('contacts c','c.id = cm.contact_id')
+						->left_join('personne p','c.id = p.contact_id')
+						->left_join('societe s','c.id = s.contact_id')						
+						->where(array('cm.in_stat !=' => 1, 'cm.mailing_id =' => $mailing_id))
+						->limit(50)
+						->offset(getOffset(50))
+						->get();
+
+		return json_encode($contacts);
+	}
+
+	public function remove_invalid_emails($mailing_id){
+		// Verification droit utilisateur
+		if( $_SESSION['utilisateur']['isAdmin'] == 0){
+			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas les droits pour effectuer cette action !');
+			return $this->indexAction();
+		}
+
+		// Verification que le formulaire est appellé de la bonne page avec un contenu
+		if(is_null($this->registry->Http->post('contacts'))){
+			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas selectionner de contact !');
+			return $this->indexAction();
+		}
+
+		// Recuperation des contacts dans une variable
+		$datas = $this->registry->Http->post('contacts');
+		
+		// On boucle sur les données pour les mettre a la corbeille
+		foreach($datas as $data){
+			foreach($data as $k => $v){
+				$contact = new contacts();
+				$contact->get($k);
+				$old_email = $contact->email;
+				$contact->email = NULL;
+				$contact->save();
+
+				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $k, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression email par fichier. Ancien adresse email : '. $old_email));
+				$clog->save();
+				echo "<pre>"; print_r($contact); echo "</pre>";
+			}
+			
+		}
+
+		// Message a l utilisateur
+		$this->registry->smarty->assign('FlashMessage','Emails supprimes');
+
+		// On lui affiche de nouveau la liste des contacts
+		return '';
+	}
+
+	public function invalid_emailsAction($mailing_id){
+
+	}
 	
 	/**
 	*	Contruit le lien vers le fichier CSV pour exporter les contacts

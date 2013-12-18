@@ -1,0 +1,179 @@
+<!-- START mailing/import_stats -->
+<ol>
+
+</ol>
+
+{if !isset($stats)}
+<div class="well">
+	<div id="form-import-stats">
+		<form method="post" action="#" enctype="multipart/form-data" class="form" onsubmit="return submit_form();">
+			<fieldset>
+				
+				Pré requis : 
+					<ul>
+						<li>Fichier au format CSV</li>
+						<li>Séparateur : <strong>;</strong></li>
+						<li>Champ : email;open;date</li>
+					</ul>
+				<br/>
+				<div class="form-group">
+					<label class="col-sm-2 control-label">Fichier :</label>
+					<div class="col-sm-5">
+					<input type="file" name="file_stats" id="file_stats" class="form-control" required/>
+					</div>
+				</div>	
+				
+			</fieldset>
+			<div class="text-center">
+				<hr/>
+				<input type="hidden" name="token" value="{$smarty.session.token}" />
+				<input type="hidden" name="fs" value="1" />
+				<button type="submit" class="btn btn-primary">Envoyer</button>
+				&nbsp;&nbsp;
+				<a href="#" class="btn btn-danger">Annuler</a>
+			</div>
+		</form>
+	</div>
+	<div id="progress-form-import-stats" style="display:none">
+		<div class="bs-callout bs-callout-warning">
+      		<h4>Traitement du fichier</h4>
+      		<p>Analyse du fichier et generation des statistiques ...</p>
+    	</div>
+
+		<div class="progress">
+      		<div class="progress-bar progress-striped active" style="width: 0%;"></div>
+    	</div>
+
+    	{if isset($savoir_inutile)}
+    	<div id="savoir-inutile">
+	    	<div class="bs-callout bs-callout-info">
+	      		<h4>{$savoir_inutile.title}</h4>
+	      		<p>{$savoir_inutile.description}</p>
+	    	</div>
+    	</div>
+    	{/if}
+	</div>
+</div>
+{else}
+<div class="well">
+	<h4><i class="fa fa-signal"></i>&nbsp;&nbsp;Statistiques</h4>
+	<br/>
+	<table class="table table-condensed table-striped">
+
+		<tr>
+			<td>Nombre de destinataire réel :</td>
+			<td>{$stats.file_contact}</td>
+		</tr>
+
+		<tr>
+			<td>Nombre de destinatire en base :</td>
+			<td>{$stats.db_contact}</td>
+		</tr>
+
+		<tr>
+			<td>Ouverture :</td>
+			<td>{$stats.open} {round(($stats.open*100)/$stats.file_contact)}%</td>
+		</tr>
+	</table>
+	<br/>
+	<hr/>
+	<h4>Emails invalide</h4>
+	<div class="alert alert-info">Cette liste est limitée à 50 emails</div>
+	<div id="progress-contacts-not-in-stats">
+		<div class="progress">
+      		<div class="progress-bar progress-striped active" style="width: 0%;"></div>
+    	</div>
+
+    	{if isset($savoir_inutile)}
+    	<div id="savoir-inutile">
+	    	<div class="bs-callout bs-callout-info">
+	      		<h4>{$savoir_inutile.title}</h4>
+	      		<p>{$savoir_inutile.description}</p>
+	    	</div>
+    	</div>
+    	{/if}
+	</div>
+
+	<div id="contacts-not-in-stats" class="display:none;">
+		<table id="table-progress-contacts-not-in-stats" class="table table-striped table-condensed">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Contact</th>
+					<th>Email</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody></tbody>
+		</table>
+	</div><!-- /contacts-not-in-stats -->
+
+</div>
+{/if}
+<script type="text/javascript">
+function submit_form(){
+	$('#form-import-stats').css('display','none');
+	$('#progress-form-import-stats').css('display','block');
+
+	var progress = setInterval(function() {
+      var $bar = $('.progress-bar');
+      
+      if ($bar.width()=='100%') {
+          $bar.width('100%');
+      } else {
+          $bar.width($bar.width()+40);
+      }
+  	}, 100);
+
+	return true;
+}
+{if isset($stats)}
+$(document).ready(function() {
+
+	var progress = setInterval(function() {
+      var $bar = $('.progress-bar');      
+      if ($bar.width()=='100%') {
+          $bar.width('100%');
+      } else {
+          $bar.width($bar.width()+40);
+      }
+  	}, 100);
+
+	$.get(
+        '{$Helper->getLink("mailing/get_contacts_not_in_stats/{$mailing_id}")}',{literal}
+        {nohtml:'nohtml'},
+         function(data){
+	    	var tpl = '<tr><td>{{id}}</td><td>{{nom}} {{prenom}}</td><td>{{email}}</td><td><a href="javascript:add_task({{id}});" title="Ajouter une tache"><i class="fa fa-flag"></i></a></td><td><input type="checkbox" name="contacts[][{{id}}]" /></td></tr>';
+	    	for( var i in data ){      
+	        	$('#table-progress-contacts-not-in-stats').append( Mustache.render(tpl, data[i]) );
+	    	}
+
+	    	$("#table-progress-contacts-not-in-stats").tablesorter({sortList:[[0,0]], widgets: ['zebra']});
+
+	    },'json'{/literal}
+    );	
+    $('#contacts-not-in-stats').css('display','block');
+    $('#progress-contacts-not-in-stats').css('display','none');
+});
+
+function goto_contact_detail(cid){
+
+}
+
+function add_task(contact_id){
+	$.get(
+        '{$Helper->getLink("ajax/add_task")}',{literal}
+        {
+        	nohtml:'nohtml',
+        	third_type:'contacts',
+        	third_id:contact_id,
+        	task:'Verifie adresse email',
+        },{/literal}
+        function(data){
+            alert('Tache ajoute');
+        }
+    );
+}
+{/if}
+</script>
