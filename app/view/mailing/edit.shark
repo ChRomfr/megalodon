@@ -64,6 +64,13 @@
 					<input type="text" name="mailing[number]" id="number" value="{$mailing->number}" class="form-control"/>
 				</div>			
 			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Corp du mailing :</label>
+				<div class="col-sm-5">
+					<textarea name="mailing[corp_message]" id="corp-message" class="form-control" rows="5">{$mailing->corp_message|htmlentities}</textarea>
+				</div>
+			</div>
 			
 		</fieldset>
 		<fieldset>

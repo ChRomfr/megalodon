@@ -108,6 +108,13 @@ class mailing extends Record{
 	public $type_id;
 
 	/**
+	 * [$corp_message description]
+	 * @var corp_message
+	 * @Db: {"name":"corp_message","type":"TEXT"}
+	 */
+	public $corp_message;
+
+	/**
 	 * numero de newsletter
 	 * @var [type]
 	 */
