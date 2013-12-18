@@ -1,0 +1,17 @@
+<!-- START adm/form_contacts_services -->
+{strip}
+<form method="post" action="{if isset($service)}{$Helper->getLink("adm/contacts_services_edit/{$service.id}")}{else}{$Helper->getLink("adm/contacts_services_add")}{/if}" id="form-contacts-services" class="form-horizontal">
+
+	<div class="form-group">
+		<label class="label-control col-md-2">Libelle :</label>
+		<div class="col-md-5">
+			<input type="text" name="service[libelle]" id="service-libelle" required {if isset($service)}value="{$service.libelle}"{/if} class="form-control" placeholder="nom du service"/>
+		</div>
+	</div>
+
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+</form>
+{/strip}
+<!-- END adm/form_contacts_services -->

@@ -151,6 +151,74 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'form_contacts_postes.shark');
 	}
 
+	public function contacts_servicesAction(){
+		$this->registry->smarty->assign('services', $this->registry->db->get('service', null, 'libelle'));
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_services.tpl');
+	}
+
+	/**
+	 * Traite la suppression d'un service dans la base
+	 * @param  [type] $pid [description]
+	 * @return [type]      [description]
+	 */
+	public function contacts_services_deleteAction($sid){
+		// Suppression du service dans la base
+		$this->registry->db->delete('service', $sid);
+
+		// Mise a jour des contacts
+		$this->registry->db->update('personne', array('service_id' => NULL), array('service_id =' => $sid));
+
+		// Notification
+		$this->registry->Helper->pnotify('Services','Service supprimé.<br/>Les contacts ont été mise a jour.');
+
+		return $this->contacts_servicesAction();
+	}
+
+	/**
+	 * Traite le formulaire d ajout d'un poste dans la base
+	 * @return [type] [description]
+	 */
+	public function contacts_services_addAction(){
+		if(!is_null($this->registry->Http->post('service'))){
+			$poste = $this->registry->Http->post('service');
+			$this->registry->db->insert('service', $poste);
+			$this->registry->Helper->pnotify('services', 'service ajouté à la base');
+		}
+
+		return $this->contacts_servicesAction();
+	}
+
+	/**
+	 * Traite le formulaire d'edition d'un service
+	 * @param  [type] $service_id [description]
+	 * @return [type]           [description]
+	 */
+	public function contacts_services_editAction($service_id){
+		if(!is_null($this->registry->Http->post('service'))){
+			$service = $this->registry->Http->post('service');
+			$this->registry->db->update('service', $service, array('id =' => $service_id));
+			$this->registry->Helper->pnotify('Services', 'Service modifié');
+		}
+
+		return $this->contacts_servicesAction();
+	}
+
+	/**
+	 * Retourne le formulaire pour ajouter/modifier un poste dans la base
+	 * @param  [type] $poste_id [description]
+	 * @return [type]           [description]
+	 */
+	public function contacts_services_load_formAction($service_id = null){
+
+		if(!empty($service_id)){
+			$this->registry->smarty->assign('service', $this->registry->db->get_one('service', array('id =' => $service_id)));
+		}
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'form_contacts_services.shark');
+	}
+
+
 	public function users_indexAction(){
 		$users = $this->registry->db->get('user');
 
