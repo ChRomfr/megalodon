@@ -95,6 +95,9 @@ class mailingController extends Controller{
 		
 		$link_csv = $this->getlinktocvs($mailing->cible);
 		$link_view = str_replace('csv','',$link_csv);
+
+		if(!empty($mailing->stats))
+			$mailing->stats = unserialize($mailing->stats);
 		
 		$this->registry->smarty->assign(array(
 			'mailing'	=>	$mailing,
@@ -228,6 +231,11 @@ class mailingController extends Controller{
 		return $this->indexAction();
 	}
 	
+	/**
+	 * Marque le mailing comme envoye dans la base de données
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
 	public function marksendAction($id){
 
 		if( isAdmin() < 1 && !getAcl('mailing_valid') ){
@@ -263,7 +271,7 @@ class mailingController extends Controller{
 			$contacts_mailing = array(
 				'mailing_id'	=>	$id,
 				'contact_id'	=>	$row['id'],
-				'result'		=>	'',
+				'email'			=>	$row['email'],
 			);
 
 			$this->registry->db->insert('contacts_mailing', $contacts_mailing);
@@ -496,12 +504,12 @@ class mailingController extends Controller{
 						$stats_file['not_open']++;
 					}
 
-					//$this->registry->db->update('contacts_mailing', $result_mailing, array('contact_id' => $result['id'], 'mailing_id =' => $mailing_id));
+					$this->registry->db->update('contacts_mailing', $result_mailing, array('contact_id' => $result['id'], 'mailing_id =' => $mailing_id));
 
 					nextboucle:
 					$i++;
 				}
-			
+				$this->registry->db->update('mailings', array('stats' => serialize($stats_file)), array('id =' => $mailing_id));
 				$this->registry->smarty->assign('stats', $stats_file);
 			}
 		}
@@ -517,7 +525,7 @@ class mailingController extends Controller{
 						->left_join('contacts c','c.id = cm.contact_id')
 						->left_join('personne p','c.id = p.contact_id')
 						->left_join('societe s','c.id = s.contact_id')						
-						->where(array('cm.in_stat !=' => 1, 'cm.mailing_id =' => $mailing_id))
+						->where(array('cm.in_stat !=' => 1, 'cm.mailing_id =' => $mailing_id, 'cm.fix =' => 0))
 						->limit(50)
 						->offset(getOffset(50))
 						->get();
@@ -552,20 +560,32 @@ class mailingController extends Controller{
 
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $k, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression email par fichier. Ancien adresse email : '. $old_email));
 				$clog->save();
-				echo "<pre>"; print_r($contact); echo "</pre>";
-			}
-			
+
+				// On marque le probleme regle dans la base
+				$this->registry->db->update('contacts_mailing', array('fix' => 1), array('contact_id =' => $contact->id, 'mailing_id =' => $mailing_id));
+			}			
 		}
 
 		// Message a l utilisateur
 		$this->registry->smarty->assign('FlashMessage','Emails supprimes');
 
 		// On lui affiche de nouveau la liste des contacts
-		return '';
+		return $this->invalid_emailsAction($mailing_id);
 	}
 
 	public function invalid_emailsAction($mailing_id){
+		$contacts =  $this->registry->db->select(' DISTINCT(c.id), concat_ws("",s.raison_social, p.nom) as nom, p.prenom, c.email')
+						->from('contacts_mailing cm')
+						->left_join('contacts c','c.id = cm.contact_id')
+						->left_join('personne p','c.id = p.contact_id')
+						->left_join('societe s','c.id = s.contact_id')						
+						->where(array('cm.in_stat !=' => 1, 'cm.mailing_id =' => $mailing_id, 'cm.fix =' => 0))
+						->get();
 
+		$this->registry->smarty->assign('mailing_id', $mailing_id);
+		$this->registry->smarty->assign('contacts', $contacts);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'invalid_emails.shark');
 	}
 	
 	/**

@@ -9,6 +9,10 @@
 
 	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 	<div class="pull-right">
+		<a href="{$Helper->getLink("mailing/invalid_emails/{$mailing->id}")}" title="Email invalide"><span class="fa-stack fl-lg"><i class="fa fa-envelope fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x text-danger"></i></span></a>
+		&nbsp;&nbsp;&nbsp;
+		<a href="{$Helper->getLink("mailing/import_stats/{$mailing->id}")}" title="Importer les stats"><i class="fa fa-signal fa-lg"></i></a>
+		&nbsp;&nbsp;&nbsp;
 		<a href="{$Helper->getLink("mailing/edit/{$mailing->id}")}" title="Modifier"><i class="fa fa-edit fa-lg"></i></a>
 		&nbsp;&nbsp;&nbsp;
 		<a href="javascript:deletemailing({$mailing->id})" title="Supprimer"><i class="fa fa-trash-o fa-lg"></i></a>
@@ -71,8 +75,31 @@
 		{/if}
 		
 	</table>
+
+	{if is_array($mailing->stats)}
 	<hr/>
-	<h4>Cibles du mailing</h4>
+	<h4><i class="fa fa-signal"></i>&nbsp;Statistiques</h4>
+	<table class="table table-condensed table-striped">
+
+		<tr>
+			<td>Nombre de destinataire réel :</td>
+			<td>{$mailing->stats.file_contact}</td>
+		</tr>
+
+		<tr>
+			<td>Nombre de destinatire en base :</td>
+			<td>{$mailing->stats.db_contact}</td>
+		</tr>
+
+		<tr>
+			<td>Ouverture :</td>
+			<td>{$mailing->stats.open} {round(($mailing->stats.open*100)/$mailing->stats.file_contact)}%</td>
+		</tr>
+	</table>
+	{/if}
+
+	<hr/>
+	<h4><i class="fa fa-filter"></i>&nbsp;Cibles du mailing</h4>
 	<table class="table table-striped table-condensed">
 		<tr>
 			<td>Cible :</td>

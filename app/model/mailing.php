@@ -119,6 +119,8 @@ class mailing extends Record{
 	 * @var [type]
 	 */
 	public $number;
+
+	public $stats;
 	
 	/**
 	*	@NoDb: {"nodb":1}

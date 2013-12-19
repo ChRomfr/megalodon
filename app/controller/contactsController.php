@@ -1279,6 +1279,16 @@ class contactsController extends Controller{
 	public function get_mailings_of_contactAction($contact_id){
 		$this->load_manager('mailing');
 		$mailings = $this->manager->mailing->getByContactId($contact_id);
+		$i=0;
+		
+		foreach ($mailings as $row) {
+			if($row['open'] == 1)
+				$mailings[$i]['open'] = '<span class="label label-success">Oui</span>';
+			else
+				$mailings[$i]['open'] = '<span class="label label-default">Non</span>';
+			
+			$i++;
+		}
 
 		return json_encode($mailings);
 	}

@@ -184,7 +184,7 @@
 			{* END CRITERES RECHERCHE *}
 
 			{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
-
+			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
 			{else}
 			<input type="hidden" name="mailing[valid]" value="0" />
 			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />

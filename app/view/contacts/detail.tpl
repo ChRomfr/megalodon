@@ -204,7 +204,7 @@
 
         <div id="tabMailingSend" class="tab-pane">
 			<table class="table table-striped table-condensed" id="table-contacts-mailings">
-				<thead><tr><th>#</th><th>Mailing</th></tr></thead>
+				<thead><tr><th>#</th><th>Mailing</th><th>Email</th><th>Ouvert</th></tr></thead>
 				<tbody></tbody>
 			</table>
         </div>
@@ -584,7 +584,7 @@ jQuery(document).ready(function(){
         '{$Helper->getLink("contacts/get_mailings_of_contact/{$contact.contact_id}")}', {literal}
         {nohtml:'nohtml'},
         function(data){ 
-            var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td></tr>';
+            var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td><td>{{email}}</td><td>{{& open}}</tr>';
             for( var i in data ){
                 $('#table-contacts-mailings').append( Mustache.render(tpl, data[i]) );
             };
