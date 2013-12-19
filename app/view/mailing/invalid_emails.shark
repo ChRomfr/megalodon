@@ -1,8 +1,8 @@
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</i></a></li>
 	<li><a href="{$Helper->getLink("mailing")}" title="Mailing"><i class="fa fa-envelope"></i>&nbsp;Mailing</i></a></li>
-	<li><a href="{$Helper->getLink("mailing/fiche/{$mailing_id}")}" title="Fiche mailing #{$mailing_id}">Fiche mailing #{$mailing_id}</a></li>
-	<li class="active">Résultat import statistiques</li>
+	<li><a href="{$Helper->getLink("mailing/fiche/{$mailing_id}")}" title="Fiche mailing #{$mailing_id}">#{$mailing_id} mailing </a></li>
+	<li class="active"><span class="fa-stack"><i class="fa fa-envelope fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x text-danger"></i></span>&nbsp;Email invalide</li>
 </ol>
 
 <div class="well">

@@ -1,6 +1,9 @@
 <!-- START mailing/import_stats -->
-<ol>
-
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</i></a></li>
+	<li><a href="{$Helper->getLink("mailing")}" title="Mailing"><i class="fa fa-envelope"></i>&nbsp;Mailing</i></a></li>
+	<li><a href="{$Helper->getLink("mailing/fiche/{$mailing_id}")}" title="Fiche mailing #{$mailing_id}">#{$mailing_id} mailing</a></li>
+	<li class="active"><i class="fa fa-signal"></i>&nbsp;Import statistiques</li>
 </ol>
 
 {if !isset($stats)}
