@@ -121,6 +121,13 @@ class mailing extends Record{
 	public $number;
 
 	public $stats;
+
+	/**
+	 * [$action_id description]
+	 * @var int
+	 * @Db: {"name":"action_id","type":"INT"}
+	 */
+	public $action_id;
 	
 	/**
 	*	@NoDb: {"nodb":1}

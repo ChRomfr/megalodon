@@ -7,17 +7,23 @@
 
 <div class="well">
 
-	{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
+	
 	<div class="pull-right">
+		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_valid)}
 		<a href="{$Helper->getLink("mailing/invalid_emails/{$mailing->id}")}" title="Email invalide"><span class="fa-stack fl-lg"><i class="fa fa-envelope fa-stack-1x"></i><i class="fa fa-ban fa-stack-2x text-danger"></i></span></a>
 		&nbsp;&nbsp;&nbsp;
 		<a href="{$Helper->getLink("mailing/import_stats/{$mailing->id}")}" title="Importer les stats"><i class="fa fa-signal fa-lg"></i></a>
 		&nbsp;&nbsp;&nbsp;
+		{/if}
+		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_adm) || isset($smarty.session.acl.mailing_valid)}
 		<a href="{$Helper->getLink("mailing/edit/{$mailing->id}")}" title="Modifier"><i class="fa fa-edit fa-lg"></i></a>
 		&nbsp;&nbsp;&nbsp;
+		{/if}
+		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.mailing_adm)}
 		<a href="javascript:deletemailing({$mailing->id})" title="Supprimer"><i class="fa fa-trash-o fa-lg"></i></a>
+		{/if}
 	</div>
-	{/if}
+	
 
 	<h3>{$mailing->libelle}</h3>
 	<div class="clearfix"></div>

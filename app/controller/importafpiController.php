@@ -528,6 +528,7 @@ class importafpiController extends Controller{
 
 							if($verbose_log == 1){
 								$logs[$i] .= '<br/>Nouvel enregistrement : '. print_r($contact, true) .'<br/>';
+								$logs[$i] .= '<br/>Objet personne : <pre>'. print_r($personne, true) .'<br/>';
 							}
 
 							$contact->id = $row['id'];
@@ -563,7 +564,7 @@ class importafpiController extends Controller{
 							$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $cid, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Ajout du contact dans la base par import AFPI'));
 							$clog->save();
 
-							$logs[$i] .= '<br/>Contact enregistre #<strong>'.$cid.'</strong>'. print_r($personne, true);
+							$logs[$i] .= '<br/>Contact enregistre #<strong>'.$cid.'</strong><pre>'. print_r($personne, true) .'</pre>';
 
 							$personne->contact_id = $cid;
 
@@ -833,6 +834,7 @@ class importafpiController extends Controller{
 		$ets->client 			= 	0;
 		$ets->isValid 			= 	1;
 		$ets->migration 		= 	0;
+		$ets->mother 			=	0;
 
 		if( isset($correspondance['code_interne']) && !empty($correspondance['code_interne']) )
 			$ets->code_interne 		=	$record[$correspondance['code_interne']];

@@ -1,0 +1,69 @@
+<form method="post" action="{if isset($action)}{$Helper->getLink("mailing/actions_edit/{$action->id}")}{else}{$Helper->getLink("mailing/actions_add")}{/if}" id="form-actions" class="form-horizontal">
+
+	<div class="form-group">
+		<label class="label-control col-md-2">Libelle :</label>
+		<div class="col-md-5">
+			<input type="text" name="action[libelle]" id="action-libelle" required {if isset($action)}value="{$action.libelle}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-2">Début :</label>
+		<div class="col-md-5">
+			<input type="text" name="action[date_start]" id="action-date_start" required {if isset($action)}value="{$action.date_start}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-2">Fin :</label>
+		<div class="col-md-5">
+			<input type="text" name="action[date_end]" id="action-date_end" required {if isset($action)}value="{$action.date_end}"{/if} class="form-control"/>
+		</div>
+	</div>
+	<hr/>
+	<div class="text-center">
+		{if isset($action)}
+		<input type="hidden" name="action[id]" value="{$action->id}" required />
+		{/if}
+		<button type="submit" class="btn btn-primary">Enregistrer</button>
+	</div>
+</form>
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#action-date_start').mask("9999-99-99");
+	$('#action-date_end').mask("9999-99-99");
+	{literal}
+	$("#action-date_start").datepicker({ dateFormat: 'yy-mm-dd', changeMonth:true, changeYear:true, showButtonPanel: true});
+	$("#action-date_end").datepicker({ dateFormat: 'yy-mm-dd', changeMonth:true, changeYear:true, showButtonPanel: true});
+	{/literal}
+	
+	$("#form-actions").validate({
+		rules:{
+			"action[libelle]":{
+				required:true,
+			},
+			"action[date_start]":{
+				required:true,
+			},
+			"action[date_end]":{
+				required:true,
+			}
+		},
+		messages:{
+		},
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('alert alert-success');
+            $(element).parents('.form-group').addClass('alert alert-danger');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('alert alert-danger');
+            $(element).parents('.form-group').addClass('alert alert-success');
+        }
+	});
+	
+});
+-->
+</script>

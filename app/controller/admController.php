@@ -236,6 +236,7 @@ class admController extends Controller{
 
 		if(!is_null($this->registry->Http->post('user'))){
 			$user = new utilisateur($this->registry->Http->post('user'));
+			
 			// Sauvegarde de l utilisateur
 			$user->save();
 
@@ -248,7 +249,8 @@ class admController extends Controller{
 				$this->registry->db->insert('acl', array('user_id' => $user->id, 'acl' => $key));
 			}
 
-			$this->registry->smarty->assign('FlashMessage','Utilisateur modifié');
+			//$this->registry->smarty->assign('FlashMessage','Utilisateur modifié');
+			$this->registry->Helper->pnotify('Utilisateur', 'modifications enregistrées', 'success');
 
 			return $this->users_indexAction();
 		}

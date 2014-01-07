@@ -17,6 +17,7 @@
 				{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_demand)}
 				<li><a href="{$Helper->getLink("mailing/add")}" title="Nouvelle demande">Demande</a></li>
 				{/if}
+				<li><a href="{$Helper->getLink("mailing/actions")}#" title="Actions">Actions</a></li>
 			</ul>
 		</li>
 		{/if}

@@ -202,8 +202,12 @@ class mailingController extends Controller{
 		$types = new mailing_type();
 		$this->getFormValidatorJs();
 
+		// Recuperation des actions en cours ....
+		$actions = $this->registry->db->get('mailing_actions', array('date_start <=' => date('Y-m-d'), 'date_end >=' => date('Y-m-d')));
+
 		$this->registry->smarty->assign('types', $types->get());
 		$this->registry->smarty->assign('mailing', $mailing);
+		$this->registry->smarty->assign('actions', $actions);
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'edit.shark');
 	}
@@ -504,7 +508,7 @@ class mailingController extends Controller{
 						$stats_file['not_open']++;
 					}
 
-					$this->registry->db->update('contacts_mailing', $result_mailing, array('contact_id' => $result['id'], 'mailing_id =' => $mailing_id));
+					$this->registry->db->update('contacts_mailing', $result_mailing, array('contact_id =' => $result['id'], 'mailing_id =' => $mailing_id));
 
 					nextboucle:
 					$i++;
@@ -588,6 +592,115 @@ class mailingController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'invalid_emails.shark');
 	}
 	
+	/**
+	 * Recupere la liste des actions dans la base
+	 * @return [type] [description]
+	 */
+	public function actionsAction(){
+
+		$actions = new mailing_actions();
+
+		$this->registry->smarty->assign('actions', $this->registry->db->get('mailing_actions', null, 'id DESC'));
+		$this->getFormValidatorJs();
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'actions.shark');	
+
+	}
+
+	public function actions_load_formAction($aid = null){
+		if( isAdmin() < 1 && !getAcl('mailing_adm') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
+		
+		if(!empty($aid)){
+			$action = new mailing_actions();
+			$action->get($aid);
+			$this->registry->smarty->assign('action', $action);
+		}
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'form-actions.shark');
+	}
+
+	public function actions_addAction(){
+		if( isAdmin() < 1 && !getAcl('mailing_adm') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
+
+		if(!is_null($this->registry->Http->post('action'))){
+			$action = new mailing_actions($this->registry->Http->post('action'));
+			/*$action->date_start = FormatDateToMySql($action->date_start);
+			$action->date_end = FormatDateToMySql($action->date_end);*/
+
+			$action->save();
+
+			$this->registry->Helper->pnotify('Actions', 'action enregistrée');
+
+			return $this->actionsAction();
+		}
+
+		exit('Error you can\'t call this page directly');
+	}
+
+	/**
+	 * Traite le formulaire d'edition d'une action
+	 * @param  [type] $aid [description]
+	 * @return [type]      [description]
+	 */
+	public function actions_editAction($aid){
+		if( isAdmin() < 1 && !getAcl('mailing_adm') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
+
+		if(!is_null($this->registry->Http->post('action'))){
+			$action = new mailing_actions($this->registry->Http->post('action'));
+
+			$action->save();
+
+			$this->registry->Helper->pnotify('Actions', 'action enregistrée');
+
+			return $this->actionsAction();
+		}
+
+		exit('Error you can\'t call this page directly');
+	}
+
+	public function actions_deleteAction($aid){
+
+		if( isAdmin() < 1 && !getAcl('mailing_adm') ){
+			header('HTTP/1.0 401 Unauthorized');
+			header('Location: '. $this->registry->Helper->getLink("mailing"));
+		}
+
+		$this->registry->db->delete('mailing_actions', $aid);
+		$this->registry->db->update('mailings', array('action_id' => NULL), array('action_id =' => $aid));
+		$this->registry->Helper->pnotify('Action', 'Action supprimée');
+		return $this->actionsAction();
+	}
+
+	public function actions_detailAction($aid){
+		$action = new mailing_actions();
+		$action->get($aid);
+
+		// Si action pas dans la base affiche liste
+		if(empty($action)){
+			return $this->actionsAction();
+		}
+
+		// Recuperation des mailings lié à l'action
+		$this->load_manager('mailing');
+		$mailings = $this->manager->mailing->getByAction($aid);
+
+		// Assignation a smarty
+		$this->registry->smarty->assign('action', $action);
+		$this->registry->smarty->assign('mailings', $mailings);
+
+		// Envoie de la page
+		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'actions_detail.shark');
+	}
+
 	/**
 	*	Contruit le lien vers le fichier CSV pour exporter les contacts
 	*	@param array $cible contient les parametres de recherche

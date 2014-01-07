@@ -7,10 +7,11 @@ class mailingManager extends BaseModel{
 	}
 	
 	public function get($limit = 100, $offset = 0, $where = null){
-		return	$this->db->select('m.*, u1.identifiant as demandeur, mt.libelle as type')
+		return	$this->db->select('m.*, u1.identifiant as demandeur, mt.libelle as type, ma.libelle as action')
 				->from('mailings m')
 				->left_join('user u1','m.demand_by = u1.id')
 				->left_join('mailings_type mt','m.type_id = mt.id')
+				->left_join('mailing_actions ma', 'm.action_id = ma.id')
 				->where($where)
 				->order('m.date_wish DESC')
 				->limit($limit)
@@ -35,6 +36,17 @@ class mailingManager extends BaseModel{
 				->left_join('contacts_mailing cm','cm.mailing_id = m.id')
 				->where(array('cm.contact_id =' => $contact_id))
 				->order('m.id DESC')
+				->get();
+	}
+
+
+	public function getByAction($aid){
+		return	$this->db->select('m.*, u1.identifiant as demandeur, mt.libelle as type')
+				->from('mailings m')
+				->left_join('user u1','m.demand_by = u1.id')
+				->left_join('mailings_type mt','m.type_id = mt.id')
+				->where(array('action_id =' => $aid))
+				->order('m.date_wish DESC')
 				->get();
 	}
 }

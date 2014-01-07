@@ -54,18 +54,19 @@ function AppAutoload(){
 		// Manager
 
 		// Model
-		'categorie'		=>	ROOT_PATH.'app'.DS.'model'.DS.'categorie.php',
-		'campaign'		=>	ROOT_PATH.'app'.DS.'model'.DS.'campaign.php',
-		'clog'			=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts_log.php',
-		'contacts'		=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts.php',
+		'categorie'			=>	ROOT_PATH.'app'.DS.'model'.DS.'categorie.php',
+		'campaign'			=>	ROOT_PATH.'app'.DS.'model'.DS.'campaign.php',
+		'clog'				=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts_log.php',
+		'contacts'			=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts.php',
 		'contacts_suivi'	=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts_suivi.php',
-		'mailing'		=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'mailing.php',
-		'mailing_type'	=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'mailing_type.php', 
-		'organisme'		=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'organisme.php',
-		'personne'		=>	ROOT_PATH.'app'.DS.'model'.DS.'personne.php',
-		'societe'		=>	ROOT_PATH.'app'.DS.'model'.DS.'societe.php',
-		'telephone'		=>	ROOT_PATH.'app'.DS.'model'.DS.'telephone.php',
-		'utilisateur'	=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'utilisateur.php',
+		'mailing'			=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'mailing.php',
+		'mailing_actions'	=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'mailing_actions.php', 
+		'mailing_type'		=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'mailing_type.php', 
+		'organisme'			=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'organisme.php',
+		'personne'			=>	ROOT_PATH.'app'.DS.'model'.DS.'personne.php',
+		'societe'			=>	ROOT_PATH.'app'.DS.'model'.DS.'societe.php',
+		'telephone'			=>	ROOT_PATH.'app'.DS.'model'.DS.'telephone.php',
+		'utilisateur'		=>	ROOT_PATH . 'app' . DS . 'model' . DS . 'utilisateur.php',
 
 	);
 

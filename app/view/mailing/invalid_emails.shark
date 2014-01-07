@@ -1,3 +1,4 @@
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</i></a></li>
 	<li><a href="{$Helper->getLink("mailing")}" title="Mailing"><i class="fa fa-envelope"></i>&nbsp;Mailing</i></a></li>
@@ -8,36 +9,35 @@
 <div class="well">
 
 	<form method="post" action="{$Helper->getLink("mailing/remove_invalid_emails/{$mailing_id}")}">
-			<table id="table-progress-contacts-not-in-stats" class="table table-striped table-condensed">
-				<thead>
-					<tr>
-						<th>#</th>
-						<th>Contact</th>
-						<th>Email</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				{foreach $contacts as $row}
-					<tr>
-						<td>{$row.id}</td>
-						<td>{$row.nom} {$row.prenom}</td>
-						<td>{$row.email}</td>
-						<td><a href="javascript:add_task({$row.id});" title="Ajouter une tache"><i class="fa fa-flag"></i></a></td>
-						<td><input type="checkbox" name="contacts[][{$row.id}]" /></td>
-					</tr>
-				{/foreach}
-				</tbody>
-			</table>
-			<div class="pull-right">
-				<button type="submit" class="btn btn-warning">Retirer les emails</button>
-			</div>
-			<div class="clearfix"></div>
-		</form>
-
+		<table id="table-progress-contacts-not-in-stats" class="table table-striped table-condensed">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Contact</th>
+					<th>Email</th>
+					<th></th>
+					<th></th>
+				</tr>
+			</thead>
+			<tbody>
+			{foreach $contacts as $row}
+				<tr>
+					<td>{$row.id}</td>
+					<td>{$row.nom} {$row.prenom}</td>
+					<td>{$row.email}</td>
+					<td><a href="javascript:add_task({$row.id});" title="Ajouter une tache"><i class="fa fa-flag"></i></a></td>
+					<td><input type="checkbox" name="contacts[][{$row.id}]" /></td>
+				</tr>
+			{/foreach}
+			</tbody>
+		</table>
+		<div class="pull-right">
+			<button type="submit" class="btn btn-warning">Retirer les emails</button>
+		</div>
+		<div class="clearfix"></div>
+	</form>
 </div>
-
+{/strip}
 <script type="text/javascript">
 function add_task(contact_id){
 	$.get(
