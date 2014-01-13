@@ -1,20 +1,19 @@
 <?php
 
-class contactsController extends Controller{
+class contactsController extends Controller{	
 	
-	
-	public function indexAction(){
-		return $this->index2Action();
-	}
+	public function indexAction(){ return $this->index2Action(); }
 	
 	/**
 	*	Affichage de contacts en les listants avev une requete ajax
 	*	Reduit le délai d'affichage de la page
 	*/
-	public function index2Action(){		
-		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'index2.shark');
-	}
+	public function index2Action(){	return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'index2.shark'); }
 	
+	/**
+	 * Affiche la liste des contacts
+	 * @return [type] [description]
+	 */
 	public function ajax_load_contactsAction(){
 		$per_page = $this->registry->config['per_page'];
 		
@@ -72,16 +71,10 @@ class contactsController extends Controller{
 	public function addAction(){
 		
 		if( !is_null($this->registry->Http->post('contact'))){
-		
-			//$structure = $this->registry->Http->post('structure');
 			
 			// Recuperation indormations formulaire
 			$Data = $this->registry->Http->post('contact');
 
-			/*echo"<br/><br/><br/><pre>";
-			print_r($Data);
-
-			exit;*/
 			// Enregistrement du contacts dans la base
 			$contact = $this->contact_add($Data);
 

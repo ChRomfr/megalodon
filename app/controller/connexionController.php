@@ -17,13 +17,13 @@ class connexionController extends BaseconnexionController{
 		if( $this->app->Http->postExists('login') ){           
             
             // Chargement du bon model
-            if( is_file(APP_PATH . 'model' . DS  . 'utilisateur.php') ):
+            if( is_file(APP_PATH . 'model' . DS  . 'utilisateur.php') ){
                 $this->load_model('utilisateur');
                 $user = new utilisateur( $this->app->HTTPRequest->postData('login') );
-            else:
+            }else{
                 $this->load_model('utilisateur', 'base_app');
                 $user = new Baseutilisateur( $this->app->HTTPRequest->postData('login') );
-            endif;	
+            }	
 			
 			// Verification information ok
             $Result = $user->checkLogin();

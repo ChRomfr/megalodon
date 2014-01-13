@@ -70,13 +70,13 @@ function AppAutoload(){
 
 	);
 
-foreach( $ClassList as $k => $v ):
-	if( $class = $k ):
-		require_once $v;
-	endif;
-endforeach;
-	
+	foreach( $ClassList as $k => $v ){
+		if( $class = $k ){
+			require_once $v;
+		}
+	}	
 }
+
 spl_autoload_register('AppAutoload');
 
 getGlobalDatas();
@@ -116,24 +116,27 @@ if( $registry->config['auth_sso_apache'] == 1 ){
 	}	
 }
 
+/**
+ * Force l'affichage du formulaire de connexion si utilisateur est visiteur
+ */
 if($registry->session->check() == false || $_SESSION['utilisateur']['id'] == 'Visiteur') {
 	$registry->router->controller = 'connexion';
 }
 
+/**
+ * Code qui permet le suivi utilisateur dans l app
+ */
 if( $_SESSION['utilisateur']['id'] != 'Visiteur' ){
 	$session = array(
-		'session_id' => $_SESSION['session_id'], 
-		'user_id' => $_SESSION['utilisateur']['id'],
-		'last_update' => time(),
-		'url'	=>	$_SERVER['REQUEST_URI'],
-		'ip'	=>	$_SERVER['REMOTE_ADDR']
+		'session_id' 	=> $_SESSION['session_id'], 
+		'user_id' 		=> $_SESSION['utilisateur']['id'],
+		'last_update' 	=> time(),
+		'url'		=>	$_SERVER['REQUEST_URI'],
+		'ip'		=>	$_SERVER['REMOTE_ADDR']
 	);
 
 	$registry->db->update('sessions', $session, array('session_id =' => $_SESSION['session_id']) );
 }
-
-
-
 
 /**
  * Si SSO est active, cette fonction va enregistrer les utilisateurs dans la base local du script
@@ -161,8 +164,6 @@ function user_add_sso($user_ldap){
 	if($registry->config['auth_by_group'] == 1 &&  !$registry->adldap->user()->inGroup($utilisateur->identifiant,$registry->config['group_ad'])){
 		exit('Vous n\'avez les droits necessaire pour accèder à cette application');
 	}
-
-	//var_dump($registry->adldap->user()->inGroup($utilisateur->identifiant,$registry->config['group_ad_adm']));
 
 	if( $registry->adldap->user()->inGroup($utilisateur->identifiant,$registry->config['group_ad_adm'])){
 		$utilisateur->isAdmin = '1';
