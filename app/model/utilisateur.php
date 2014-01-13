@@ -83,12 +83,20 @@ class utilisateur extends Baseutilisateur{
         return "Error_general_empty_method";
     }
 
+    /**
+     * Verifie si l utilisateur est present dans la base du logiciel
+     * @return [type] [description]
+     */
     private function user_in_localdb(){
     	global $registry;
 
     	return $registry->db->count('user', array('identifiant =' => $this->identifiant));
     }
 
+    /**
+     * Injecte l utilisateur dans la base local par rapport au info LDAP
+     * @return [type] [description]
+     */
     private function insert_user_in_localdb(){
     	global $registry;
 

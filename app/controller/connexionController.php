@@ -8,14 +8,15 @@ class connexionController extends BaseconnexionController{
     	public function indexAction(){
 		
 		# Si utilisateur deja connecter on le renvoie a l index
-		if( $_SESSION['utilisateur']['id'] != 'Visiteur' ):
+		if( $_SESSION['utilisateur']['id'] != 'Visiteur' ){
 			header('location:' . $this->app->Helper->getLink('index') );
 			exit;
-		endif;
+		}
 		
 		# Soumission du formulaire
 		if( $this->app->Http->postExists('login') ){           
             
+            // Chargement du bon model
             if( is_file(APP_PATH . 'model' . DS  . 'utilisateur.php') ):
                 $this->load_model('utilisateur');
                 $user = new utilisateur( $this->app->HTTPRequest->postData('login') );
@@ -24,6 +25,7 @@ class connexionController extends BaseconnexionController{
                 $user = new Baseutilisateur( $this->app->HTTPRequest->postData('login') );
             endif;	
 			
+			// Verification information ok
             $Result = $user->checkLogin();
             
             if($Result == 'session_ok'){
@@ -48,38 +50,17 @@ class connexionController extends BaseconnexionController{
 				$this->registry->Helper->pnotify('Bienvenu', 'Vous êtes maintenance connecté !', 'success');
 
 				return $index->indexAction();
-            }
-
-            if( $Result !== true):
+            }elseif( $Result !== true){
             	$this->app->smarty->assign('Error_login', $Result);
             	goto print_form;
-            endif;
+            }
 
             # On creer la session
-			$this->app->session->create($user);
+			//$this->app->session->create($user);
 
 			# On met a jour le profil utilisateur avec sa derniere connexion
-			$this->app->db->update(PREFIX . 'user', array('last_connexion' => time()), array('id =' => $_SESSION['utilisateur']['id']));
-			
-			/*if( isset($_SESSION['utilisateur']['isAdmin']) && $_SESSION['utilisateur']['isAdmin'] > 0):
-				# Si administrateur redirige l utilisateur vers l administration
-				return $this->redirect( $this->registry->Helper->getLink("index") );
-			else:
-				# On gere la redirection de l utilisateur
-				$url_redirection = $this->registry->Helper->getLink('index');
+			//$this->app->db->update(PREFIX . 'user', array('last_connexion' => time()), array('id =' => $_SESSION['utilisateur']['id']));
 				
-				if( $this->registry->Http->postExists('referer') ):
-					$referer = $this->registry->Http->post('referer');
-					# On verifie que l url soit bien du site
-					if( strpos($referer, $this->registry->config['url']) !== false ):
-						$url_redirection = $referer;
-					endif;
-				endif;
-				return $this->redirect($url_redirection);
-			endif;
-		endif;*/
-
-		
 		}
 		# Affichage du formulaire
 		print_form:

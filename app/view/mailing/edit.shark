@@ -58,7 +58,7 @@
 				</div>
 			</div>
 
-			{if !empty($action)}
+			{if !empty($actions)}
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Action :</label>
 				<div class="col-sm-5">
