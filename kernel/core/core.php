@@ -43,8 +43,7 @@ require_once ROOT_PATH . 'kernel' . DS . 'core' . DS . 'autoload.php';
 require_once ROOT_PATH . 'kernel' . DS . 'core' . DS . 'DB' . DS . 'connexion.php';
 
 # Fichier lang
-require_once ROOT_PATH . 'kernel' . DS . 'base_app' . DS . 'lang' . DS . 'french.php';
-require_once ROOT_PATH . 'app' . DS . 'local' . DS . 'french.php';	                   
+require_once ROOT_PATH . 'kernel' . DS . 'base_app' . DS . 'lang' . DS . 'french.php';	                   
 
 require_once ROOT_PATH . 'kernel' . DS . 'core' . DS . 'functions.php';
 require_once ROOT_PATH . 'kernel' . DS . 'core' . DS . 'function_error.php';

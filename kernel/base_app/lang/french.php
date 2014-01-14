@@ -23,5 +23,9 @@
                I'                                  "YM                         
  */
 $lang = array(
-	'Nom_prenom'		=>	'Nom / Prénom',
+'Connexion'	=>	'Connexion',
+'Identifiant'	=>	'Identifiant',
+'Mot_de_passe'	=>	'Mot de passe',
+'Mot_de_passe_perdu'	=>	'Mot de passe perdu',
+'Nom_prenom'	=>	'Nom / Prénom',
 );
