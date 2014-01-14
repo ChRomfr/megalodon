@@ -226,6 +226,40 @@ class admController extends Controller{
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_index.shark');
 	}
+	
+	public function users_addAction(){
+		if(!is_null($this->registry->Http->post('user'))){
+			$tmp = $this->registry->Http->post('user');
+			
+			if($tmp['password_1'] != $tmp['password_2']){
+				$this->registry->Helper->pnotify('Utilisateur', 'Mot de passe different !');
+				goto showform;
+			}
+			
+			if($this->registry->db->count('user', array('identifiant =' => $tmp['identifiant']))){
+				$this->registry->Helper->pnotify('Utilisateur', 'Identifiant deja utilisé !');
+				goto showform;
+			}
+			
+			if($this->registry->db->count('user', array('email =' => $tmp['email']))){
+				$this->registry->Helper->pnotify('Utilisateur', 'E-mail deja utilisé !');
+				goto showform;
+			}
+			
+			$tmp['password'] = sha1( sha1(strtolower($tmp['identifiant'])) . $tmp['password_1'] );
+			
+			$user = new utilisateur($tmp);
+			
+			$user->save();
+			
+			$this->registry->Helper->pnotify('Utilisateur', 'utilisateur ajouté');
+			return $this->users_indexAction();
+		}
+		
+		showform:
+		$this->getFormValidatorJs();
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_add.shark');
+	}
 
 	/**
 	 * Affiche et traite le formulaire d edition utilisateur
@@ -373,9 +407,7 @@ class admController extends Controller{
 		}// end post
 
 		printform:
-		/*echo "<pre>";
-		print_r(getSavoirInutile());
-		echo "</pre>";*/
+	
 		$this->registry->smarty->assign('savoir_inutile', getSavoirInutile());
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_delete_by_email_step1.shark');
 

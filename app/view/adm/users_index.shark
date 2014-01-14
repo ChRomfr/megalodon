@@ -5,7 +5,11 @@
 </ol>
 
 <div class="well">
+	<div class="pull-right">
+		<a href="{$Helper->getLink("adm/users_add")}" title="Ajouter"><i class="fa fa-plus fa-lg"></i></a>
+	</div>
 	<h4>Utilisateurs</h4>
+	<div class="clearfix"></div>
 	<table class="table" id="users-liste">
 		<thead>
 			<tr>
