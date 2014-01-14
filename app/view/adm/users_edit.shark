@@ -146,6 +146,8 @@
 			{if $user->auth_type == 'sso'}
 			<input type="hidden" name="user[identifiant]" value="{$user->identifiant}" />
 			<input type="hidden" name="user[actif]" value="1"/>
+			{else}
+			<input type="hidden" name="user[actif]" value="1"/>
 			{/if}
 			<input type="hidden" name="user[id]" value="{$user->id}" />
 			<button class="btn btn-primary" type="submit">Enregistrer</button>

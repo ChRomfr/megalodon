@@ -271,6 +271,9 @@ class admController extends Controller{
 		if(!is_null($this->registry->Http->post('user'))){
 			$user = new utilisateur($this->registry->Http->post('user'));
 			
+			// Suppression propriete mot de passe pour eviter un RAZ
+			unset($user->password);
+			
 			// Sauvegarde de l utilisateur
 			$user->save();
 
@@ -283,7 +286,6 @@ class admController extends Controller{
 				$this->registry->db->insert('acl', array('user_id' => $user->id, 'acl' => $key));
 			}
 
-			//$this->registry->smarty->assign('FlashMessage','Utilisateur modifié');
 			$this->registry->Helper->pnotify('Utilisateur', 'modifications enregistrées', 'success');
 
 			return $this->users_indexAction();
@@ -396,10 +398,7 @@ class admController extends Controller{
 				$this->registry->smarty->assign('contacts', $contacts);
 
 				goto printform;
-				echo"<pre>";
-				print_r($contacts);
-				echo"</pre>";
-			
+							
 			}else{
 				$this->registry->smarty->assign('FlashMessage', 'Une erreur est survenu pendant le transfert du fichier');
 				goto printform;
