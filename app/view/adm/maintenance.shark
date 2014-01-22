@@ -41,7 +41,30 @@
 	<div id="result-cache"></div>
 </div>
 
+<div class="well">
+	<h4>Parametre serveur</h4>
+	<table class="table">
+		<tr>
+			<td>SOFTWARE</td>
+			<td>{$smarty.server.SERVER_SOFTWARE}</td>
+		</tr>
+		<tr>
+			<td>PHP</td>
+			<td>{phpversion()}</td>
+		</tr>
+		<tr>
+			<td>ZEND</td>
+			<td>{zend_version()}</td>
+		</tr>
+		<tr>
+			<td>DOCUMENT ROOT</td>
+			<td>{$smarty.server.DOCUMENT_ROOT}</td>
+		</tr>
+	</table>
+</div>
+
 <script type="text/javascript">
+<!--
 function clean_cache(){
 	$.get(
         '{$Helper->getLink("adm/ajax_clean_cache")}',{literal}
@@ -61,4 +84,5 @@ function clean_sessions(){
         }
     );
 }
+//-->
 </script>

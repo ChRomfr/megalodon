@@ -45,8 +45,10 @@ class mailingController extends Controller{
 	public function calendrierAction(){
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
-        $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
-		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'calendar.tpl');
+       // $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
+        $this->registry->load_web_lib('fullcalendar/fullcalendar_year.js','js');
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'calendar.tpl');
 	}
 	
 	/**
@@ -590,6 +592,32 @@ class mailingController extends Controller{
 		$this->registry->smarty->assign('contacts', $contacts);
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'invalid_emails.shark');
+	}
+
+	public function exportAction(){
+		$this->load_manager('mailing');
+
+		if( isset($_GET['year']) ){
+			$year = $_GET['year'];
+			$mailings = $this->manager->mailing->get(99999,0, array('m.date_send >' => ''. $year .'-01-01', 'm.date_send <' => ''. $year .'-12-31'));
+		}else{
+			$mailings = $this->manager->mailing->get(99999,0);
+		}
+
+		$csv = "id;demand_on;valid_on;libelle;description;caller;number;demandeur;type\n";
+		
+		foreach ($mailings as $row) {
+			foreach($row as $key => $value){
+				if($key == 'id' || $key == 'demand_on' || $key == 'valid_on' || $key == 'libelle' || $key == 'description' || $key == 'caller' || $key == 'number' || $key == 'demandeur' || $key == 'type')
+					$csv .= utf8_decode(preg_replace("(\r\n|\n|\r)",'',$value)) .';';
+			}
+			$csv .= "\n";		    
+		}
+
+		header('Content-Type: application/csv-tab-delimited-table');
+		header('Content-disposition: filename=Export_mailing.csv');
+		echo $csv;
+		exit;
 	}
 	
 	/**

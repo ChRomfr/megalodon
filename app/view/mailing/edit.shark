@@ -281,20 +281,20 @@ function champformcontact(){
 jQuery(document).ready(function(){
     $('#form-mailing-request').validate({
         rules:{
-            "mailing[date_wish]": {
+           /* "mailing[date_wish]": {
                 required:true,
                 remote:'{$Helper->getLink("mailing/checkdatewish/'+ $('#date_wish').val() +'?nohtml")}'
-            },
+            },*/
             "mailing[cible][ctype][]":{
 				required:true,
 				minlength:1,
 			}
         },
 		messages:{
-			"mailing[date_wish]":{
+			/*"mailing[date_wish]":{
 				required: "Veuillez indiquer la date d envoie souhaitée",
 				remote: "Le nombre maximum de mailing programmé ce jour est atteint"
-			},
+			},*/
 		},
 		highlight:function(element)
         {

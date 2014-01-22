@@ -28,4 +28,6 @@ $lang = array(
 'Mot_de_passe'	=>	'Mot de passe',
 'Mot_de_passe_perdu'	=>	'Mot de passe perdu',
 'Nom_prenom'	=>	'Nom / Prénom',
+'S_enregistrer'	=>	'S\'enregistrer',
+'Vous_etes_maintenant_deconnecte'	=>	'Vous êtes maintenant déconnecté',
 );

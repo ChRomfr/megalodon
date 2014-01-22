@@ -17,12 +17,17 @@ $.getJSON(
 	function(data){ 
 		
 		$(document).ready(function() {
+
+			var date = new Date();
+                var d = date.getDate();
+                var m = date.getMonth();
+                var y = date.getFullYear();
 	
 			$('#calmailing').fullCalendar({
 				header: {
 					left: 'prev,next today',
 					center: 'title',
-					right: 'month,basicWeek,basicDay'
+					right: 'year,month,basicWeek,basicDay'
 				},
 				firstDay:1,
 				editable: false,

@@ -183,7 +183,7 @@
 
 			{* END CRITERES RECHERCHE *}
 
-			{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
+			{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
 			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
 			{else}
 			<input type="hidden" name="mailing[valid]" value="0" />
@@ -205,7 +205,7 @@
 <!--
 $(document).ready(function() {
 	$('#date_wish').mask("99/99/9999");
-	{if isset($smarty.session.utilisateur.mailing_adm) && $smarty.session.utilisateur.mailing_adm == 1}
+	{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
 	{literal}
 	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true });
 	{/literal}
