@@ -150,6 +150,17 @@
 					</select>
 				</div> 
 			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">APE :</label>
+				<div class="col-sm-5">
+					<select name="mailing[cible][ape][]" class="form-control chzn-select" multiple>
+						{foreach $global_ape as $row}
+						<option value="{$row.id}">{$row.code}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
 			
 			<div id="champs-contacts"></div>
 			

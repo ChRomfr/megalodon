@@ -413,7 +413,6 @@ class contactsController extends Controller{
 			$filtres = $data_filtre;
 		}
 		
-		
 		// On recupere que les valides
 		$param = " c.valid = 1 ";
 		
@@ -426,7 +425,6 @@ class contactsController extends Controller{
 		
 		// Traitement des filtres
 		if( !empty($filtres) ){
-			//$filtres = $_GET['filtre'];
 
 			if( isset($filtres['departement']) && !empty($filtres['departement']) && !is_array($filtres['departement']) ){
 				$param .= " AND c.code_postal LIKE '". $filtres['departement'] ."%' ";
@@ -441,7 +439,7 @@ class contactsController extends Controller{
 						}
 						$i++;
 					}
-					$param .= " ) ";
+				$param .= " ) ";
 			}
 
 			if( isset($filtres['email_is_valid']) ){
@@ -451,6 +449,23 @@ class contactsController extends Controller{
 			// APE
 			if( isset($filtres['ape_id']) && !empty($filtres['ape_id']) ){
 				$param .= " AND s.ape_id =  '". $filtres['ape_id'] ."'";
+			}elseif(isset($filtres['ape']) && !empty($filtres['ape']) ){
+				$ape = $filtres['ape'];
+				
+				if(!empty($ape)){
+					
+					$param .= " AND ( ";
+					$i=0;
+					foreach($ape as $k => $v){
+						if($i!=0){
+							$param .= " OR s.ape_id = ". $v ." ";
+						}else{
+							$param .= " s.ape_id = ". $v ." ";
+						}
+						$i++;
+					}
+					$param .= " ) ";
+				}
 			}
 
 			// Organismes
@@ -471,7 +486,6 @@ class contactsController extends Controller{
 					}
 					$param .= " ) ";
 				}
-
 			}
 			
 			// Effectif

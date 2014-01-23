@@ -1,0 +1,1 @@
+INSERT INTO `config` (`cle`, `valeur`) VALUES ('ape_multi_choice', '0');

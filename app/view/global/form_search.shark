@@ -113,14 +113,33 @@
 		</select>
 	</div>
 	
+	{if $config.ape_multi_choice == 1}
+	<div class="form-group">
+		<label for="filtre_ape">APE :</label><br/>
+		<select name="filtre[ape][]" class="form-control chzn-select" multiple style="width:250px">
+			{foreach $global_ape as $row}
+			<option value="{$row.id}"
+				{if isset($smarty.get.filtre.ape)}
+					{foreach $smarty.get.filtre.ape as $k => $v}
+						{if $row.id == $v}
+							selected="selected"
+						{/if}
+					{/foreach}
+				{/if}
+				>{$row.code}
+			</option>
+			{/foreach}
+		</select>
+	</div>
+	{else}
 	<div class="form-group">
 		<label>APE :</label>
 		<br/>
 		<input type="text" id="form-input-search-ape" class="form-control" />
 		<input type="hidden" name="filtre[ape_id]" id="form-search-ape" value=""/>
 	</div>
-	
-	{* Filtre sur les types *}
+	{/if}
+
 	<label class="checkbox-inline">
 		<input type="checkbox" name="filtre[societes]" value="1" {if !isset($smarty.get.filtre) || isset($smarty.get.filtre.societes) && $smarty.get.filtre.societes == 1}checked="checked"{/if} />&nbsp;Societe
 	</label>
@@ -152,6 +171,7 @@ function hidesearchform(){
 	$('#select-view-form').html('<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>');
 }
 
+{if $config.ape_multi_choice == 0}
 jQuery(document).ready(function(){
 	$('#form-input-search-ape').autocomplete({
 		source : '{$Helper->getLink("ajax/search_ape?nohtml=nohtml")}',
@@ -167,5 +187,6 @@ jQuery(document).ready(function(){
 		}
 	});	
 });
+{/if}
 //-->
 </script>

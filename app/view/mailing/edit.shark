@@ -153,6 +153,26 @@
 			</div>
 
 			<div class="form-group">
+				<label class="control-label col-sm-2">APE :</label>
+				<div class="col-sm-5">
+					<select name="mailing[cible][ape][]" class="chzn-select form-control" multiple>
+						{foreach $global_ape as $row}
+						<option value="{$row.id}"
+							{if isset($mailing->cible.ape)}
+								{foreach $mailing->cible.ape as $k => $v}
+									{if $row.id == $v}
+										selected="selected"
+									{/if}
+								{/foreach}
+							{/if}
+							>{$row.code}
+						</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
+			<div class="form-group">
 				<label class="control-label col-sm-2">Poste :</label>
 				<div class="col-sm-5">		
 					<select name="mailing[cible][poste]" class="form-control">
