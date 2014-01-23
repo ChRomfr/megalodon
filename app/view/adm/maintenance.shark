@@ -1,9 +1,17 @@
 <!-- view/adm/maintenance -->
+{strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("")}" title="Administration">Administration</a></li>
-	<li>Maintenance</li>
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;&nbsp;{$lang.Accueil}</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;{$lang.Administration}</a></li>
+	<li class="active"><i class="fa fa-gears"></i>&nbsp;&nbsp;Maintenance</li>
 </ol>
+
+<div class="well">
+	<h4>{$lang.Verification_configuration}</h4>
+	<div class="text-center">
+		<a href="{$Helper->getLink("adm/configuration_check")}" title="{$lang.Verifier}" class="btn btn-primary">{$lang.Verifier}</a>
+	</div>
+</div>
 
 <div class="well">
 	<h4>Sessions</h4>
@@ -62,7 +70,7 @@
 		</tr>
 	</table>
 </div>
-
+{/strip}
 <script type="text/javascript">
 <!--
 function clean_cache(){

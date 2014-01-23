@@ -43,6 +43,8 @@ $registry->load_web_lib('shark_tasks/shark_tasks.css','css');
 */
 $registry->config['ldap_server'] = unserialize($registry->config['ldap_server']);
 
+require_once ROOT_PATH.'app'.DS.'local'.DS.'french.php';
+$registry->smarty->assign('lang', $lang);
 
 /**
  * Fonction autoload de l'application

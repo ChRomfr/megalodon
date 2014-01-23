@@ -24,6 +24,13 @@
 		</li>
 
 		<li>
+			<a href="{$Helper->getLink("adm/maintenance")}" title="{$lang.Maintenance}">
+				<span class="fa fa-gears fa-3x"></span>
+				<span class="glyphicon-class">{$lang.Maintenance}</span>
+			</a>
+		</li>
+
+		<li>
 			<a href="{$Helper->getLink("adm/configuration")}" title="">
 				<span class="glyphicon glyphicon-wrench"></span>
 				<span class="glyphicon-class">Préferences</span>

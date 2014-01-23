@@ -1,0 +1,25 @@
+<!-- START view/adm/configuration_check.meg -->
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;Administration</a></li>
+    <li><a href="{$Helper->getLink("adm/maintenance")}" title="{$lang.Maintenance}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;{$lang.Maintenance}</a></li>
+    <li class="active">{$lang.Verification_configuration}</li>
+</ol>
+
+<div class="well">
+	{if count($results) == 0}
+	<div class="alert alert-success">{$lang.Configuration_ok}</div>
+	{else}
+	<table class="table">
+		{foreach $results as $k => $v}
+		<tr>
+			<td>#{$k}</td>
+			<td>{$v}</td>
+		</tr>
+		{/foreach}
+	</table>
+	{/if}
+</div>
+{/strip}
+<!-- END view/adm/configuration_check.meg -->

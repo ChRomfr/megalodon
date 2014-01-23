@@ -153,6 +153,20 @@
             </div>
             
         </fieldset>
+
+        <fieldset>
+            <legend>{$lang.Contacts}</legend>
+            <div class="form-group">
+                <label class="control-label col-sm-2">{$lang.Recherche_multiple_par_code_ape}</label>
+                <div class="col-sm-5">
+                    <select name="config[ape_multi_choice]" id="config-ape-multi-choice" class="form-control">
+                        <option value="0" {if $config.ape_multi_choice == 0}selected="selected"{/if}>Non</option>
+                        <option value="1" {if $config.ape_multi_choice == 1}selected="selected"{/if}>Oui</option>
+                    </select>
+                </div>
+            </div>
+        </fieldset>
+
         <div class="text-center">
             <hr/>
             <button class="btn btn-primary" type="submit">Enregistrer</button>

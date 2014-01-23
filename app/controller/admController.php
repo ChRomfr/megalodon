@@ -73,6 +73,33 @@ class admController extends Controller{
         return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'configuration.shark');
 	}
 
+	/**
+	 * Verifie la precence des lignes de configuration dans la table.
+	 * Si ligne abs elle est automatiquement rajoutée.
+	 * @return [type] [description]
+	 */
+	public function configuration_checkAction(){
+		$config_check = array(
+			'ape_multi_choice'	=>	0,
+		);
+		
+		$results = array();
+
+		foreach($config_check as $k => $v){
+			$result = $this->registry->db->count('config', array('cle =' => $k));
+			
+			if($result == 0){
+				// On ajoute la cle
+				$this->registry->db->insert('config', array('cle' => $k, 'valeur' => $v));
+				$results[] = 'KEY : <strong>'.$k.'</strong> is missing. KEY add in database !';
+			}
+		}
+
+		$this->registry->smarty->assign('results', $results);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'configuration_check.meg');
+	}
+
     public function contactsAction(){
         
         return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'contacts.tpl');
