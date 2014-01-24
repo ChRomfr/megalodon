@@ -14,7 +14,13 @@
 
 	<table class="table table-stripped table-condensed">
 		<thead>
-
+			<tr>
+				<th>#</th>
+				<th>{$lang.Site}</th>
+				<th>{$lang.Lieux}</th>
+				<th>{$lang.Telephone}</th>
+				<th></th>
+			</tr>
 		</thead>
 		<tbody>
 			{foreach $sites as $row}
@@ -23,6 +29,11 @@
 				<td>{$row.libelle}</td>
 				<td>{$row.ville}</td>
 				<td>{$row.telephone}</td>
+				<td>
+					<a href="javascript:site_edit({$row.id})" title="{$lang.Modifier}"><i class="fa fa-edit"></i></a>
+					&nbsp;&nbsp;
+					<a href="javascript:site_delete({$row.id}, '{$row.libelle}');" title="{$lang.Supprimer}"><i class="fa fa-trash-o"></i></a>
+				</td>
 			</tr>
 			{/foreach}
 		</tbody>
@@ -40,6 +51,24 @@ function site_add(){
     );
     $('#modal-global-label').html('<i class="fa fa-global"></i>&nbsp;&nbsp;{$lang.Nouveau_site}');
     $('#modal-global').modal('show');
+}
+
+function site_edit(sid){
+	$.get(
+        '{$Helper->getLink("adm/sitesloadform/'+sid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-global"></i>&nbsp;&nbsp;{$lang.Edition_site}');
+    $('#modal-global').modal('show');
+}
+
+function site_delete(sid, slibelle){
+	if(confirm('{$lang.Confirm_suppression_site} :'+ slibelle +' ?')){
+		window.location.href='{$Helper->getLink("adm/site_delete/'+sid+'")}';
+	}
 }
 </script>
 <!-- END app/view/adm/site.meg -->

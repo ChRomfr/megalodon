@@ -552,6 +552,12 @@ class admController extends Controller{
 	 */
 	public function sitesloadformAction($sid = null){
 
+		if(!is_null($sid)){
+			$site = new site();
+			$site->get($sid);
+			$this->registry->smarty->assign('site', $site);
+		}
+
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'form_sites.meg');
 	}
 
