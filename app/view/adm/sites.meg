@@ -1,0 +1,45 @@
+<!-- START app/view/adm/site.meg -->
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;&nbsp;{$lang.Accueil}</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;{$lang.Administration}</a></li>
+	<li class="active"><i class="fa fa-globe"></i>&nbsp;&nbsp;{$lang.Sites}</li>
+</ol>
+
+<div class="well">
+	<div class="pull-right">
+		<a href="javascript:site_add();" title="{$lang.Ajouter}"><i class="fa fa-lg fa-plus"></i></a>
+	</div>
+
+	<div class="clearfix"></div>
+
+	<table class="table table-stripped table-condensed">
+		<thead>
+
+		</thead>
+		<tbody>
+			{foreach $sites as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{$row.libelle}</td>
+				<td>{$row.ville}</td>
+				<td>{$row.telephone}</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+
+<script type="text/javascript">
+function site_add(){
+	$.get(
+        '{$Helper->getLink("adm/sitesloadform")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-global"></i>&nbsp;&nbsp;{$lang.Nouveau_site}');
+    $('#modal-global').modal('show');
+}
+</script>
+<!-- END app/view/adm/site.meg -->

@@ -35,14 +35,26 @@
 		</div>
 
 		<div class="form-group">
-				<label class="control-label col-sm-2">Administrateur :</label>
-				<div class="col-sm-5">
-					<select name="user[isAdmin]" class="form-control">
-						<option value="0" {if $user->isAdmin == 0}selected="selected"{/if} >Non</option>
-						<option value="1" {if $user->isAdmin == 1}selected="selected"{/if}>Oui</option>
-					</select>
-				</div>
+			<label class="control-label col-sm-2">Administrateur :</label>
+			<div class="col-sm-5">
+				<select name="user[isAdmin]" class="form-control">
+					<option value="0" {if $user->isAdmin == 0}selected="selected"{/if} >Non</option>
+					<option value="1" {if $user->isAdmin == 1}selected="selected"{/if}>Oui</option>
+				</select>
 			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2" for="user-site-id">{$lang.Site} :</label>
+			<div class="col-sm-5">
+				<select name="user[site_id]" class="form-control">
+					<option value=""></option>
+					{foreach $sites as $row}
+					<option value="{$row.id}" {if $user->site_id == $row.id}selected="selected"{/if}>{$row.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
 
 		<fieldset>
 			<legend>Acl</legend>			
@@ -156,5 +168,3 @@
 </div><!-- /well -->
 <!-- END FORM EDIT USER -->
 {/strip}
-<pre>
-{$user|print_r}

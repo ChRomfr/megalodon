@@ -1,1 +1,42 @@
+CREATE TABLE `module_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(100) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM;
+
+CREATE TABLE `modules` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(100) NOT NULL,
+  `description` TEXT NULL,
+  `actif` INT(1) NOT NULL DEFAULT 0,
+  `author` VARCHAR(100) NULL,
+  `version` VARCHAR(15) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+ COMMENT = 'Contient la liste des modules du logiciel';
+
+ CREATE TABLE `sites` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(200) NOT NULL,
+  `description` TEXT NULL,
+  `email` VARCHAR(200) NULL,
+  `telephone` VARCHAR(20) NULL,
+  `fax` VARCHAR(20) NULL,
+  `adresse` TEXT NULL,
+  `cp` VARCHAR(15) NULL,
+  `ville` VARCHAR(200) NULL,
+  `pays` VARCHAR(200) NULL,
+  `siege` INT(1) NOT NULL DEFAULT 0,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Informations contenants les differents site de l entreprise';
+
 INSERT INTO `config` (`cle`, `valeur`) VALUES ('ape_multi_choice', '0');
+INSERT INTO `config` (`cle`) VALUES ('logo');
+
+INSERT INTO `module_type` (`libelle`) VALUES ('base');
+INSERT INTO `module_type` (`libelle`) VALUES ('addon');
+
+INSERT INTO `modules` (`name`, `description`, `actif`) VALUES ('contacts', '', '1');
+INSERT INTO `modules` (`name`, `actif`) VALUES ('mailing', '1');
+INSERT INTO `modules` (`name`, `actif`) VALUES ('campaign', '1');

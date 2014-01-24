@@ -33,7 +33,6 @@ if(ACL_ADMIN){
 	$registry->constructConstAdm();	
 }
 
-
 # Envoie du JS & CSS
 $jquery_theme = 'overcast';
 $registry->addJS('jquery-last.min.js');								# Jquery
@@ -51,7 +50,7 @@ $registry->load_web_lib('chosen/chosen.jquery.min.js','js');
 $registry->load_web_lib('chosen/chosen.css','css');
 
 # Difinition des chemins des applications par ordre d appel
-$registry->router->setPath(array(ROOT_PATH . 'MyApp' . DS . 'controller' .DS,  ROOT_PATH . 'app' . DS . 'controller' .DS) );
+$registry->router->setPath(array(ROOT_PATH . 'modules' . DS . 'controller' .DS,  ROOT_PATH . 'app' . DS . 'controller' .DS) );
 
 # Execution de la requete et recuperation du resultat
 $Content = $registry->router->loader();

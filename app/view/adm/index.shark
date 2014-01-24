@@ -31,6 +31,13 @@
 		</li>
 
 		<li>
+			<a href="{$Helper->getLink("adm/modules")}" title="{$lang.Modules}">
+				<span class="fa fa-puzzle-piece fa-3x"></span>
+				<span class="glyphicon-class">{$lang.Modules}</span>
+			</a>
+		</li>
+
+		<li>
 			<a href="{$Helper->getLink("adm/configuration")}" title="">
 				<span class="glyphicon glyphicon-wrench"></span>
 				<span class="glyphicon-class">Préferences</span>

@@ -1,0 +1,32 @@
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}">{$lang.Accueil}</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}">{$lang.Administration}</a></li>
+	<li class="active">{$lang.Modules}</li>
+</ol>
+
+<div class="well">
+	<table class="table table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>{$lang.Module}</th>
+				<th>{$lang.Actif}</td>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $modules as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{$row.name}</td>
+				<td>
+					{if $row.actif == 1}<span class="label label-success">Oui</span>
+					{else}<span class="label label-danger">Non</span>
+					{/if}
+				</tr>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+{/strip}

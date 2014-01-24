@@ -81,8 +81,10 @@ class admController extends Controller{
 	public function configuration_checkAction(){
 		$config_check = array(
 			'ape_multi_choice'	=>	0,
+			'logo'				=>	'',
 		);
 		
+
 		$results = array();
 
 		foreach($config_check as $k => $v){
@@ -319,11 +321,13 @@ class admController extends Controller{
 		}
 
 		$user = new utilisateur();
-		$user->get($uid);
+		$sites = new site();
 
+		$user->get($uid);
 		$user->acl = getACLs($user->id, true);
 
 		$this->registry->smarty->assign('user', $user);
+		$this->registry->smarty->assign('sites', $sites->get());
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_edit.shark');
 	}
@@ -517,4 +521,65 @@ class admController extends Controller{
 		$this->registry->Helper->pnotify('Type supprime', 'Le type a été supprimé');
 		return $this->mailingtypeAction();
 	}
+
+	public function modulesAction(){
+		$modules = $this->registry->db->get('modules');
+
+		$this->registry->smarty->assign('modules',$modules);
+		$this->registry->smarty->assign('ctitre', 'Administration :: Modules');
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'modules.meg');
+	}
+
+	/* --- SITES ACTIONS --- */
+
+	/**
+	 * Affiche la liste des sites dans la base
+	 * @return [type] [description]
+	 */
+	public function sitesAction(){
+		$sites = new site();
+
+		$this->registry->smarty->assign('sites', $sites->get());
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'sites.meg');
+	}
+
+	/**
+	 * Charge le formulaire pour ajout/modifier un site
+	 * @param  [type] $sid [description]
+	 * @return [type]      [description]
+	 */
+	public function sitesloadformAction($sid = null){
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'form_sites.meg');
+	}
+
+	/**
+	 * Traite l'ajout d'un site dans la base
+	 * @return [type] [description]
+	 */
+	public function site_addAction(){
+		if(!is_null($this->registry->Http->post('site'))){
+			$site = new site($this->registry->Http->post('site'));
+			$site->save();
+			$this->registry->Helper->pnotify('Sites', 'Site enregistré');
+		}
+
+		return $this->sitesAction();
+	}
+
+	/**
+	 * Traite l'edition d'un site dans la base
+	 * @param  [type] $sid [description]
+	 * @return [type]      [description]
+	 */
+	public function siteEdit($sid){}
+
+	/**
+	 * Traite la suppression d'un site dans la base
+	 * @param  [type] $sid [description]
+	 * @return [type]      [description]
+	 */
+	public function siteDelete($sid){}
 }

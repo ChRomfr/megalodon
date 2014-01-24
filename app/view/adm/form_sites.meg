@@ -1,0 +1,77 @@
+<!-- START app/view/adm/form_site.meg -->
+{strip}
+<form method="post" role="form" class="form-horizontal well" action="{if isset($site)}{else}{$Helper->getLink("adm/site_add")}{/if}">
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Nom_du_site} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[libelle]" id="site-libelle" required {if isset($site)}value="{$site.libelle}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Description} :</label>
+		<div class="col-md-8">
+			<textarea name="site[description]" id="site-description" class="form-control">{if isset($site)}$site.description}{/if}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Adresse} :</label>
+		<div class="col-md-8">
+			<textarea name="site[adresse]" id="site-adresse" class="form-control">{if isset($site)}$site.adresse}{/if}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Code_postal} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[cp]" id="site-cp" required {if isset($cp)}value="{$site.cp}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Ville} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[ville]" id="site-ville" required {if isset($site)}value="{$site.ville}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Telephone} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[telephone]" id="site-telephone" {if isset($site)}value="{$site.telephone}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Fax} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[fax]" id="site-fax" required {if isset($site)}value="{$site.fax}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Email} :</label>
+		<div class="col-md-8">
+			<input type="text" name="site[email]" id="site-email" required {if isset($site)}value="{$site.email}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-4">{$lang.Siege} :</label>
+		<div class="col-md-8">
+			<select type="text" name="site[siege]" id="site-siege" class="form-control">
+				<option {if isset($site) && $site.siege == 0}selected="selected"{/if} value="0">{$lang.Non}</option>
+				<option {if isset($site) && $site.siege == 1}selected="selected"{/if} value="1">{$lang.Oui}</option>
+			</select>
+		</div>
+	</div>
+
+	<hr/>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary">{$lang.Enregistrer}</button>
+	</div>
+</form>
+{/strip}
+<!-- END app/view/adm/form_site.meg -->
