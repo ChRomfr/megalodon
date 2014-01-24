@@ -311,8 +311,10 @@ class admController extends Controller{
 
 			// On parcours les acls pour enregistrement
 			$acls = $this->registry->Http->post('acl');
-			foreach ($acls as $key => $value) {
-				$this->registry->db->insert('acl', array('user_id' => $user->id, 'acl' => $key));
+			if(!empty($acls)){
+				foreach ($acls as $key => $value) {
+					$this->registry->db->insert('acl', array('user_id' => $user->id, 'acl' => $key));
+				}
 			}
 
 			$this->registry->Helper->pnotify('Utilisateur', 'modifications enregistrées', 'success');
@@ -580,12 +582,40 @@ class admController extends Controller{
 	 * @param  [type] $sid [description]
 	 * @return [type]      [description]
 	 */
-	public function siteEdit($sid){}
+	public function site_editAction($sid){
+		if(!is_null($this->registry->Http->post('site'))){
+			$site = new site($this->registry->Http->post('site'));
+
+			// Verification des champs qui peuvent etre vide
+			if(empty($site->telephone)) $site->telephone = NULL;
+			if(empty($site->fax)) $site->fax = NULL;
+			if(empty($site->email)) $site->email = NULL;
+
+			$site->save();
+			$this->registry->Helper->pnotify('Sites', 'Site modifié');
+		}
+
+		return $this->sitesAction();
+	}
 
 	/**
 	 * Traite la suppression d'un site dans la base
 	 * @param  [type] $sid [description]
 	 * @return [type]      [description]
 	 */
-	public function siteDelete($sid){}
+	public function site_deleteAction($sid){
+		$this->registry->db->delete('sites', $sid);
+		$users = $this->registry->db->get('user', array('site_id =' => $sid));
+		foreach($users as $user){
+			$user['site_id'] = NULL;
+			$this->registry->db->update('user', $user);
+		}
+		$this->registry->Helper->pnotify('Site', 'Site supprimé de la base. Les utilisateurs ont été retirés du site.');
+		return $this->sitesAction();
+	}
+
+	/*-- TIERS --*/
+
+
+	/*-- PRODUCT --*/
 }
