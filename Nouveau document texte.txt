@@ -55,6 +55,8 @@ CREATE TABLE `megalodon`.`tiers_type` (
   PRIMARY KEY (`id`))
 ENGINE = MyISAM;
 
+ALTER TABLE `tiers` CHANGE COLUMN `tel` `telephone` VARCHAR(20) NULL DEFAULT NULL , ADD COLUMN `internal_code` VARCHAR(20) NULL AFTER `type_id`;
+
 INSERT INTO `config` (`cle`, `valeur`) VALUES ('ape_multi_choice', '0');
 INSERT INTO `config` (`cle`) VALUES ('logo');
 INSERT INTO `config` (`cle`) VALUES ('logo_name');

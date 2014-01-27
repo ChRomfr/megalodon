@@ -650,6 +650,10 @@ class admController extends Controller{
 
 	/*-- TIERS --*/
 
+	/**
+	 * Affiche la liste des tiers avec les differentes actions.
+	 * @return [type] [description]
+	 */
 	public function tiersAction(){
 
 		// Verification modules actifs
@@ -658,6 +662,8 @@ class admController extends Controller{
 			return $this->indexAction();
 		}
 
+		$this->getFormValidatorJs();
+
 		$this->load_manager('tier');
 
 		$tiers = $this->manager->tier->getAll();
@@ -665,6 +671,62 @@ class admController extends Controller{
 		$this->registry->smarty->assign('tiers', $tiers);
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'tiers.meg');
+	}
+
+	/**
+	 * Retourne le formulaire de gestion des tiers
+	 * @param  [type] $tid [description]
+	 * @return [type]      [description]
+	 */
+	public function tiers_formAction($tid = null){
+
+		if(!is_null($tid)){
+			$tier = new tier();
+			$tier->get($tid);
+			$this->registry->smarty->assign('tier', $tier);
+		}
+		
+		$this->registry->smarty->assign('types', $this->registry->db->get('tiers_type'));
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'tier_form.meg');
+	}
+
+	/**
+	 * Traite le formulaire d ajout de tier
+	 * @return [type] [description]
+	 */
+	public function tier_addAction(){
+		if( !is_null($this->registry->Http->post('tier'))){
+			$tier = new tier($this->registry->Http->post('tier'));
+			$tier->save();
+			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base');
+		}
+
+		return $this->tiersAction();
+	}
+
+	/**
+	 * Traite le formulaire d edition
+	 * @return [type] [description]
+	 */
+	public function tier_editAction(){
+		if( !is_null($this->registry->Http->post('tier'))){
+			$tier = new tier($this->registry->Http->post('tier'));
+			$tier->save();
+			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base');
+		}
+
+		return $this->tiersAction();
+	}
+
+	/**
+	 * Supprime un tier de la base
+	 * @param  [type] $tid [description]
+	 * @return [type]      [description]
+	 */
+	public function tier_delete($tid){
+		$this->registry->db->delete('tiers', $tier);
+		$this->registry->Helper->pnotify('Tiers', 'Informations supprimées dans la base');
+		return $this->tiersAction();
 	}
 
 

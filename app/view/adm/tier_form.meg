@@ -1,24 +1,146 @@
 <!-- START app/view/adm/tier_form.meg -->
-<form method="post" action="{if isset($tier)}{$Helper->getLink("adm/tier_edit/{$tier.id}")}{else}{$Helper->getLink("adm/tier_add")}{/if}">
+<form method="post" action="{if isset($tier)}{$Helper->getLink("adm/tier_edit/{$tier.id}")}{else}{$Helper->getLink("adm/tier_add")}{/if}" role="form" class="form-horizontal" id="tiers-form">
 
 	<div class="form-group">
-		<label class="label-control col-md-2">{$lang.Nom} :</label>
+		<label class="label-control col-md-3">{$lang.Nom} :</label>
 		<div class="col-md-5">
 			<input type="text" name="tier[name]" id="tier-name" required {if isset($tier)}value="{$tier.name}"{/if} class="form-control"/>
 		</div>
 	</div>
 
 	<div class="form-group">
-		<label class="label-control col-md-2">{$lang.Type} :</label>
+		<label class="label-control col-md-3">{$lang.Type} :</label>
 		<div class="col-md-5">
 			<select name="tier[type_id]" id="tier-type-id" class="form-control">
 				<option></option>
 				{foreach $types as $row}
-				<option value="{$row.id}">{$row.libelle}</option>
+				<option value="{$row.id}" {if $row.id == $tier.type_id}selected="selected"{/if}>{$row.libelle}</option>
 				{/foreach}
 			</select>
 		</div>
 	</div>
 
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Description} :</label>
+		<div class="col-md-5">
+			<textarea type="text" name="tier[description]" id="tier-description" class="form-control">{if isset($tier)}{$tier.description}{/if}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Adresse} :</label>
+		<div class="col-md-5">
+			<textarea type="text" name="tier[adresse]" id="tier-adresse" class="form-control">{if isset($tier)}{$tier.adresse}{/if}</textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Code_postal} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[cp]" id="tier-cp" {if isset($tier)}value="{$tier.cp}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Ville} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[ville]" id="tier-ville" {if isset($tier)}value="{$tier.ville}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Pays} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[pays]" id="tier-pays" {if isset($tier)}value="{$tier.pays}"{else}value="{$config.default_country}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Telephone} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[telephone]" id="tier-telephone" {if isset($tier)}value="{$tier.telephone}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Fax} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[fax]" id="tier-fax" {if isset($tier)}value="{$tier.fax}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Site} :</label>
+		<div class="col-md-5">
+			<input type="url" name="tier[site]" id="tier-site" {if isset($tier)}value="{$tier.site}"{/if} class="form-control" placeholder="http://www......"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Email} :</label>
+		<div class="col-md-5">
+			<input type="email" name="tier[email]" id="tier-email" {if isset($tier)}value="{$tier.email}"{/if} class="form-control" palceholder="contact@tier.dom"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Siret} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[siret]" id="tier-siret" {if isset($tier)}value="{$tier.siret}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.TVA} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[tva]" id="tier-tva" {if isset($tier)}value="{$tier.tva}"{/if} class="form-control"/>
+		</div>
+	</div>
+	
+	<div class="form-group">
+		<label class="label-control col-md-3">{$lang.Code_interne} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[internal_code]" id="tier-internal-code" {if isset($tier)}value="{$tier.internal_code}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<hr/>
+	<div class="text-center">
+		{if isset($tier)}
+		<input type="hidden" name="tier[id]" value="{$tier.id}" required />
+		{/if}
+		<button type="submit" class="btn btn-primary">{$lang.Enregistrer}</button>
+	</div>
+
 </form>
+<script type="text/javascript">
+$("#tiers-form").validate({
+	rules:{
+		"tier[name]":{
+			required:true,
+		},
+		"tier[email]":{
+			email:true,
+		},
+	},
+	messages:{
+		"tier[name]":{
+			required:"Veuillez indiquer le nom du contact",
+		},
+		"tier[email]":{
+			email:"Veuillez saisir une adresse email valide",
+		},
+	},
+	highlight:function(element)
+    {
+        $(element).parents('.form-group').removeClass('success');
+        $(element).parents('.form-group').addClass('error');
+    },
+    unhighlight: function(element)
+    {
+        $(element).parents('.form-group').removeClass('error');
+        $(element).parents('.form-group').addClass('success');
+    }
+});
+</script>
 <!-- END app/view/adm/tier_form.meg -->
