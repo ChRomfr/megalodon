@@ -6,7 +6,7 @@
 </ol>
 
 <div class="well">
-    <form method="post" action="" id="form-edit-config" class="form-horizontal">
+    <form method="post" action="" id="form-edit-config" class="form-horizontal" enctype="multipart/form-data">
         
         <fieldset>
             <legend id="configuration-general">Générale</legend>
@@ -14,6 +14,21 @@
                 <label class="control-label col-sm-2">Pays par défaut:</label>
                 <div class="col-sm-5">
                     <input type="text" name="config[default_countre]" id="config-default-contry" value="{$config.default_country}" class="form-control"/>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">{$lang.Logo} :</label>
+                <div class="col-sm-5">
+                    <input type="file" name="file_logo" id="config-logo" class="form-control"/>
+                    {if !empty($config.logo_name)}<span class="help-block"><img src="{$config.url}web/upload/logo/{$config.logo_name}" alt="LOGO" style="width:150px" /></span>{/if}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-sm-2">Supprimer le logo actuel :</label>
+                <div class="col-sm-5">
+                    <input type="checkbox" name="logo_delete" value="1"/>
                 </div>
             </div>
         </fieldset>

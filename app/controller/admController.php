@@ -50,6 +50,12 @@ class admController extends Controller{
 	}
 
 	public function configurationAction(){
+
+		if( isset($_POST['logo_delete'])){
+			unlink(ROOT_PATH.'web'.DS.'upload'.DS.'logo'.DS.$this->registry->config['logo_name']);
+			$this->registry->db->update('config', array('valeur' => NULL), array('cle =' => 'logo_name'));
+		}
+
 		if(!is_null($this->registry->Http->post('config'))){
             
             $config = $this->registry->Http->post('config');
@@ -62,10 +68,35 @@ class admController extends Controller{
                 
                 $this->registry->db->update('config', array('valeur' => $value), array('cle =' => $key));
             }
+
+            // Traitements des fichiers
+            $path = ROOT_PATH . 'web' . DS . 'upload' . DS . 'logo' . DS;
+		
+			if( !is_dir($path) ) @mkdir($path);			
+		
+			// Recuperation lib
+			require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'upload' . DS . 'class.upload.php';
+		
+			// Nouvelle instance
+			$upload = new Upload($_FILES['file_logo']);
+		
+			$new_file_name = time();
+		
+			// Traitement de l'upload avec renommage
+			if($upload->uploaded){
+				$upload->file_overwrite = true;
+				$upload->file_new_name_body   = time();
+				$upload->process($path);
+				
+				// Enregistrement dans la table
+				$this->registry->db->update('config', array('valeur' => $upload->file_dst_name), array('cle =' => 'logo_name'));
+			}
             
+            // Suppression du cache actuel
             $this->registry->cache->remove('config');
             
-            return $this->registry->Helper->redirect($this->registry->Helper->getLink('configuration'),3,'Configuration enregistrée');
+            $this->registry->Helper->pnotify('Configuration', 'Configuration enregistrée');
+            goto printform;
         }
         
         printform:
@@ -82,6 +113,7 @@ class admController extends Controller{
 		$config_check = array(
 			'ape_multi_choice'	=>	0,
 			'logo'				=>	'',
+			'logo_name'			=>	'',
 		);
 		
 

@@ -33,6 +33,8 @@ COMMENT = 'Informations contenants les differents site de l entreprise';
 
 INSERT INTO `config` (`cle`, `valeur`) VALUES ('ape_multi_choice', '0');
 INSERT INTO `config` (`cle`) VALUES ('logo');
+INSERT INTO `config` (`cle`) VALUES ('logo_name');
+
 
 INSERT INTO `module_type` (`libelle`) VALUES ('base');
 INSERT INTO `module_type` (`libelle`) VALUES ('addon');

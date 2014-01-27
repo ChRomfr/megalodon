@@ -24,6 +24,7 @@ $lang = array_merge($lang, array(
 'Module'	=>	'Module',
 'Modules'	=>	'Modules',
 'Lieux'	=>	'Lieux',
+'Logo'	=>	'Logo',
 'Oui'	=>	'Oui',
 'Recherche_multiple_par_code_ape'	=>	'Recherche par plusieurs code APE',
 'Siege'	=>	'Siège',
