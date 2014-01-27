@@ -45,6 +45,8 @@ $registry->config['ldap_server'] = unserialize($registry->config['ldap_server'])
 
 require_once ROOT_PATH.'app'.DS.'local'.DS.'french.php';
 $registry->smarty->assign('lang', $lang);
+$registry->modules = getModules();
+$registry->smarty->assign('modules', $registry->modules);
 
 /**
  * Fonction autoload de l'application
@@ -283,4 +285,16 @@ function getAcl($name){
 
 function isAdmin(){
 	return $_SESSION['utilisateur']['isAdmin'];
+}
+
+function getModules(){
+	global $registry;
+	$result = $registry->db->get('modules');
+	$modules = array();
+
+	foreach($result as $row){
+		$modules[$row['name']] = $row;
+	}
+
+	return $modules;
 }

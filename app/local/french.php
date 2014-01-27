@@ -32,6 +32,7 @@ $lang = array_merge($lang, array(
 'Sites'	=>	'Sites',
 'Supprimer'	=>	'Supprimer',
 'Telephone'	=>	'Téléphone',
+'Tiers'	=>	'Tiers',
 'Verification_configuration'	=>	'Verification de la configuration',
 'Verifier'	=>	'Vérifier',
 'Ville'	=>	'Ville',

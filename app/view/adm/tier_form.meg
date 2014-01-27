@@ -1,0 +1,24 @@
+<!-- START app/view/adm/tier_form.meg -->
+<form method="post" action="{if isset($tier)}{$Helper->getLink("adm/tier_edit/{$tier.id}")}{else}{$Helper->getLink("adm/tier_add")}{/if}">
+
+	<div class="form-group">
+		<label class="label-control col-md-2">{$lang.Nom} :</label>
+		<div class="col-md-5">
+			<input type="text" name="tier[name]" id="tier-name" required {if isset($tier)}value="{$tier.name}"{/if} class="form-control"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="label-control col-md-2">{$lang.Type} :</label>
+		<div class="col-md-5">
+			<select name="tier[type_id]" id="tier-type-id" class="form-control">
+				<option></option>
+				{foreach $types as $row}
+				<option value="{$row.id}">{$row.libelle}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
+
+</form>
+<!-- END app/view/adm/tier_form.meg -->

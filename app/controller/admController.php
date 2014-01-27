@@ -51,11 +51,13 @@ class admController extends Controller{
 
 	public function configurationAction(){
 
+		// Suppression du logo existant
 		if( isset($_POST['logo_delete'])){
 			unlink(ROOT_PATH.'web'.DS.'upload'.DS.'logo'.DS.$this->registry->config['logo_name']);
 			$this->registry->db->update('config', array('valeur' => NULL), array('cle =' => 'logo_name'));
 		}
 
+		// Traitement du formulaire
 		if(!is_null($this->registry->Http->post('config'))){
             
             $config = $this->registry->Http->post('config');
@@ -647,6 +649,23 @@ class admController extends Controller{
 	}
 
 	/*-- TIERS --*/
+
+	public function tiersAction(){
+
+		// Verification modules actifs
+		if($this->registry->modules['tiers']['actif'] != 1){
+			$this->registry->Helper->pnotify('Erreur', 'Module desactive');
+			return $this->indexAction();
+		}
+
+		$this->load_manager('tier');
+
+		$tiers = $this->manager->tier->getAll();
+
+		$this->registry->smarty->assign('tiers', $tiers);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'tiers.meg');
+	}
 
 
 	/*-- PRODUCT --*/

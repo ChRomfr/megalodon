@@ -31,6 +31,30 @@ ENGINE = MyISAM
 ENGINE = MyISAM
 COMMENT = 'Informations contenants les differents site de l entreprise';
 
+CREATE TABLE `tiers` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  `description` TEXT NULL,
+  `adresse` TEXT NULL,
+  `cp` VARCHAR(15) NULL,
+  `ville` VARCHAR(150) NULL,
+  `pays` VARCHAR(150) NULL,
+  `email` VARCHAR(200) NULL,
+  `tel` VARCHAR(20) NULL,
+  `fax` VARCHAR(20) NULL,
+  `site` VARCHAR(200) NULL,
+  `siret` VARCHAR(50) NULL,
+  `tva` VARCHAR(50) NULL,
+  `type_id` INT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM;
+
+CREATE TABLE `megalodon`.`tiers_type` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(150) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM;
+
 INSERT INTO `config` (`cle`, `valeur`) VALUES ('ape_multi_choice', '0');
 INSERT INTO `config` (`cle`) VALUES ('logo');
 INSERT INTO `config` (`cle`) VALUES ('logo_name');

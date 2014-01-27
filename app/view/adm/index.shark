@@ -43,6 +43,15 @@
 				<span class="glyphicon-class">Préferences</span>
 			</a>
 		</li>
+		
+		{if isset($modules['tiers']) && $modules['tiers']['actif'] == 1}
+		<li>
+			<a href="{$Helper->getLink("adm/tiers")}" title="">
+				<span class="fa fa-sitemap fa-3x"></span>
+				<span class="glyphicon-class">{$lang.Tiers}</span>
+			</a>
+		</li>
+		{/if}
 
 		<li>
 			<a href="{$Helper->getLink("adm/users_index")}" title="">
