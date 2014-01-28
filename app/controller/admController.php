@@ -723,8 +723,8 @@ class admController extends Controller{
 	 * @param  [type] $tid [description]
 	 * @return [type]      [description]
 	 */
-	public function tier_delete($tid){
-		$this->registry->db->delete('tiers', $tier);
+	public function tier_deleteAction($tid){
+		$this->registry->db->delete('tiers', $tid);
 		$this->registry->Helper->pnotify('Tiers', 'Informations supprimées dans la base');
 		return $this->tiersAction();
 	}
