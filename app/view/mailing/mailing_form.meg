@@ -1,0 +1,330 @@
+<!-- START app/view/mailing/mailing_form.meg -->
+{strip}
+<form method="post" action="" class="form-horizontal" id="form-mailing-request">
+
+	<fieldset>
+
+		<legend>{$lang.Mailing}</legend>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Nom du mailing :</label>
+			<div class="col-sm-5">
+				<input type="text" name="mailing[libelle]" id="libelle" required {if isset($mailing)}value="{$mailing->libelle}"{/if} class="form-control"/>
+			</div>			
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Description :</label>
+			<div class="col-sm-5">
+				<textarea name="mailing[description]" id="description" required rows="6" class="form-control">{if isset($mailing)}{$mailing->description}{/if}</textarea>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Date d'envoie souhaitée :</label>
+			<div class="col-sm-5">
+				<input type="text" name="mailing[date_wish]" id="date_wish" class="form-control" {if isset($mailing)}value="{$mailing->date_wish}"{/if} />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="col-sm-2 control-label">{$lang.Type} :</label>
+			<div class="col-sm-5">
+				<select name="mailing[type_id]" class="form-control">
+					<option value=""></option>
+					{foreach $types as $type}
+					<option value="{$type.id}" {if isset($mailing) && $mailing->type_id == $type.id}selected="selected"{/if}>{$type.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
+		<div class="form-group">
+			<label class="control-label col-sm-2">{$lang.Demandeur} :</label>
+			<div class="col-sm-5">
+				<input type="text" name="mailing[caller]" id="caller" {if isset($mailing)}value="{$mailing->caller}"{/if} class="form-control"/>
+			</div>			
+		</div>		
+
+		{if !empty($actions)}
+		<div class="form-group">
+			<label class="col-sm-2 control-label">Action :</label>
+			<div class="col-sm-5">
+				<select name="mailing[action_id]" class="form-control">
+					<option value=""></option>
+					{foreach $actions as $action}
+					<option value="{$action.id}" {if isset($mailing) && $mailing->action_id == $action.id}selected="selected"{/if}>{$action.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+		{/if}
+				
+		<div class="form-group">
+			<label class="control-label col-sm-2">Numéro :</label>
+			<div class="col-sm-5">
+				<input type="text" name="mailing[number]" id="number" {if isset($mailing)}value="{$mailing->number}"{/if} class="form-control"/>
+			</div>			
+		</div>
+
+		{if isset($mailing)}
+		<div class="form-group">
+			<label class="control-label col-sm-2">Corp du mailing :</label>
+			<div class="col-sm-5">
+				<textarea name="mailing[corp_message]" id="corp-message" class="form-control" rows="5">{$mailing->corp_message|htmlentities}</textarea>
+			</div>
+		</div>
+		{/if}
+
+		{/if}
+	</fieldset>
+	<fieldset>
+		<legend>{$lang.Cible}</legend>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Departement:</label>
+			<div class="col-sm-5">
+				<select name="mailing[cible][departement][]" class="chzn-select form-control" multiple>
+					<option value=""></option>
+					{foreach $global_departements as $k => $v}
+					<option value="{$v.dpt}" 
+						{if isset($mailing->cible['departement']) && is_array($mailing->cible['departement'])}
+							{foreach $mailing->cible['departement'] as $key =>  $value}
+								{if $value == $v['dpt']}selected="selected"{/if}
+							{/foreach}
+						{/if}
+					>{$v.dpt}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Categorie :</label>
+			<div class="col-sm-5">
+				<select name="mailing[cible][categorie][]" class="chzn-select form-control" multiple>
+					{foreach $global_categories as $row}
+					<option value="{$row.id}"
+						{if isset($mailing->cible.categorie)}
+							{foreach $mailing->cible.categorie as $k => $v}
+								{if $row.id == $v}
+									selected="selected"
+								{/if}
+							{/foreach}
+						{/if}
+						>{$row.libelle}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Condition categorie :</label>
+			<div class="col-sm-1">
+				<select name="mailing[cible][categorie_condition]" class="form-control">
+					<option value="OR" {if isset($mailing) && $mailing->cible['categorie_condition'] == "OR"}selected="selected"{/if}>Ou</option>
+					<option value="AND"{if isset($mailing) && $mailing->cible['categorie_condition'] == "AND"}selected="selected"{/if}>Et</option>
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Effectif : </label>
+			<div class="col-sm-5">
+				<div class="col-xs-2">
+					<input type="text" name="mailing[cible][effectif_mini]" class="form-control" {if isset($mailing) && !empty($mailing->cible['effectif_mini'])}value="{$mailing->cible['effectif_mini']}"{/if} /> 
+				</div>
+				<div class="col-xs-1">à</div> 
+				<div class="col-xs-2">
+					<input type="text" name="mailing[cible][effectif_max]" class="form-control" {if isset($mailing) && !empty($mailing->cible['effectif_max'])}value="{$mailing->cible['effectif_max']}"{/if}/>
+				</div>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">APE :</label>
+			<div class="col-sm-5">
+				<select name="mailing[cible][ape][]" class="chzn-select form-control" multiple>
+					{foreach $global_ape as $row}
+					<option value="{$row.id}"
+						{if isset($mailing->cible.ape)}
+							{foreach $mailing->cible.ape as $k => $v}
+								{if $row.id == $v}
+									selected="selected"
+								{/if}
+							{/foreach}
+						{/if}
+						>{$row.code}
+					</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Poste :</label>
+			<div class="col-sm-5">		
+				<select name="mailing[cible][poste]" class="form-control">
+					<option value=""></option>
+					{foreach $global_postes as $row}
+					<option value="{$row.id}" {if isset($mailing) && !empty($mailing->cible['poste']) && $mailing->cible['poste'] == $row['id']}selected="selected"{/if}>{$row.libelle}</option>
+					{/foreach}
+				</select>
+			</div>
+		</div>
+			
+		<div class="form-group">
+			<label class="control-label col-sm-2">Service :</label>	
+			<div class="col-sm-5">				
+				<select name="mailing[cible][service]" class="form-control">
+					<option value=""></option>
+					{foreach $global_services as $row}
+					<option value="{$row.id}" {if isset($mailing) && !empty($mailing->cible['service']) && $mailing->cible['service'] == $row['id']}selected="selected"{/if}>{$row.libelle}</option>
+					{/foreach}
+				</select>
+			</div> 
+		</div>
+			
+		<div id="champs-contacts"></div>
+			
+		<div class="form-group">
+			<label class="control-label col-sm-2">Client :</label>
+			<div class="col-sm-5">
+				<input type="checkbox" name="mailing[cible][is_client]" value="1" {if isset($mailing->cible['is_client'])}checked="checked"{/if} />
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Societe :</label>
+			<div class="col-sm-5">
+				<input type="checkbox" name="mailing[cible][ctype][]" value="societes" {if isset($mailing->cible['societes'])}checked="checked"{/if}/>
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label class="control-label col-sm-2">Contact societe :</label>
+			<div class="col-sm-5">
+				<input type="checkbox" name="mailing[cible][ctype][]" value="societe_contact" {if isset($mailing->cible['societe_contact'])}checked="checked"{/if}/>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="control-label col-sm-2">Particulier :</label>
+			<div class="col-sm-5">
+				<input type="checkbox" name="mailing[cible][ctype][]" value="particulier" {if isset($mailing->cible['particulier'])}checked="checked"{/if}/>
+			</div>
+		</div>
+
+	</fieldset>
+
+	{if isset($mailing)}
+	<fieldset>
+		{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
+		<div class="form-group">
+			<label class="control-label col-sm-2">Status :</label>
+			<div class="col-sm-5">
+				<select name="mailing[valid]" id="mailing-valid" required class="form-control">
+					<option value="0" {if $mailing->valid == 0}selected="selected"{/if}>A valider</option>
+					<option value="1" {if $mailing->valid == 1}selected="selected"{/if}>Accepter</option>
+					<option value="2" {if $mailing->valid == 2}selected="selected"{/if}>Refuser</option>
+				</select>
+			</div>
+		</div>
+		
+		<div class="form-group">
+			<label class="control-label col-sm-2">Refus :</label>
+			<div class="col-sm-5">
+				<textarea name="mailing[refus]" id="refus" rows="6" class="form-control" >{$mailing->refus}</textarea>
+			</div>
+		</div>
+		{/if}
+	</fieldset>
+	{/if}
+
+	<hr/>
+	<div class="text-center">
+		{if !isset($mailing)}
+			{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
+			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
+			{else}
+			<input type="hidden" name="mailing[valid]" value="0" />
+			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
+			{/if}
+		{else}
+			{if !isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin == 0}
+			<input type="hidden" name="mailing[valid]" value="{$mailing->valid}" />
+			<input type="hidden" name="mailing[refus]" value="{$mailing->refus}" />
+			{/if}
+			<input type="hidden" name="mailing[cible][email_is_valid]" value="1" />
+			<input type="hidden" name="mailing[id]" value="{$mailing->id}" />
+			<input type="hidden" name="mailing[date_send]" value="{$mailing->date_send}" />
+			<input type="hidden" name="mailing[send]" value="{$mailing->send}" />			
+			<input type="hidden" name="mailing[demand_by]" value="{$mailing->demand_by}" />			
+			<input type="hidden" name="mailing[demand_on]" value="{$mailing->demand_on}" />			
+			<input type="hidden" name="mailing[valid_by]" value="{$mailing->valid_by}" />			
+			<input type="hidden" name="mailing[valid_on]" value="{$mailing->valid_on}" />
+		{/if}
+		<button type="submit" class="btn btn-primary">{$lang.Enregistrer}</button>
+	</div>
+</form>
+{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
+<div class="pull-right">
+	<small>Formulaire en mode administrateur</small>
+</div>
+<div class="clearfix"></div>
+{/if}
+{/strip}
+<script type="text/javascript">
+<!--
+$(document).ready(function() {
+	$('#date_wish').mask("99/99/9999");
+	{if isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin > 0}
+	{literal}
+	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true });
+	{/literal}
+	{else}
+	{literal}
+	$( "#date_wish" ).datepicker({ dateFormat: 'dd/mm/yy', changeMonth:true, changeYear:true, showButtonPanel: true, minDate:+1, maxDate:'+1M +10D' });
+	{/literal}
+	{/if}
+});
+
+jQuery(document).ready(function(){
+    $('#form-mailing-request').validate({
+        rules:{
+        	{if !isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin == 0}
+            "mailing[date_wish]": {
+                required:true,
+                remote:'{$Helper->getLink("mailing/checkdatewish/'+ $('#date_wish').val() +'?nohtml")}'
+            },
+            {/if}
+            "mailing[cible][ctype][]":{
+				required:true,
+				minlength:1,
+			}
+        },
+        {if !isset($smarty.session.acl.mailing_adm) || $smarty.session.utilisateur.isAdmin == 0}
+		messages:{
+			"mailing[date_wish]":{
+				required: "Veuillez indiquer la date d envoie souhaitée",
+				remote: "Le nombre maximum de mailing programmé ce jour est atteint"
+			},
+		},
+		{/if}
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-success');
+            $(element).parents('.form-group').addClass('text-danger');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-danger');
+            $(element).parents('.form-group').addClass('text-success');
+        }
+    });
+});
+//-->
+</script>
+<!-- END app/view/mailing/mailing_form.meg -->

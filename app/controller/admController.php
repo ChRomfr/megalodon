@@ -369,6 +369,16 @@ class admController extends Controller{
 	}
 
 	/**
+	 * Affioche la liste des groupes utilisateur dans la base
+	 * @return [type] [description]
+	 */
+	public function groupsAction(){
+
+		$this->registry->smarty->assign('groups', $this->registry->db->get('groupe'));
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_groups.meg');
+	}
+
+	/**
 	 * Retourne les stats pour affichage dans l administration
 	 * @return [type] [description]
 	 */
@@ -683,6 +693,13 @@ class admController extends Controller{
 		if(!is_null($tid)){
 			$tier = new tier();
 			$tier->get($tid);
+
+			// Verification que le tier demandé est valide
+			if(empty($tier->id)){
+				$this->registry->Helper->pnotify('Tiers', 'Erreur tier introuvable dans la base','danger');
+				return $this->tiersAction();
+			}
+
 			$this->registry->smarty->assign('tier', $tier);
 		}
 		
@@ -698,7 +715,7 @@ class admController extends Controller{
 		if( !is_null($this->registry->Http->post('tier'))){
 			$tier = new tier($this->registry->Http->post('tier'));
 			$tier->save();
-			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base');
+			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base','success');
 		}
 
 		return $this->tiersAction();
@@ -708,11 +725,11 @@ class admController extends Controller{
 	 * Traite le formulaire d edition
 	 * @return [type] [description]
 	 */
-	public function tier_editAction(){
+	public function tier_editAction($tid){
 		if( !is_null($this->registry->Http->post('tier'))){
 			$tier = new tier($this->registry->Http->post('tier'));
 			$tier->save();
-			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base');
+			$this->registry->Helper->pnotify('Tiers', 'Informations enregistrées dans la base','success');
 		}
 
 		return $this->tiersAction();
@@ -724,8 +741,17 @@ class admController extends Controller{
 	 * @return [type]      [description]
 	 */
 	public function tier_deleteAction($tid){
+		$tier = new tier();
+		$tier->get($tid);
+
+		// Verification que le tier demandé est valide
+		if(empty($tier)){
+			$this->registry->Helper->pnotify('Tiers', 'Erreur tier introuvable dans la base','danger');
+			return $this->tiersAction();
+		}
+
 		$this->registry->db->delete('tiers', $tid);
-		$this->registry->Helper->pnotify('Tiers', 'Informations supprimées dans la base');
+		$this->registry->Helper->pnotify('Tiers', 'Informations supprimées dans la base','success');
 		return $this->tiersAction();
 	}
 

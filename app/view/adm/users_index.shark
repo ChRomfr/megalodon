@@ -1,12 +1,16 @@
+<!-- START app/view/adm/user_index.shark -->
+{strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("adm")}" title="Accueil">Administration</a></li>
-	<li class="active">Utilisateurs</li>
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;{$lang.Administration}</a></li>
+	<li class="active"><i class="fa fa-user"></i>&nbsp;{$lang.Utilisateurs}</li>
 </ol>
 
 <div class="well">
 	<div class="pull-right">
 		<a href="{$Helper->getLink("adm/users_add")}" title="Ajouter"><i class="fa fa-plus fa-lg"></i></a>
+		&nbsp;&nbsp;&nbsp;
+		<a href="{$Helper->getLink("adm/groups")}" title="{$lang.Groupe_utilisateur}"><i class="fa fa-group fa-lg"></i></a>
 	</div>
 	<h4>Utilisateurs</h4>
 	<div class="clearfix"></div>
@@ -59,12 +63,12 @@
 	</div>
 	{/if}
 </div>
+{/strip}
 <script type="text/javascript">
-<!--
 {literal}
 jQuery(document).ready(function(){
 	 $("#users-liste").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
 });
 {/literal}
-//-->
 </script>
+<!-- START app/view/adm/user_index.shark -->

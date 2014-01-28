@@ -109,6 +109,14 @@ class mailingController extends Controller{
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'fiche.tpl');
 	}
+
+	public function get_formAction($mid = null){
+
+		$types = new mailing_type();
+		$this->getFormValidatorJs();
+		$this->registry->smarty->assign('types', $types->get());
+		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'mailing_form.meg');
+	}
 	
 	/**
 	*	Affiche et traite le formulaire de requete de mailing
@@ -164,6 +172,7 @@ class mailingController extends Controller{
 		$types = new mailing_type();
 		$this->getFormValidatorJs();
 		$this->registry->smarty->assign('types', $types->get());
+		$this->registry->smarty->assign('form', $this->get_formAction());
 		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'add.tpl');
 	}
 	
@@ -385,15 +394,6 @@ class mailingController extends Controller{
 		
 		$this->registry->smarty->assign('FlashMessage','Mailing refuse');
 		return $this->ficheAction($id);		
-	}
-	
-	/**
-	*	Retourne et affiche les champs contacts pour le formulaire
-	*	de requete mailing
-	*	@return string code html a affiche
-	*/
-	public function getchampscontactsajaxAction(){
-		return $this->registry->smarty->fetch(VIEW_PATH . 'mailing' . DS . 'getchampscontactsajax.tpl');
 	}
 	
 	/**

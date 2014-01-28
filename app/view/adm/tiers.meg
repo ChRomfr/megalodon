@@ -1,8 +1,9 @@
 <!-- START view/adm/tiers.meg -->
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
 	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;{$lang.Administration}</a></li>
-	<li class="active">{$lang.Tiers}</li>
+	<li class="active"><i class="fa fa-sitemap"></i>&nbsp;{$lang.Tiers}</li>
 </ol>
 
 <div class="well">
@@ -38,7 +39,7 @@
 		</tbody>
 	</table>
 </div>
-
+{/strip}
 <script type="text/javascript">
 function tier_add(){
 	$.get(

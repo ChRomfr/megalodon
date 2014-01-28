@@ -49,5 +49,18 @@
 	<div class="pull-left">{$Pagination->render()}</div>
 	{/if}
 	<div class="clearfix"></div>
-</div>{* /well *}
+</div>
 {/strip}
+<script type="text/javascript">
+function mailing_add(){
+	$.get(
+        '{$Helper->getLink("mailing/get_form")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+    $('#modal-global-label').html('');
+    $('#modal-global').modal('show');
+}
+</script>
