@@ -29,7 +29,7 @@
 				<td>{$row.name}</td>
 				<td></td>
 				<td></td>
-				<td></td>
+				<td><a href="javascript:group_edit({$row.id});" title="{$lang.Edition}"><i class="fa fa-edit"></i></a></td>
 			</tr>
 			{/foreach}
 		</tbody>
@@ -46,6 +46,18 @@ function group_add(){
         }        
     );
     $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Nouveau_groupe}');
+    $('#modal-global').modal('show');
+}
+
+function group_edit(tid){
+	$.get(
+        '{$Helper->getLink("adm/groups_get_form/'+tid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Edition_groupe}');
     $('#modal-global').modal('show');
 }
 </script>

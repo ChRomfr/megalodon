@@ -408,6 +408,20 @@ class admController extends Controller{
 	}
 
 	/**
+	 * Traite le formulaire pour enregistre un group dans la base
+	 * @return groupsAction()
+	 */
+	public function groups_editAction($gid){
+		if(!is_null($this->registry->Http->post('group'))){
+			$group = new Basegroupe($this->registry->Http->post('group'));
+			$group->save();
+			$this->registry->Helper->pnotify('Groupe', 'Groupe  enregistré dans la base','success');
+		}
+
+		return $this->groupsAction();
+	}
+
+	/**
 	 * Retourne les stats pour affichage dans l administration
 	 * @return [type] [description]
 	 */

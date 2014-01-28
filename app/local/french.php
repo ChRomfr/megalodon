@@ -17,6 +17,7 @@ $lang = array_merge($lang, array(
 'Demandeur'	=>	'Demandeur',
 'Description'	=>	'Description',
 'Edition'	=>	'Edition',
+'Edition_groupe'	=>	'Edition groupe',
 'Edition_site'	=>	'Edition site',
 'Edition_tier'	=>	'Edition tier',
 'Email'	=>	'Email',
