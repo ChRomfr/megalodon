@@ -373,9 +373,38 @@ class admController extends Controller{
 	 * @return [type] [description]
 	 */
 	public function groupsAction(){
+		// Appel du JS pour le form
+		$this->getFormValidatorJs();
 
 		$this->registry->smarty->assign('groups', $this->registry->db->get('groupe'));
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_groups.meg');
+	}
+
+	/**
+	 * Retourne le formulaire de gestion de groupe
+	 * @param  int $gid id du groupe
+	 * @return mixed      code HTML du formulaire
+	 */
+	public function groups_get_formAction($gid = null){
+
+		if(!empty($gid)){
+			$this->registry->smarty->assign('group', $this->registry->db->get_one('groupe', array('id =' => $gid)));
+		}
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'groups_form.meg');
+	}
+
+	/**
+	 * Traite le formulaire pour enregistre un group dans la base
+	 * @return groupsAction()
+	 */
+	public function groups_addAction(){
+		if(!is_null($this->registry->Http->post('group'))){
+			$group = new Basegroupe($this->registry->Http->post('group'));
+			$group->save();
+			$this->registry->Helper->pnotify('Groupe', 'Groupe  enregistré dans la base','success');
+		}
+
+		return $this->groupsAction();
 	}
 
 	/**
@@ -689,8 +718,8 @@ class admController extends Controller{
 	 * @return [type]      [description]
 	 */
 	public function tiers_formAction($tid = null){
-
-		if(!is_null($tid)){
+		
+		if(!empty($tid)){
 			$tier = new tier();
 			$tier->get($tid);
 

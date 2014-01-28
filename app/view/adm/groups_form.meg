@@ -1,0 +1,42 @@
+<!-- START app/view/adm/groups_form.meg -->
+{strip}
+<form method="post" role="form" class="form-horizontal" id="groups-form" action="{if isset($group)}{else}{$Helper->getLink("adm/groups_add")}{/if}">
+
+	<div class="form-group">
+		<label class="control-label col-sm-3" for="libelle">{$lang.Libelle} :</label>
+		<div class="col-sm-5">
+			<input type="text" name="group[name]" id="libelle" required {if isset($group)}value="{$group->name}"{/if} class="form-control"/>
+		</div>			
+	</div>
+
+	<div class="text-center">
+		<input type="hidden" name="group[principal]" value="1" />
+		<input type="hidden" name="group[systeme]" value="0" />	
+		<input type="hidden" name="group[ouvert]" value="1" />
+		<input type="hidden" name="group[visible]" value="1" />
+		<button type="submit" class="btn btn-primary">{$lang.Enregistrer}</button>
+	</div>
+</form>
+{/strip}
+<script type="text/javascript">
+jQuery(document).ready(function(){
+    $('#groups-form').validate({
+        rules:{}
+            "group[name]":{
+				required:true,
+			}
+        },
+		highlight:function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-success');
+            $(element).parents('.form-group').addClass('text-danger');
+        },
+        unhighlight: function(element)
+        {
+            $(element).parents('.form-group').removeClass('text-danger');
+            $(element).parents('.form-group').addClass('text-success');
+        }
+    });
+});
+</script>
+<!-- END app/view/adm/groups_form.meg -->

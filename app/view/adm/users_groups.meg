@@ -1,4 +1,5 @@
 <!-- START app/view/adm/users_groups.meg -->
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
 	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;{$lang.Administration}</a></li>
@@ -7,6 +8,11 @@
 </ol>
 
 <div class="well">
+
+	<div class="pull-right">
+		<a href="javascript:group_add();" title="{$lang.Nouveau_groupe}"><i class="fa fa-lg fa-plus"></i></a>
+	</div>
+
 	<table class="table table-striped table-condensed">
 		<thead>
 			<tr>
@@ -17,11 +23,30 @@
 				<th></th>
 		</thead>
 		<tbody>
-
+			{foreach $groups as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{$row.name}</td>
+				<td></td>
+				<td></td>
+				<td></td>
+			</tr>
+			{/foreach}
 		</tbody>
 	</table>
 </div>
-
+{/strip}
 <script type="text/javascript">
+function group_add(){
+	$.get(
+        '{$Helper->getLink("adm/groups_get_form")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Nouveau_groupe}');
+    $('#modal-global').modal('show');
+}
 </script>
 <!-- END app/view/adm/users_groups.meg -->
