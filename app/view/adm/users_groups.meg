@@ -29,7 +29,11 @@
 				<td>{$row.name}</td>
 				<td></td>
 				<td></td>
-				<td><a href="javascript:group_edit({$row.id});" title="{$lang.Edition}"><i class="fa fa-edit"></i></a></td>
+				<td>
+					<a href="javascript:group_edit({$row.id});" title="{$lang.Edition}"><i class="fa fa-edit"></i></a>
+					&nbsp;&nbsp;&nbsp;
+					<a href="javascript:group_delete({$row.id});" title="{$lang.Supprimer}"><i class="fa fa-trash-o"></i></a>
+				</td>
 			</tr>
 			{/foreach}
 		</tbody>
@@ -59,6 +63,12 @@ function group_edit(tid){
     );
     $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Edition_groupe}');
     $('#modal-global').modal('show');
+}
+
+function group_delete(gid){
+	if(confirm('Etes vous sur de vouloir supprimer ce groupe ?')){
+		window.location.href='{$Helper->getLink("adm/groups_delete/'+gid+'")}';
+	}
 }
 </script>
 <!-- END app/view/adm/users_groups.meg -->

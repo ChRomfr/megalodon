@@ -26,7 +26,7 @@
 {foreach registry::$js_lib as $k => $v}
 <script type="text/javascript" src="{$config.url}web/lib/{$v}"></script>
 {/foreach}
-<script type="text/javascript" src="{$config.url}themes/bootstrap/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
 <!--[if lt IE 9]>
 <script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
 <![endif]-->

@@ -55,6 +55,7 @@ $lang = array_merge($lang, array(
 'Tiers'	=>	'Tiers',
 'TVA'	=>	'TVA',
 'Type'	=>	'Type',
+'Utilisateur'	=>	'Utilisateur',
 'Utilisateurs'	=>	'Utilisateurs',
 'Verification_configuration'	=>	'Verification de la configuration',
 'Verifier'	=>	'Vérifier',

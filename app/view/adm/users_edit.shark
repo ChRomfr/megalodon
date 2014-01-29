@@ -57,101 +57,147 @@
 		</div>
 
 		<fieldset>
-			<legend>Acl</legend>			
+			<legend>{$lang.Groupes}</legend>
+			<table class="table table-condensed table-striped">
+				<thead>
+					<tr>
+						<th>{$lang.Groupe}</th>
+						<th>{$lang.Action}</th>
+					</tr>
+				</thead>
+				<tbody>
+					{foreach $user->groupes as $row}
+					<tr>
+						<td>{$row.name}</td>
+						<td><a href="javascript:remove_from_group({$row.id}, '{$row.name}', {$user->id})" title="{$lang.Enlever_du_groupe}"><i class="fa fa-unlink"></i></a></td>
+					</tr>
+					{/foreach}
+				</tbody>
+			</table>	
+		</fieldset>
 
-			<div class="panel panel-default">
-				<div class="panel-heading">Module contacts</div>
-	  			<div class="panel-body">
+		<fieldset>
+			<legend>Acl</legend>		
 
-	  				<div class="form-group">
-						<label class="control-label col-sm-2">Ajouter :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[contacts_add]" value="1" {if isset($user->acl['contacts_add'])}checked="checked"{/if}/>
-						</div>
+			<div class="panel-group" id="accordionAcl">
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+						 	<a data-toggle="collapse" data-parent="#accordionAcl" href="#collapseContacts">Module contacts</a>
+						 </h4>
 					</div>
 
-					<div class="form-group">
-						<label class="control-label col-sm-2">Modifier :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[contacts_edit]" value="1" {if isset($user->acl['contacts_edit'])}checked="checked"{/if}/>
-						</div>
+					<div id="collapseContacts" class="panel-collapse collapse">
+			  			<div class="panel-body">
+
+			  				<div class="form-group">
+								<label class="control-label col-sm-2">Ajouter :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[contacts_add]" value="1" {if isset($user->acl['contacts_add'])}checked="checked"{/if}/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-2">Modifier :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[contacts_edit]" value="1" {if isset($user->acl['contacts_edit'])}checked="checked"{/if}/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-2">Supprimer :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[contacts_delete]" value="1" {if isset($user->acl['contacts_delete'])}checked="checked"{/if}/>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-2">Exporter en CSV :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[contacts_export_csv]" value="1" {if isset($user->acl['contacts_export_csv'])}checked="checked"{/if}/>
+								</div>
+							</div>
+
+						</div><!-- /panel-body -->
+					</div><!-- /collapse-contacts -->
+				</div><!-- /panel -->
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+        					<a data-toggle="collapse" data-parent="#accordionAcl" href="#collapseMailing">
+								Module mailing
+							</a>
+						</h4>
 					</div>
+					<div id="collapseMailing" class="panel-collapse collapse">
+			  			<div class="panel-body">
+							<div class="form-group">
+								<label class="control-label col-sm-2">Mailing accès :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[mailing_access]" value="1" {if isset($user->acl['mailing_access'])}checked="checked"{/if}/>
+									<p class="help-block">Donner les droits de visualisation du module. L'utilisateur ne pourra effectuer aucunes actions</p>
+								</div>
+							</div>
 
-					<div class="form-group">
-						<label class="control-label col-sm-2">Supprimer :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[contacts_delete]" value="1" {if isset($user->acl['contacts_delete'])}checked="checked"{/if}/>
-						</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2">Demander un mailing :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[mailing_demand]" value="1" {if isset($user->acl['mailing_demand'])}checked="checked"{/if}/>
+									<p class="help-block">Permet à un utilisateur de faire des demandes. Il doit avoir les droits d'accès au module</p>
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label class="control-label col-sm-2">Traiter les demandes :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[mailing_valid]" value="1" {if isset($user->acl['mailing_valid'])}checked="checked"{/if}/>
+									<p class="help-block">Donner les droits de validation depuis la fiche</p>
+								</div>
+							</div>
+							
+							<div class="form-group">
+								<label class="control-label col-sm-2">Droits d'administration :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[mailing_adm]" value="1" {if isset($user->acl['mailing_adm'])}checked="checked"{/if}/>
+									<p class="help-block">Donner les droits d'éditions et suppression sur les mailings</p>
+								</div>
+							</div>
+
+						</div><!-- /panel-body -->
+					</div><!-- /collapseMailing -->
+				</div><!-- /panel -->
+
+				<div class="panel panel-default">
+					<div class="panel-heading">
+						<h4 class="panel-title">
+        					<a data-toggle="collapse" data-parent="#accordionAcl" href="#collapseCampagne">
+							Module campagne
+							</a>
+						</h4>
 					</div>
+					<div id="collapseCampagne" class="panel-collapse collapse">
+			  			<div class="panel-body">
+							<div class="form-group">
+								<label class="control-label col-sm-2">Campagne accès :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[campaign_access]" value="1" {if isset($user->acl['campaign_access'])}checked="checked"{/if}/>
+								</div>
+							</div>
 
-					<div class="form-group">
-						<label class="control-label col-sm-2">Exporter en CSV :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[contacts_export_csv]" value="1" {if isset($user->acl['contacts_export_csv'])}checked="checked"{/if}/>
-						</div>
-					</div>
+							<div class="form-group">
+								<label class="control-label col-sm-2">Assigner une campagne :</label>
+								<div class="col-sm-5">
+									<input type="checkbox" name="acl[campaign_assign]" value="1" {if isset($user->acl['campaign_assign'])}checked="checked"{/if}/>
+								</div>
+							</div>
 
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
+						</div><!-- /panel-body -->
+					</div><!-- /collapseCampagne -->
+				</div><!-- /panel -->
 
-			<div class="panel panel-default">
-				<div class="panel-heading">Module mailing</div>
-	  			<div class="panel-body">
-					<div class="form-group">
-						<label class="control-label col-sm-2">Mailing accès :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[mailing_access]" value="1" {if isset($user->acl['mailing_access'])}checked="checked"{/if}/>
-							<p class="help-block">Donner les droits de visualisation du module. L'utilisateur ne pourra effectuer aucunes actions</p>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-sm-2">Demander un mailing :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[mailing_demand]" value="1" {if isset($user->acl['mailing_demand'])}checked="checked"{/if}/>
-							<p class="help-block">Permet à un utilisateur de faire des demandes. Il doit avoir les droits d'accès au module</p>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-sm-2">Traiter les demandes :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[mailing_valid]" value="1" {if isset($user->acl['mailing_valid'])}checked="checked"{/if}/>
-							<p class="help-block">Donner les droits de validation depuis la fiche</p>
-						</div>
-					</div>
-					
-					<div class="form-group">
-						<label class="control-label col-sm-2">Droits d'administration :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[mailing_adm]" value="1" {if isset($user->acl['mailing_adm'])}checked="checked"{/if}/>
-							<p class="help-block">Donner les droits d'éditions et suppression sur les mailings</p>
-						</div>
-					</div>
-
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
-
-			<div class="panel panel-default">
-				<div class="panel-heading">Module campagne</div>
-	  			<div class="panel-body">
-					<div class="form-group">
-						<label class="control-label col-sm-2">Campagne accès :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[campaign_access]" value="1" {if isset($user->acl['campaign_access'])}checked="checked"{/if}/>
-						</div>
-					</div>
-
-					<div class="form-group">
-						<label class="control-label col-sm-2">Assigner une campagne :</label>
-						<div class="col-sm-5">
-							<input type="checkbox" name="acl[campaign_assign]" value="1" {if isset($user->acl['campaign_assign'])}checked="checked"{/if}/>
-						</div>
-					</div>
-
-				</div><!-- /panel-body -->
-			</div><!-- /panel -->
-
+			</div><!-- /accordion-acl -->
 		</fieldset>
 		<div class="text-center">
 			<hr/>
@@ -166,5 +212,12 @@
 		</div>
 	</form>
 </div><!-- /well -->
-<!-- END FORM EDIT USER -->
 {/strip}
+<script type="text/javascript">
+function remove_from_group(gid, gname, uid){
+	if(confirm('Etes vous de vouloir supprimer l\'utilisateur du groupe : '+gname+' ?')){
+		window.location.href = '{$Helper->getLink("adm/users_remove_group/'+uid+'?gid='+gid+'")}';
+	}
+}
+</script>
+<!-- END FORM EDIT USER -->

@@ -369,6 +369,18 @@ class admController extends Controller{
 	}
 
 	/**
+	 * Supprime l utilisateur du groupe
+	 * @param  [type] $uid [description]
+	 * @return [type]      [description]
+	 */
+	public function users_remove_groupAction($uid){
+		$gid = $this->registry->Http->get('gid');
+		$this->remove_users_group($uid, $gid);
+		$this->registry->Helper->pnotify('Utilisateur', 'Utilisateur retiré du groupe');
+		return $this->users_editAction($uid);
+	}
+
+	/**
 	 * Affioche la liste des groupes utilisateur dans la base
 	 * @return [type] [description]
 	 */
@@ -419,6 +431,88 @@ class admController extends Controller{
 		}
 
 		return $this->groupsAction();
+	}
+
+	/**
+	 * Gere la suppression d un groupe
+	 * @param  [type] $gid [description]
+	 * @return [type]      [description]
+	 */
+	public function groups_deleteAction($gid){
+		$this->registry->db->delete('groupe', $gid);
+		$this->registry->Helper->pnotify('Groupe', 'Groupe supprimé','success');
+		return $this->groupsAction();
+	}
+
+	public function groups_detailAction($gid){
+		
+		$group = new Basegroupe();
+		$group->get($gid);
+		
+		// Utilisateurs dans le groupe
+		$users = $this->registry->db->select('u.id, u.identifiant, ug.role')
+					->from('user_groupe ug')
+					->left_join('user u', 'ug.user_id = u.id')
+					->where(array('ug.groupe_id =' => $gid))
+					->get();
+
+		$this->registry->smarty->assign('group', $group);
+		$this->registry->smarty->assign('users', $users);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'groups_detail.meg');
+	}
+
+	public function groups_form_add_inAction($gid){
+
+		if(!is_null($this->registry->Http->post('group'))){
+			$group = $this->registry->Http->post('group');
+			$group['groupe_id'] = $gid;
+			$this->registry->db->insert('user_groupe', $group);
+			$this->registry->Helper->pnotify('Groupe', 'Utilisateur ajouté au groupe.');
+			return $this->groups_detailAction($gid);
+		}
+
+		// Recuperation des utilisateuts deja dans la groupe pour exclure
+		$users_in_group = $this->registry->db->get('user_groupe', array('groupe_id =' => $gid));
+
+		$not_in = '';
+
+		if(count($users_in_group) > 0){
+			$not_in = 'id NOT IN (';
+			foreach ($users_in_group as $row) {
+				$not_in .= $row['user_id'].',';
+			}
+
+			$not_in = substr($not_in,0, -1);
+			$not_in .= ')';
+		}
+
+		// Recuperation des utilisateurs
+		$this->registry->db->select('u.*')->from('user u');
+		if(!empty($not_in)) $this->registry->db->where_free($not_in);
+		$users = $this->registry->db->get();
+
+		$this->registry->smarty->assign('users', $users);
+		$this->registry->smarty->assign('gid', $gid);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'groups_form_add_in.meg');					
+	}
+
+	public function groups_remove_userAction($gid){
+		$uid = $this->registry->Http->get('uid');
+		$this->remove_users_group($uid, $gid);
+		$this->registry->Helper->pnotify('Groupe', 'Utilisateur retiré du groupe.');
+		return $this->groups_detailAction($gid);
+	}
+
+	/**
+	 * Supprime la liaison user <-> group
+	 * @param  int $uid [description]
+	 * @param  int $gid [description]
+	 * @return void
+	 */
+	private function remove_users_group($uid, $gid){
+		$this->registry->db->delete('user_groupe', null, array('groupe_id =' => $gid, 'user_id =' => $uid));
 	}
 
 	/**
