@@ -380,6 +380,41 @@ class admController extends Controller{
 		return $this->users_editAction($uid);
 	}
 
+	public function users_add_in_groupAction($uid){
+		if(!is_null($this->registry->Http->post('group'))){
+			$group = $this->registry->Http->post('group');
+			$group['user_id'] = $uid;
+			$this->registry->db->insert('user_groupe', $group);
+			$this->registry->Helper->pnotify('Groupe', 'Utilisateur ajouté au groupe.');
+			return $this->users_editAction($uid);
+		}
+
+		// Recuperation des groupes ou l utilisateur est deja inscrit
+		$users_in_group = $this->registry->db->get('user_groupe', array('user_id =' => $uid));
+
+		$not_in = '';
+
+		if(count($users_in_group) > 0){
+			$not_in = 'id NOT IN (';
+			foreach ($users_in_group as $row) {
+				$not_in .= $row['groupe_id'].',';
+			}
+
+			$not_in = substr($not_in,0, -1);
+			$not_in .= ')';
+		}
+
+		// Recuperation des groupes
+		$this->registry->db->select('g.*')->from('groupe g');
+		if(!empty($not_in)) $this->registry->db->where_free($not_in);
+		$groups = $this->registry->db->get();
+
+		$this->registry->smarty->assign('groups', $groups);
+		$this->registry->smarty->assign('uid', $uid);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_add_in_group.meg');
+	}
+
 	/**
 	 * Affioche la liste des groupes utilisateur dans la base
 	 * @return [type] [description]

@@ -44,6 +44,7 @@
 			</div>
 		</div>
 
+		{if count($sites) > 0}
 		<div class="form-group">
 			<label class="control-label col-sm-2" for="user-site-id">{$lang.Site} :</label>
 			<div class="col-sm-5">
@@ -55,6 +56,7 @@
 				</select>
 			</div>
 		</div>
+		{/if}
 
 		<fieldset>
 			<legend>{$lang.Groupes}</legend>
@@ -68,12 +70,15 @@
 				<tbody>
 					{foreach $user->groupes as $row}
 					<tr>
-						<td>{$row.name}</td>
+						<td><a href="{$Helper->getLink("adm/groups_detail/{$row.id}")}" title="">{$row.name}</a></td>
 						<td><a href="javascript:remove_from_group({$row.id}, '{$row.name}', {$user->id})" title="{$lang.Enlever_du_groupe}"><i class="fa fa-unlink"></i></a></td>
 					</tr>
 					{/foreach}
 				</tbody>
-			</table>	
+			</table>
+			<div class="text-center">
+				<a href="javascript:get_form_add_in_group({$user->id})" title="" class="btn btn-default">{$lang.Ajouter}</a>
+			</div>	
 		</fieldset>
 
 		<fieldset>
@@ -218,6 +223,18 @@ function remove_from_group(gid, gname, uid){
 	if(confirm('Etes vous de vouloir supprimer l\'utilisateur du groupe : '+gname+' ?')){
 		window.location.href = '{$Helper->getLink("adm/users_remove_group/'+uid+'?gid='+gid+'")}';
 	}
+}
+
+function get_form_add_in_group(uid){
+	$.get(
+        '{$Helper->getLink("adm/users_add_in_group/'+uid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$user->identifiant}');
+    $('#modal-global').modal('show');
 }
 </script>
 <!-- END FORM EDIT USER -->

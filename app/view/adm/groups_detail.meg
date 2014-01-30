@@ -4,7 +4,7 @@
 	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
 	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;{$lang.Administration}</a></li>
 	<li><a href="{$Helper->getLink("adm/users_index")}" title="{$lang.Utilisateurs}"><i class="fa fa-user"></i>&nbsp;{$lang.Utilisateurs}</a></li>
-	<li><a href="{$Helper->getLink("adm/users_groups")}" title="{$lang.Groupes}"><i class="fa fa-group"></i>&nbsp;{$lang.Groupes}</a></li>
+	<li><a href="{$Helper->getLink("adm/groups")}" title="{$lang.Groupes}"><i class="fa fa-group"></i>&nbsp;{$lang.Groupes}</a></li>
 	<li class="active">{$group->name}</li>
 </ol>
 
