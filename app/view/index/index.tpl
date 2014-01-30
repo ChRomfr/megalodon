@@ -1,6 +1,6 @@
 {strip}
 <ol class="breadcrumb">
-	<li class="active">Accueil</li>
+	<li class="active"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</li>
 </ol>
 
 <div class="col-md-5 well">
@@ -45,6 +45,7 @@
 </div>
 {/if}
 {/strip}
+
 {if $smarty.session.utilisateur.index_map_contacts == 1}
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 {/if}

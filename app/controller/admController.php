@@ -749,6 +749,18 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'modules.meg');
 	}
 
+	public function modules_unactiveAction($mid){
+		$this->registry->db->update('modules', array('actif' => 0, 'id' => $mid));
+		$this->registry->Helper->pnotify('Modules', 'Module desactivé');
+		return $this->modulesAction();
+	}
+
+	public function modules_activeAction($mid){
+		$this->registry->db->update('modules', array('actif' => 1, 'id' => $mid));
+		$this->registry->Helper->pnotify('Modules', 'Module activé');
+		return $this->modulesAction();
+	}
+
 	/* --- SITES ACTIONS --- */
 
 	/**

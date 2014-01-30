@@ -1,8 +1,8 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}">{$lang.Accueil}</a></li>
-	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}">{$lang.Administration}</a></li>
-	<li class="active">{$lang.Modules}</li>
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;{$lang.Administration}</a></li>
+	<li class="active"><i class="fa fa-puzzle-piece"></i>&nbsp;{$lang.Modules}</li>
 </ol>
 
 <div class="well">
@@ -20,8 +20,8 @@
 				<td>{$row.id}</td>
 				<td>{$row.name}</td>
 				<td>
-					{if $row.actif == 1}<span class="label label-success">Oui</span>
-					{else}<span class="label label-danger">Non</span>
+					{if $row.actif == 1}<span class="label label-success" onclick="javascript:unactive({$row.id});">Oui</span>
+					{else}<span class="label label-danger" onclick="javascript:active({$row.id});">Non</span>
 					{/if}
 				</tr>
 			</tr>
@@ -30,3 +30,16 @@
 	</table>
 </div>
 {/strip}
+<script type="text/javascript">
+function unactive(mid){
+	if(confirm('Etes vous sur de vouloir desactiver ce module ?')){
+		window.location.href = '{$Helper->getLink("adm/modules_unactive/'+mid+'")}';
+	}	
+}
+
+function active(mid){
+	if(confirm('Etes vous sur de vouloir activer ce module ?')){
+		window.location.href = '{$Helper->getLink("adm/modules_active/'+mid+'")}';
+	}	
+}
+</script>
