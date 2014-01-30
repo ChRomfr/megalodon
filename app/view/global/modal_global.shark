@@ -1,4 +1,5 @@
-{* MODAL GENERIQUE *}
+<!-- START app/view/global/modal_global.shark -->
+{strip}
 <div id="modal-global" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -15,3 +16,5 @@
         </div>
     </div>
 </div>
+{/strip}
+<!-- END app/view/global/modal_global.shark -->
