@@ -188,7 +188,6 @@ class contactsController extends Controller{
 				$societe = new societe($data['ets']);
 				$societe->contact_id = $contact->id;
 				$societe->save();
-				echo "DANS SOCIETE";
 			}
 			
 			return $this->detailAction($id);
@@ -1031,7 +1030,7 @@ class contactsController extends Controller{
 		if(!is_null($this->registry->Http->get('json'))){
 			$i=0;
 			foreach($files as $file){
-				$files[$i]['url_download'] = $this->registry->config['url'] . 'upload/contacts/'. $cid . '/'. $file['disk_name'];
+				$files[$i]['url_download'] = $this->registry->config['url'] . 'web/upload/contacts/'. $cid . '/'. $file['disk_name'];
 				$i++;
 			}
 
@@ -1158,6 +1157,28 @@ class contactsController extends Controller{
 		return json_encode($results);
 	}
 
+	/**
+	 * Retourne le formulaire pour ajouter un agence
+	 * @param  [type] $mother_id [description]
+	 * @return [type]            [description]
+	 */
+	public function ajax_form_add_agenceAction($mother_id){
+		$this->registry->smarty->assign('contact_id', $this->registry->Http->get('contact'));
+		$this->registry->smarty->assign('mother_id', $mother_id);
+		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-agence-add.meg');
+	}
+
+	/**
+	 * Retourne le formulaire pour ajouter un fichier
+	 * depuis la fiche du client
+	 * @param  [type] $cid [description]
+	 * @return [type]      [description]
+	 */
+	public function ajax_form_add_fileAction($cid){
+		$this->registry->smarty->assign('cid', $cid);
+		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-add-file.meg');
+	}
+
 	public function phone_deleteAction($pid){
 
 		$phone =  new telephone();
@@ -1179,13 +1200,10 @@ class contactsController extends Controller{
 	public function agence_addAction(){
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
+		$contact = $this->registry->Http->get('contact');
 		$this->registry->db->update('societe', array('parent_id' => $mother), array('id =' => $agence_id));
 		
-		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $mother, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Ajout d une agence'));
-		
-		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $agence_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Societe rattachee a un siege social'));
-		
-		return $this->detailAction($mother);
+		return $this->detailAction($contact);
 	}
 	
 	/**
@@ -1196,11 +1214,7 @@ class contactsController extends Controller{
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
 		$this->registry->db->update('societe', array('parent_id' => '0'), array('id =' => $agence_id));
-		
-		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $mother, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression d une agence'));
-		
-		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $agence_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Societe retiree a un siege social'));
-		
+			
 		return $this->detailAction($mother);
 	}
 

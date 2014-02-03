@@ -17,6 +17,7 @@
 	{/if}
 
 	<div class="pull-right">
+		<a href="javascript:get_form_add_file({$contact.contact_id});" title="{$lang.Ajouter_un_document}"><i class="fa fa-lg fa-cloud-upload"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if !empty($contact.email)}
 		<a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{/if}
@@ -253,7 +254,10 @@
 
 		{if !empty($contact.raison_social) && $contact.mother == 1}
 		<div id="tabAgences" class="tab-pane">
-			
+			<div class="pull-right">
+				<a href="javascript:get_form_add_agence({$contact.sid}, {$contact.contact_id})" title=""><i class="fa fa-plus fa-lg"></i></a>
+			</div>
+			<div class="clearix"></div>
 			<table class="table table-striped table-consended">
 				<thead>
 					<tr>
@@ -273,23 +277,18 @@
 					</tr>
 				{/foreach}
 				</tbody>
-			</table>
-			
-			<form method="get" action="{$Helper->getLink("contacts/agence_add")}" class="form-inline" role="form">
-				<fieldset>
-					<legend>Nouvelle agence :</legend>
-					<div class="form-group">
-						<label class="sr-only">ID de l'agence</label>
-						<input type="text" name="agence_id" required class="form-control" placeholder="ID de l agence"/>
-					</div>
-					<button class="btn btn-primary" type="submit">Enregistrer</button>
-					<input type="hidden" name="mother" value="{$contact.sid}" />
-				</fieldset>
-			</form>
+			</table>		
 		</div>
 		{/if}
 		
+		<!-- START TAB FICHIER -->
 		<div id="tabContactsFiles" class="tab-pane">
+			<br/>
+			<div class="pull-right">
+				<a href="javascript:get_form_add_file({$contact.contact_id});" title=""><i class="fa fa-lg fa-cloud-upload"></i></a>
+			</div>
+			<div class="clearfix"></div>
+
 			{if count($contact.files)}
 			<table class="table table-condensed" id="table-contacts-files">
 				<thead>
@@ -297,7 +296,7 @@
 						<th>Fichier</th>
 						<th>Utilisateur</th>
 						<th>Date d'ajout</th>
-						{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
+						{if $smarty.session.utilisateur.isAdmin > 0}
 						<th></th>
 						{/if}
 					</tr>
@@ -305,32 +304,20 @@
 				<tbody>
 					{foreach $contact.files as $file}
 					<tr>
-						<td><a href="{$config.url}web/upload/contacts/{$contact.contact_id}/{$file.disk_name}" title="Télécharger le fichier">{$file.name}</a></td>
+						<td><a href="{$config.url}web/upload/contacts/{$contact.contact_id}/{$file.disk_name}" title="Télécharger le fichier"><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{$file.name}</a></td>
 						<td>{$file.identifiant}</td>
 						<td>{$file.date_add}</td>
-						{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
+						{if $smarty.session.utilisateur.isAdmin > 0}
 						<td><a href="javascript:deleteFile({$file.id});" title="Supprimer ce fichier"><i class="fa fa-trash-o"></i></a></td>
 						{/if}
 					</tr>
 					{/foreach}
 				</tbody>
 			</table>
-			{/if}
-			<hr/>
-			<form method="post" action="{$Helper->getLink("contacts/file_add/{$contact.contact_id}?nohtml")}" target="uploadFrame" enctype="multipart/form-data" onsubmit="return sendUpload()" class="form-inline" role="form">
-				<div class="form-group">
-					<label class="sr-only">Fichier</label>
-					<input type="file" name="file_contact" class="form-control" placeholder="Fichier a envoyé"/>
-				</div>
-				<button type="submit" class="btn btn-primary">Envoyer</button>
-			</form>
-			
-			<div id="uploadInfos">
-				<div id="uploadStatus"></div>
-				<iframe id="uploadFrame" name="uploadFrame" style="display:none;"></iframe>
-			</div>
+			{/if}			
 		</div>
-		
+		<!-- END TAB FICHIER -->
+
 		{if $smarty.session.utilisateur.historique_contact == 1}
 		<div id="tabContactsLogs" class="tab-pane active">
 			<table class="table table-condensed" id="table-contacts-logs">
@@ -421,6 +408,34 @@ function deleteContact(id){
 	}
 }
 
+function get_form_add_file(cid){
+	$.get(
+        '{$Helper->getLink("contacts/ajax_form_add_file/'+cid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('<i class="fa fa-cloud-upload"></i>&nbsp;Ajouter un fichier');
+    $('#modal-global').modal('show');
+}
+
+{if !empty($contact.raison_social) && $contact.mother == 1}
+function get_form_add_agence(mother_id, contact_id){
+	$.get(
+        '{$Helper->getLink("contacts/ajax_form_add_agence/'+mother_id+'")}',{literal}
+        {nohtml:'nohtml', contact:contact_id},{/literal}
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('Nouvelle agence');
+    $('#modal-global').modal('show');
+}
+{/if}
+
 function get_form_suivi(cid){
 	$.get(
         '{$Helper->getLink("contacts/ajax_form_suivi/'+cid+'")}',{literal}
@@ -470,7 +485,7 @@ function endUpload(result){
 	}
 }
 
-{if $smarty.session.utilisateur.mailing_adm == 1 || $smarty.session.utilisateur.isAdmin > 0}
+{if $smarty.session.utilisateur.isAdmin > 0}
 function deleteSuivi(sid){
 	if(confirm('Etes vous sur de vouloir supprimer ce suivi ?')){
 		window.location.href = '{$Helper->getLink("contacts/suividelete/'+sid+'")}';

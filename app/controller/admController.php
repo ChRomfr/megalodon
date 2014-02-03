@@ -37,6 +37,14 @@ class admController extends Controller{
 	 */
 	public function check_dirAction(){
 		$check_dir = array(
+			'/cache'		=>	array(
+					'name'	=>	'/cache',
+					'dir'	=>	ROOT_PATH.'cache',
+				),
+			'/cache/_sessions' => array(
+					'name'	=>	'/cache/_sessions',
+					'dir'	=>	ROOT_PATH.'cache'.DS.'_sessions',
+				),
 			'/web/upload'	=>	array(
 					'name'	=>	'/web/upload',
 					'dir'	=>	ROOT_PATH .'web'.DS.'upload',

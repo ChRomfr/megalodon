@@ -1,0 +1,18 @@
+{strip}
+<form method="get" action="{$Helper->getLink("contacts/agence_add")}" class="form-inline" role="form">
+	<fieldset>
+		<legend>Nouvelle agence :</legend>
+		<div class="form-group">
+			<label class="sr-only">ID de l'agence</label>
+			<input type="text" name="agence_id" required class="form-control" placeholder="ID de l agence"/>
+		</div>
+		<br/>
+		<hr/>
+		<div class="text-center">
+			<button class="btn btn-primary" type="submit">{$lang.Enregistrer}</button>
+		</div>
+		<input type="hidden" name="mother" value="{$mother_id}" />
+		<input type="hidden" name="contact" value="{$contact_id}" />
+	</fieldset>
+</form>
+{/strip}

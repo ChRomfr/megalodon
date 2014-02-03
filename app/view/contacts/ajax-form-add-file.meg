@@ -1,0 +1,18 @@
+{strip}
+<form method="post" action="{$Helper->getLink("contacts/file_add/{$cid}?nohtml")}" target="uploadFrame" enctype="multipart/form-data" onsubmit="return sendUpload()" class="form-inline" role="form">
+	<div class="form-group">
+		<label class="control-label">Fichier :</label>
+		<input type="file" name="file_contact" placeholder="Fichier a envoyé"/>
+	</div>
+	<br/>
+	<hr/>
+	<div class="text-center">
+		<button type="submit" class="btn btn-primary"><i class="fa fa-cloud-upload"></i>&nbsp;{$lang.Envoyer}</button>
+	</div>
+</form>
+
+<div id="uploadInfos">
+	<div id="uploadStatus"></div>
+	<iframe id="uploadFrame" name="uploadFrame" style="display:none;"></iframe>
+</div>
+{/strip}
