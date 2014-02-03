@@ -1,7 +1,7 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
-	<li class="active">Contacts</li>
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
+	<li class="active"><i class="fa fa-group"></i>&nbsp;Contacts</li>
 </ol>
 
 <div class="well">

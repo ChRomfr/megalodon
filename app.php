@@ -32,6 +32,9 @@
 @package : require sharkphp
 */
 
+define('MEG_VERSION', '1.0.20140130');
+define('SHARK_VERSION', '1.0.0-beta');
+
 // System de notification pour le bootstrap
 $registry->load_web_lib('notifications/notifications.css','css');
 $registry->load_web_lib('notifications/notifications.js','js');

@@ -1,3 +1,4 @@
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
 	<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
@@ -7,7 +8,7 @@
 <div class="well">
 	{if $smarty.session.utilisateur.isAdmin > 0}
 	<div class="pull-right">
-		<a href="javascript:delete_campaign({$campaign.id});" title="Supprimer cette campagne"><i class="icon icon-trash"></i></a>
+		<a href="javascript:delete_campaign({$campaign.id});" title="Supprimer cette campagne"><i class="fa fa-trash-o fa-lg"></i></a>
 	</div>
 	{/if}
 	<h4>Detail : {$campaign.title}</h4>
@@ -77,7 +78,7 @@
 	<div class="clearfix"></div>
 	{/if}
 </div>
-
+{/strip}
 <script type="text/javascript">
 <!--
 var filter_cible = '';

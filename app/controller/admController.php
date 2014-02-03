@@ -31,6 +31,65 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'maintenance.shark');
 	}
 
+	/**
+	 * Verifie l'existance et les droits sur les dossiers MEG
+	 * @return string HTML
+	 */
+	public function check_dirAction(){
+		$check_dir = array(
+			'/web/upload'	=>	array(
+					'name'	=>	'/web/upload',
+					'dir'	=>	ROOT_PATH .'web'.DS.'upload',
+				),
+			'/web/upload/contacts'	=>	array(
+					'name'	=>	'/web/upload/contacts',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'contacts',
+				),
+			'/web/upload/csv'	=>	array(
+					'name'	=>	'/web/upload/csv',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'csv',
+				),
+			'/web/upload/logo'	=>	array(
+					'name'	=>	'/web/upload/logo',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'logo',
+				),
+			'/web/upload/tmp'	=>	array(
+					'name'	=>	'/web/upload/tmp',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'tmp',
+				),
+			'/log'	=>	array(
+					'name'	=>	'/log',
+					'dir'	=>	ROOT_PATH . 'log',
+				),
+			'/log/error'	=>	array(
+					'name'	=>	'/log/error',
+					'dir'	=>	ROOT_PATH . 'log'.DS.'error',
+				),
+			'/log/import'	=>	array(
+					'name'	=>	'/log/import',
+					'dir'	=>	ROOT_PATH . 'log'.DS.'import',
+				),
+		);
+
+		foreach ($check_dir as $dir) {
+			if(!is_dir($dir['dir'])){
+				$check_dir[$dir['name']]['result']= 'Dossier absent';
+
+				if(@mkdir($dir['dir'], '0777'))
+					$check_dir[$dir['name']]['result'] = '<br/>OK';
+				else
+					$check_dir[$dir['name']]['result'] = '<br/>Erreur';			
+				
+			}else{
+				$check_dir[$dir['name']]['result']= '<span class="label label-success"><strong>OK</strong></span>';
+			}
+		}
+		
+		$this->registry->smarty->assign('check_dir', $check_dir);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'check_dir.meg');
+	}
+
 	public function ajax_clean_cacheAction(){
 		$files = getFilesInDir(ROOT_PATH . 'cache');
 		foreach($files as $key => $value){
@@ -116,6 +175,7 @@ class admController extends Controller{
 			'ape_multi_choice'	=>	0,
 			'logo'				=>	'',
 			'logo_name'			=>	'',
+			'version_installed'	=>	'1.0.20140130',
 		);
 		
 
@@ -151,6 +211,28 @@ class admController extends Controller{
 		$this->registry->smarty->assign('postes', $this->registry->db->get('poste', null, 'libelle'));
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_postes.tpl');
+	}
+
+	/**
+	 * Recupere et affiche tout les contacts de type societe_contact sans email
+	 * @return mixed resultat au format HTML ou JSON
+	 */
+	public function contacts_no_emailAction(){
+
+		// Mise a la corbeille des contacts directements
+		if( !is_null($this->registry->Http->get('go_to_trash')) ){
+			$query = "UPDATE contacts SET isDelete = '1' WHERE ctype = 'societe_contact' AND (email IS NULL OR email = '') ";
+			$result = $this->registry->db->query($query);
+			return 'Contacts supprimés ('. $result .')';
+		}
+
+		/*$this->load_manager('contacts');
+
+		$contacts = $this->manager->contacts->get_no_email();
+		var_dump($this->registry->db->queries);
+		var_dump($contacts);*/
+
+
 	}
 
 	/**
@@ -366,6 +448,23 @@ class admController extends Controller{
 		$this->registry->smarty->assign('sites', $sites->get());
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_edit.shark');
+	}
+
+	public function users_deleteAction($uid){
+
+		$user = new utilisateur();
+		$user->get($uid);
+
+		if($user->identifiant == 'admin'){
+			$this->registry->Helper->pnotify('Utilisateur', '<strong>Il n est pas possible cet utilisateur.</strong>');
+			return $this->users_indexAction();	
+		}
+
+		$this->registry->db->delete('user', $uid);
+
+		$this->registry->Helper->pnotify('Utilisateur', 'Utilisateur supprimé de la base.');
+
+		return $this->users_indexAction();
 	}
 
 	/**

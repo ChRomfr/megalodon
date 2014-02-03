@@ -42,6 +42,11 @@
 	</table>
 </div>
 
+<div class="well" id="check_dir_in_app">
+	<h4>Verification des accès au dossier et au fichier</h4>
+	<div id="result-check-fichier"></div>
+</div>
+
 <div class="well">
 	<h4>Cache</h4>
 	<hr/>
@@ -52,6 +57,14 @@
 <div class="well">
 	<h4>Parametre serveur</h4>
 	<table class="table">
+		<tr>
+			<td>MEG VERSION</td>
+			<td>{$smarty.const.MEG_VERSION}</td>
+		</tr>
+		<tr>
+			<td>SHARK VERSION</td>
+			<td>{$smarty.const.SHARK_VERSION}</td>
+		</tr>
 		<tr>
 			<td>SOFTWARE</td>
 			<td>{$smarty.server.SERVER_SOFTWARE}</td>
@@ -73,6 +86,14 @@
 {/strip}
 <script type="text/javascript">
 <!--
+$.get(
+    '{$Helper->getLink("adm/check_dir")}',{literal}
+    {nohtml:'nohtml'},{/literal}
+    function(data){
+        $('#result-check-fichier').html(data);
+    }
+);
+
 function clean_cache(){
 	$.get(
         '{$Helper->getLink("adm/ajax_clean_cache")}',{literal}
