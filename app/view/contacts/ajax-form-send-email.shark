@@ -1,5 +1,6 @@
 <!-- START ajax-form-send-email -->
-<form method="post" action="{$Helper->getLink("contacts/sendemail/{$contact_id}")}" id="form-email-ets" class="form-horizontal well" role="form">
+{strip}
+<form method="post" action="{$Helper->getLink("contacts/sendemail/{$contact_id}")}" id="form-email-ets" class="form-horizontal well" role="form" enctype="multipart/form-data">
 	<div class="form-group">
 		<label>A :</label>
 		<span class="uneditable-input">{$contact.email}</span>
@@ -21,9 +22,16 @@
 		<label>Message :</label>
 		<textarea name="mail[body]" required id="body-email" cols="40" rows="6" class="form-control"></textarea>
 	</div>
+
+	<div class="control-form">
+		<label>Piece jointe :</label>
+		<input type="file" name="pj"  id="pj-email" class="form-control" />
+	</div>
+
 	<div class="text-center">
 		<hr/>
 		<button type="submit" class="btn btn-primary">Envoyer</button>
 	</div>
 </form>
+{/strip}
 <!-- END ajax-form-send-email -->

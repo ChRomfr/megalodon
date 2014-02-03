@@ -3,9 +3,7 @@
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
 	<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-users"></i>&nbsp;&nbsp;Contacts</a></li>
-	<li class="active">
-		{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}
-	</li>
+	<li class="active">{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</li>
 </ol>
 
 <div class="well">
@@ -52,7 +50,6 @@
 			</td>
 		</tr>
 		
-		{* Traitement des telephones *}
 		{foreach $contact.telephones as $row}
 		<tr>
 			<td>
@@ -150,10 +147,9 @@
 		
 	</table>
 	<hr/>
-	{* START TAB *}
+	
 	<div class="tab-content">
 		
-		{* Liste des onglets *}
 		<ul id="tabContacts" class="nav nav-tabs">
             {if !empty($contact.raison_social)}<li><a href="#tabContactsOfSociete" data-toggle="tab">Contacts</a></li>{/if}
 			{if !empty($contact.raison_social) && $contact.mother == 1}<li><a href="#tabAgences" data-toggle="tab">Agences</a></li>{/if}
@@ -203,12 +199,14 @@
         </div>
         <!-- END tab-suivis -->
 
+        <!-- START tab-mailing envoye -->
         <div id="tabMailingSend" class="tab-pane">
 			<table class="table table-striped table-condensed" id="table-contacts-mailings">
 				<thead><tr><th>#</th><th>Mailing</th><th>Email</th><th>Ouvert</th></tr></thead>
 				<tbody></tbody>
 			</table>
         </div>
+        <!-- END tab-mailing envoye -->
 		
 		<!-- START tab Doublons -->
 		{if $smarty.session.utilisateur.isAdmin > 0}
@@ -226,8 +224,7 @@
 			</form>
 			{/if}
 
-			{* Tableau des matching *}
-			<table class="table table-striped table-condensed">
+			<table class="table table-striped table-condensed" id="table-matchings">
 				<thead>
 					<tr>
 						<th>ID</th>
@@ -254,6 +251,7 @@
 
 		{if !empty($contact.raison_social) && $contact.mother == 1}
 		<div id="tabAgences" class="tab-pane">
+			<br/>
 			<div class="pull-right">
 				<a href="javascript:get_form_add_agence({$contact.sid}, {$contact.contact_id})" title=""><i class="fa fa-plus fa-lg"></i></a>
 			</div>
@@ -351,7 +349,7 @@
 						<td>{$row.date_send}</td>
 						<td>{$row.email_user}</td>
 						<td>{$row.de}</td>
-						<td>{$row.sujet}</td>
+						<td><a href="javascript:get_form_send_email({$row.id});" title="">{$row.sujet}</a></td>
 						<td>{$row.result}</td>
 					</tr>
 					{/foreach}
@@ -379,8 +377,8 @@
 		</div>
 		{/if}		
 	</div>
-	{* END TAB *}
-</div>{* /well *}
+
+</div><!-- /well -->
 
 {* MODAL GENERIQUE *}
 <div id="modal-fiche-contacts"	class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -455,6 +453,19 @@ function get_form_send_email(cid){
         {nohtml:'nohtml'},{/literal}
         function(data){
             $("#modal-fiche-contacts-body").html(data);
+        }        
+    );
+
+    $('#modal-fiche-contact-label').html('Envoie email');
+    $('#modal-fiche-contacts').modal('show');
+}
+
+function get_form_send_email(eid){
+	$.get(
+        '{$Helper->getLink("contacts/ajax_get_email_detail/'+eid+'")}',{literal}
+        {nohtml:'nohtml'},{/literal}
+        function(data){
+            $("#modal-fiche-contacts-body").html('<div class="well">'+data+'</div>');
         }        
     );
 

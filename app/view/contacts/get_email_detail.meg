@@ -1,0 +1,23 @@
+<!-- START app/view/contacts/get_emaiul_detail.meg -->
+<table class="table">
+	<tr>
+		<td>{$lang.Sujet} :</td>
+		<td>{$email.sujet}</td>
+	</tr>
+	<tr>
+		<td>{$lang.Message} :</td>
+		<td>{$email.body|nl2br}</td>
+	</tr>
+	{if !empty($email.pj) && $email.pj == 'Error file not found !'}
+	<tr>
+		<td>Piece jointe</td>
+		<td>La piece jointe a ete supprimé du serveur</td>
+	</tr>
+	{elseif !empty($email.pj)}
+	<tr>
+		<td>Piece jointe</td>
+		<td><a href="{$config.url}web/upload/tmp/{$email.pj}" title="" target="_blank">{$email.pj}</a></td>
+	</tr>
+	{/if}
+</table>
+<!-- END app/view/contacts/get_emaiul_detail.meg -->

@@ -369,26 +369,42 @@ class contactsController extends Controller{
 				'body'				=>	$mail['body'],
 				'result'			=>	'none',
 				'date_send'			=>	date("Y-m-d H:i:s"),
+				'pj'				=>	null,
 			);
 
-			// Sauvegarde dans la base du mail
-			$email_id = $this->registry->db->insert('contacts_email', $email);
+			// Envoie de l email			
+			if(is_file($_FILES['pj']['tmp_name'])){
+				// Traitement email avec pj
+				$extension_upload = strtolower(  substr(  strrchr($_FILES['pj']['name'], '.')  ,1)  );
+				$name_file = md5(uniqid(rand(), true));
+				
+				$dest_file = ROOT_PATH.'web'.DS.'upload'.DS.'tmp'.DS.$name_file.'.'.$extension_upload;
 
-			// Envoie de l email et recuperation du resultat
-			$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body']);
+				move_uploaded_file($_FILES['pj']['tmp_name'],$dest_file);
+
+				$email['pj'] = $name_file.'.'.$extension_upload;
+
+				// Envoie de l email et recuperation du resultat
+				$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body'], $dest_file);
+			}else{
+				$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body']);
+			}
+
+			$email['result'] = $result;
+
+			// Sauvegarde dans la base du mail
+			$email_id = $this->registry->db->insert('contacts_email', $email);			
 
 			if( $result === true){
-				$email['result'] = 'Succes';
 				$this->registry->db->update('entreprise_email', $email, array('id =' => $email_id));
 				sendEmail($mail['de'],$mail['de'], 'Copie message - '. $mail['sujet'], '',$mail['body']);
-				$this->smarty->assign('FlashMessage','Email envoye. Une copie a ete envoye a l\\\'adresse suivante : '. $mail['de']);
+				$this->registry->Helper->pnotify('Email','Email envoye. Une copie a ete envoye a l\\\'adresse suivante : '. $mail['de']);
 				// Enregistrement du log
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $eid, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Envoie email depuis la fiche #'. $email_id));
 				$clog->save();
 			}else{
-				$email['result'] = $result;
 				$this->registry->db->update('entreprise_email', $email, array('id =' => $email_id));
-				$this->smarty->assign('FlashMessage','Une erreur est survenue durant l\\\'envoie : '. $result);
+				$this->registry->Helper->pnotify('FlashMessage','Une erreur est survenue durant l\\\'envoie : '. $result);
 				// Enregistrement du log
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $eid, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Echec envoie email depuis la fiche #'. $email_id));
 				$clog->save();
@@ -398,6 +414,26 @@ class contactsController extends Controller{
 		}else{
 			return $this->detailAction($eid);
 		}
+	}
+
+	/**
+	 * Recupere et retourne les emails envoye depuis la fiche
+	 * @param  [type] $eid [description]
+	 * @return [type]      [description]
+	 */
+	public function ajax_get_email_detailAction($eid){
+		$email = $this->registry->db->get_one('contacts_email', array('id =' =>$eid));
+
+		if(!empty($email['pj'])){
+			// Verification PJ toujours sur le serveur
+			if(!is_file(ROOT_PATH.'web'.DS.'upload'.DS.'tmp'.DS.$email['pj'])){
+				$email['pj'] = 'Error file not found !';
+			}
+		}
+		
+		$this->registry->smarty->assign('email', $email);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'get_email_detail.meg');
 	}
 	
 	/**
