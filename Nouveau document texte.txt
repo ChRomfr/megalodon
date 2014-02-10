@@ -1,5 +1,21 @@
-
+ALTER TABLE `user` ADD COLUMN `token` VARCHAR(100) NULL AFTER `index_map_contacts`;
 ALTER TABLE `contacts_email` ADD COLUMN `pj` VARCHAR(100) NULL AFTER `result`;
+ALTER TABLE `user` ADD COLUMN `sso_link_token` VARCHAR(100) NULL AFTER `token`, ADD COLUMN `sso_link` INT(1) NULL DEFAULT 0 AFTER `sso_link_token`;
+
+CREATE TABLE `logs` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `date_log` datetime NOT NULL,
+  `log` text NOT NULL,
+  `module` varchar(50) NOT NULL,
+  `link_id` varchar(50) NOT NULL,
+  `user_id` int(11) DEFAULT NULL,
+  `user` varchar(50) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  KEY `log_link_id` (`link_id`),
+  KEY `log_module` (`module`),
+  KEY `log_module_link` (`module`,`link_id`)
+) ENGINE=MyISAM DEFAULT CHARSET=utf8;
+
 
 /*------------------------------------*/
 CREATE TABLE `module_type` (

@@ -180,10 +180,12 @@ class admController extends Controller{
 	 */
 	public function configuration_checkAction(){
 		$config_check = array(
-			'ape_multi_choice'	=>	0,
-			'logo'				=>	'',
-			'logo_name'			=>	'',
-			'version_installed'	=>	'1.0.20140130',
+			'ape_multi_choice'				=>	0,
+			'cron_token'					=>	getUniqueID(),
+			'logo'							=>	'',
+			'logo_name'						=>	'',
+			'mailing_group_receive_resume'	=>	'',
+			'version_installed'				=>	'1.0.20140130',
 		);
 		
 
@@ -808,12 +810,45 @@ class admController extends Controller{
 		return $this->contacts_maintenanceAction();
 	}
 
+	public function mailingsAction(){
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings.meg');
+	}
+
 	public function mailingtypeAction(){
 		$types = new mailing_type();
 		
 		$this->registry->smarty->assign('types', $types->get());
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailingtype.shark');
+	}
+
+	/**
+	 * Affiche et traite les preferences du modules mailings
+	 * @return [type] [description]
+	 */
+	public function mailings_settingsAction(){
+
+		// Traitement du formulaire
+		if(!is_null($this->registry->Http->post('config'))){
+            
+            $config = $this->registry->Http->post('config');
+            
+            foreach($config as $key => $value){                
+                $this->registry->db->update('config', array('valeur' => $value), array('cle =' => $key));
+            }
+            
+            // Suppression du cache actuel
+            $this->registry->cache->remove('config');
+            
+            $this->registry->Helper->pnotify('Configuration', 'Configuration enregistrée');
+          	
+          	return $this->mailingsAction();
+        }
+        
+        printform:
+
+		$this->registry->smarty->assign('groups', $this->registry->db->get('groupe'));
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings_settings.meg');
 	}
 
 	/**
@@ -845,6 +880,91 @@ class admController extends Controller{
 		$type->delete($type->id);
 		$this->registry->Helper->pnotify('Type supprime', 'Le type a été supprimé');
 		return $this->mailingtypeAction();
+	}
+
+	public function mailings_resumeAction($type="hebdo"){
+
+		if(empty($type)){
+			$type = 'hebdo';
+		}
+
+		// Recuperation des mailins entre deux dates
+		$this->load_manager('mailing');
+
+		if($type=='hebdo'){
+			// Tache à effectue le dimanche
+			$date =  date("Y-m-d");
+
+			if( !is_null($this->registry->Http->get('date')) ){
+				$date = $this->registry->Http->get('date');	
+			}	
+
+			// Recuperation des jours de le semaine
+			$days_of_week = week_from_monday($date);
+
+			// Mailing a venir
+			$mailings = $this->manager->mailing->get(1000,0, array('date_send >=' => $days_of_week[0], 'date_send <=' => $days_of_week[6], 'send =' => 1, 'valid =' => 1));
+			
+			// Mailing passe
+			list($year_n, $month_n, $day_n) = explode('-', $days_of_week['6']);
+			$date_next_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) + 86400)); 
+			$days_of_next_week = week_from_monday($date_next_week);
+
+			$next_mailings = $this->manager->mailing->get(1000,0, array('date_wish >=' => $days_of_next_week[0], 'date_wish <=' => $days_of_next_week[6]));
+
+			$date_feature_mailing = array($days_of_next_week[0], $days_of_next_week[6]);
+			$date_previous_mailing = array($days_of_week[0], $days_of_week[6]); 
+
+		}elseif($type=="week_pair"){
+			// Tache a effectue le lundi
+			
+			// Recuperation du numéro de semaine
+			$num_week = date('W');
+
+			// On teste le numero de semaine
+			if($num_week%2==1){
+				return 'invalid week';
+			}
+
+			// Recuperation des mailings a venir sur la semaine pair et impair a venir
+			$week_1 = week_from_monday(date("Y-m-d"));
+
+			list($year_n, $month_n, $day_n) = explode('-', $week_1['6']);
+			$date_next_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) + 86400)); 
+			$week_2 = week_from_monday($date_next_week);
+
+			$next_mailings = $this->manager->mailing->get(1000,0, array('date_wish >=' => $week_1[0], 'date_wish <=' => $week_2[6]));
+
+			// Recuperation des mailings envoye sur la semaines impair et pair passés
+			list($year_n, $month_n, $day_n) = explode('-', $week_1['0']);
+			$date_p_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) - 86400)); 
+			$previous_week_1 = week_from_monday($date_p_week);
+
+			list($year_n, $month_n, $day_n) = explode('-', $previous_week_1['0']);
+			$date_p_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) - 86400)); 
+			$previous_week_2 = week_from_monday($date_p_week);
+			
+			$mailings = $this->manager->mailing->get(1000,0, array('date_send >=' => $previous_week_2[0], 'date_send <=' => $previous_week_1[6], 'send =' => 1, 'valid =' => 1));
+
+			$date_feature_mailing = array($week_1[0], $week_2[6]);
+			$date_previous_mailing =  array($previous_week_2[0], $previous_week_1[6]);
+		}
+
+		$this->registry->smarty->assign(array(
+			'date_feature_mailing'	=>	$date_feature_mailing,
+			'date_previous_mailing' => 	$date_previous_mailing,
+			'type'					=>	$type,
+		));
+
+		$this->registry->smarty->assign('mailings', $mailings);		
+		$this->registry->smarty->assign('next_mailings', $next_mailings);
+
+		$mail_sujet = "Recap hebdomadaire des mailings";
+		$mail_body =  $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings_mail_body_resume.meg');
+
+		sendEmail(array('romain.drouche@afpi-centre-valdeloire.com', 'elise.bordier@afpi-centre-valdeloire.com', 'pierre.szwiec@afpi-centre-valdeloire.com'), 'nepasrepondre@afpi-centre-valdeloire', $mail_sujet, '', $mail_body);
+
+		return 'ok';
 	}
 
 	public function modulesAction(){
@@ -1048,4 +1168,15 @@ class admController extends Controller{
 
 
 	/*-- PRODUCT --*/
+
+	/*-- LOGS --*/
+	public function logsAction(){
+
+		// Recuperation des logs dans la base
+		$logs = $this->registry->db->get('logs', null, 'date_log DESC');
+
+		$this->registry->smarty->assign('logs', $logs);
+		
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'logs.meg');
+	}
 }

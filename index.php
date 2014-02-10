@@ -39,9 +39,6 @@ $registry->addJS('jquery-last.min.js');								# Jquery
 $registry->addJS('jquery-migrate-1.1.0.min.js'); 					# Jquery BC
 $registry->addJS('jquery-ui-last.custom.min.js');					# Jquery ui
 $registry->addCSS($jquery_theme . '/jquery-ui-last.custom.min.css');
-//$registry->addJS('fancybox/jquery.mousewheel-3.0.4.pack.js');
-//$registry->addJS('fancybox/jquery.fancybox-1.3.4.pack.js');
-//$registry->addCSS('fancybox/jquery.fancybox-1.3.4.css');
 $registry->addJS('jquery.maskedinput.min.js');
 $registry->addJS('mustache.js');
 $registry->load_web_lib('tablesorter/jquery.tablesorter.min.js','js');

@@ -1,0 +1,30 @@
+<!-- START app/view/adm/mailings_settings.meg -->
+{strip}
+<ol class="breadcrumb">
+    <li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;&nbsp;{$lang.Accueil}</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;{$lang.Administration}</a></li>
+    <li><a href="{$Helper->getLink("adm/mailings")}" title="{$lang.Mailing}"><i class="fa fa-envelope"></i>&nbsp;&nbsp;{$lang.Mailing}</a></li>
+    <li class="active"><i class="fa fa-wrench"></i>&nbsp;&nbsp;{$lang.Preferences}</li>
+</ol>
+
+<div class="well">
+    <form method="post" action="" id="form-edit-config" class="form-horizontal" enctype="multipart/form-data">
+    	<div class="form-group">
+            <label class="control-label col-sm-2">{$lang.Groupe_qui_recoit_les_resumes_hebdomadaire} :</label>
+            <div class="col-sm-5">
+                <select name="config[mailing_group_receive_resume]" id="config-mailing_group_receive_resume" class="form-control">
+                	<option></option>
+                   {foreach $groups as $row}
+                   <option value="{$row.id}" {if $config.mailing_group_receive_resume == $row.id}selected="selected"{/if}>{$row.name}</option>
+                   {/foreach}
+                </select>
+            </div>
+        </div>
+        <hr/>
+        <div class="text-center">
+        	<button class="btn btn-primary" type="submit">{$lang.Enregistrer}</button>
+        </div>
+    </form>
+</div>
+{/strip}
+<!-- END app/view/adm/mailings_settings.meg -->

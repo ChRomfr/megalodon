@@ -61,10 +61,9 @@
 		</div>
 	</div>
 
-
 	<div class="row">
 		<div class="well">
-			<h4>Parametre serveur</h4>
+			<h4>Parametre application</h4>
 			<table class="table">
 				<tr>
 					<td>MEG VERSION</td>
@@ -74,6 +73,18 @@
 					<td>SHARK VERSION</td>
 					<td>{$smarty.const.SHARK_VERSION}</td>
 				</tr>
+				<tr>
+					<td>CRON TOKEN</td>
+					<td>{$config.cron_token}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="well">
+			<h4>Parametre serveur</h4>
+			<table class="table">				
 				<tr>
 					<td>SOFTWARE</td>
 					<td>{$smarty.server.SERVER_SOFTWARE}</td>

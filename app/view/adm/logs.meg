@@ -1,0 +1,23 @@
+<ol class="breadcrumb">
+    <li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;&nbsp;{$lang.Accueil}</a></li>
+    <li><a href="{$Helper->getLink("adm")}" title="{$lang.Administration}"><i class="fa fa-dashboard"></i>&nbsp;&nbsp;{$lang.Administration}</a></li>
+    <li class="active"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Logs</li>
+</ol>
+
+<table class="table table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Log</th>
+			<th>Date</th>
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $logs as $row}
+		<tr>
+			<td>{$row.id}</td>
+			<td>{$row.log}</td>
+			<td>{$row.date_log}</td>
+		{/foreach}
+	</tbody>
+</table>
