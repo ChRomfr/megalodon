@@ -185,6 +185,7 @@ class admController extends Controller{
 			'logo'							=>	'',
 			'logo_name'						=>	'',
 			'mailing_group_receive_resume'	=>	'',
+			'register_open'					=>	0,
 			'version_installed'				=>	'1.0.20140130',
 		);
 		
@@ -442,6 +443,13 @@ class admController extends Controller{
 					$this->registry->db->insert('acl', array('user_id' => $user->id, 'acl' => $key));
 				}
 			}
+
+			$log = new log(array(
+				'log' 		=> 	'Edition du l utilisateur : <a href="'.$this->registry->Helper->getLink("adm/users_edit/".$user->id) .'" title="">'. $user->identifiant .'</a>',
+				'module'	=>	'user',
+				'link_id'	=>	$user->id,
+			));
+			$log->save();
 
 			$this->registry->Helper->pnotify('Utilisateur', 'modifications enregistrées', 'success');
 
@@ -1171,9 +1179,12 @@ class admController extends Controller{
 
 	/*-- LOGS --*/
 	public function logsAction(){
+		$per_page = 50;
+
+		$nb_rows = $this->registry->db->count('logs');
 
 		// Recuperation des logs dans la base
-		$logs = $this->registry->db->get('logs', null, 'date_log DESC');
+		$logs = $this->registry->db->get('logs', null, 'date_log DESC', $per_page, getOffset($per_page));
 
 		$this->registry->smarty->assign('logs', $logs);
 		

@@ -38,9 +38,7 @@ define('SHARK_VERSION', '1.0.0-beta');
 $ajax_query = false;
 
 // Detection du type de requete
-if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') {
-	$ajax_query = true;
-}
+if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') $ajax_query = true;
 
 // System de notification pour le bootstrap
 $registry->load_web_lib('notifications/notifications.css','css');

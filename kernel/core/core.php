@@ -24,8 +24,9 @@
                ii!                             '*YMWM,                         
                I'                                  "YM                         
                                                                                
-
+Dernier edition : 2014-02-10 14:00
 */
+
 define('BUNDLE_PATH', ROOT_PATH . 'bundle' . DS);
 
 # Demarrage des sessions
@@ -60,15 +61,12 @@ $registry->smarty      = new MySmarty($registry);
 $registry->session     = new Session($registry);
 $registry->HTTPRequest = new HTTPRequest($registry);
 $registry->form        = new Form($registry);
-//$cache                 = $registry->cache;
 $registry->Http        = new Http($registry);
 
 // Traitement de la configuration du framework
 $config                = new Baseconfig($config_file, $registry);
 
-if(CONFIG_IN_DB){
-  $config->get();
-}
+if(CONFIG_IN_DB)  $config->get();
 
 $config->config['url'] = $registry->Http->getUrl();
 $config->config['url_dir']  = '';
@@ -80,14 +78,12 @@ $registry->Helper      = new Helper($registry);
 require_once ROOT_PATH . 'kernel' . DS . 'core' . DS . 'bundle.php';
 
 # Verification sessions
-if( $registry->session->check() == false ):
+if( $registry->session->check() == false ){
     $registry->session->create('Visiteur'); // Creation d'une session visiteur
-endif;
+}
 
 # Suppression des sessions de plus de 3h = 10800sec
-if(SESSION_IN_DB){
-  $registry->db->delete(PREFIX . 'sessions', null, array('last_used <' => time() - 10800) );
-}
+if(SESSION_IN_DB)  $registry->db->delete(PREFIX . 'sessions', null, array('last_used <' => time() - 10800) );
 
 # Envoie des Elements du kernel a smarty
 $registry->smarty->assign(array(

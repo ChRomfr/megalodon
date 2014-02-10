@@ -7116,7 +7116,7 @@ td.visible-print {
 </head>
 <body>
 <div class="well">
-	<h4>Les mailings a venir. {$date_feature_mailing.0} - {$date_feature_mailing.1} </h4>
+	<h4>Les mailings programmés. {$date_feature_mailing.0} - {$date_feature_mailing.1} </h4>
 	<table class="table table-striped">
 		<thead>
 			<tr>
@@ -7140,7 +7140,7 @@ td.visible-print {
 	<br/>
 	<hr/>
 	<br/>
-	<h4>Les mailings passés. {$date_previous_mailing.0} - {$date_previous_mailing.1} </h4>
+	<h4>Les mailings envoyés. {$date_previous_mailing.0} - {$date_previous_mailing.1} </h4>
 	<table class="table table-striped">
 		<thead>
 			<tr>

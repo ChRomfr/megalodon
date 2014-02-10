@@ -1,0 +1,10 @@
+2014-02-10
+
+- app.php : Ajout fonction pour sso
+- app.php : Ajout finction pour sso_cron
+- app.php : Nettoyage du code
+- mailingController.php : Nettoyage du code
+- FEATURE : Ajout systeme de log systeme, permettant d enregistrer les actions effectués dans l administration et sur le noyau
+- FEATURE : Possibilité de créer des taches CRON avec connexion automatique
+- FEATURE : Ajout d une couleur dans la calendrier des mailings, pour ceux qui sont valider et non envoyer
+- BUG : Correction du bug empechant la suppressiond d adresse email de la traitement des stats des mailings

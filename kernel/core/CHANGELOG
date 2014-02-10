@@ -1,0 +1,7 @@
+
+
+-- 2014-02-10 --
+
+- Modification vue connexion pour masquer le lien d'inscription quand la directive est à 0
+- Modification vue connexion : icone dans le fil d'ariane
+- core.php : Nettoyage du code

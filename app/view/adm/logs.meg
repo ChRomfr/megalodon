@@ -4,20 +4,27 @@
     <li class="active"><i class="fa fa-info-circle"></i>&nbsp;&nbsp;Logs</li>
 </ol>
 
-<table class="table table-striped">
-	<thead>
-		<tr>
-			<th>#</th>
-			<th>Log</th>
-			<th>Date</th>
-		</tr>
-	</thead>
-	<tbody>
-		{foreach $logs as $row}
-		<tr>
-			<td>{$row.id}</td>
-			<td>{$row.log}</td>
-			<td>{$row.date_log}</td>
-		{/foreach}
-	</tbody>
-</table>
+<div class="well">
+	<div id="container-table">
+		<table class="table table-striped table-condensed" id="table-logs">
+			<thead>
+				<tr>
+					<th>#</th>
+					<th>Log</th>
+					<th>Date</th>
+					<th>{$lang.Module}</th>
+				</tr>
+			</thead>
+			<tbody>
+				{foreach $logs as $row}
+				<tr>
+					<td>{$row.id}</td>
+					<td>{$row.log}</td>
+					<td>{$row.date_log}</td>
+					<td>{$row.module}</td>
+				</tr>
+				{/foreach}
+			</tbody>
+		</table>
+	</div>
+</div>
