@@ -26,24 +26,6 @@ class utilisateur extends Baseutilisateur{
 
     public $index_map_contacts;
 
-    /**
-     * Jeton de securite pour auth auto
-     * @var [type]
-     */
-    public $token;
-
-    /**
-     * Jeton de securite pour le sso via link
-     * @var [type]
-     */
-    public $sso_link_token;
-
-    /**
-     * Active ou non le sso link pour l utilisateur
-     * @var [type]
-     */
-    public $sso_link;
-
     public function checkLogin(){
     	global $registry;
         

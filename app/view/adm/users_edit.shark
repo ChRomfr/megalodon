@@ -44,28 +44,6 @@
 			</div>
 		</div>
 
-		<div class="form-group">
-			<label class="control-label col-sm-2">SSO via lien :</label>
-			<div class="col-sm-5">
-				<select name="user[sso_link]" id="sso-link" class="form-control">
-					<option value="0">{$lang.Non}</option>
-					<option value="1" {if $user->sso_link == 1}selected="selected"{/if}>{$lang.Oui}</option>
-				</select>
-			</div>
-		</div>
-
-		<div class="form-group">
-			<label class="control-label col-sm-2">SSO TOKEN :</label>
-			<div class="col-sm-5">
-				<div class="input-group">
-					<input type="text" id="sso-link-token-input" value="{$user->sso_link_token}" class="form-control" disabled/>
-					<span class="input-group-btn">
-						<a href="javascript:getTokenSSO();" class="btn btn-default"><i class="fa fa-refresh"></i></a>
-					</span>
-				</div>
-			</div>
-		</div>
-
 		{if count($sites) > 0}
 		<div class="form-group">
 			<label class="control-label col-sm-2" for="user-site-id">{$lang.Site} :</label>
@@ -234,7 +212,6 @@
 			{else}
 			<input type="hidden" name="user[actif]" value="1"/>
 			{/if}
-			<input type="hidden" name="user[sso_link_token]" value="{$user->sso_link_token}"  id="sso-link-token"/>
 			<input type="hidden" name="user[id]" value="{$user->id}" />
 			<button class="btn btn-primary" type="submit">Enregistrer</button>
 		</div>
@@ -258,17 +235,6 @@ function get_form_add_in_group(uid){
     );
     $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$user->identifiant}');
     $('#modal-global').modal('show');
-}
-
-function getTokenSSO(){
-	$.get(
-        '{$Helper->getLink("ajax/get_token")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-        	$("#sso-link-token-input").val(data);
-            $("#sso-link-token").val(data);
-        }        
-    );
 }
 </script>
 <!-- END FORM EDIT USER -->

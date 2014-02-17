@@ -35,10 +35,6 @@
 				<td>{if $user.actif == 1}<span class="label label-success">Oui</span>{else}<span class="label label-danger">Non</span>{/if}</td>
 				<td>
 					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="fa fa-edit"></i></a>
-					&nbsp;&nbsp;
-					{if $user.identifiant != 'admin'}
-					<a href="javascript:user_delete({$user.id});" title="{$lang.Supprimer}"><i class="fa fa-trash-o"></i></a>
-					{/if}
 				</tr>
 			</tr>
 			{/foreach}
@@ -74,10 +70,5 @@ jQuery(document).ready(function(){
 	 $("#users-liste").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
 });
 {/literal}
-function user_delete(uid){
-	if(confirm('Etes vous de vouloir supprimer cet utilisateur ?')){
-		window.location.href = '{$Helper->getLink("adm/users_delete/'+uid+'")}';
-	}
-}
 </script>
 <!-- END app/view/adm/user_index.shark -->

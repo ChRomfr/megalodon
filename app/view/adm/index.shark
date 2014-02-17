@@ -17,9 +17,9 @@
 		</li>
 
 		<li>
-			<a href="{$Helper->getLink("adm/mailings")}" title="{$lang.Mailings}">
+			<a href="{$Helper->getLink("adm/mailingtype")}" title="Mailing">
 				<span class="fa fa-envelope fa-3x"></span>
-				<span class="glyphicon-class">{$lang.Mailings}</span>
+				<span class="glyphicon-class">Mailing</span>
 			</a>
 		</li>
 
@@ -34,13 +34,6 @@
 			<a href="{$Helper->getLink("adm/modules")}" title="{$lang.Modules}">
 				<span class="fa fa-puzzle-piece fa-3x"></span>
 				<span class="glyphicon-class">{$lang.Modules}</span>
-			</a>
-		</li>
-
-		<li>
-			<a href="{$Helper->getLink("adm/logs")}" title="{$lang.Logs}">
-				<span class="fa fa-info-circle fa-3x"></span>
-				<span class="glyphicon-class">{$lang.Logs}</span>
 			</a>
 		</li>
 

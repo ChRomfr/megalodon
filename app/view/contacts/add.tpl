@@ -241,19 +241,6 @@ jQuery(document).ready(function(){
 	});
 	
 });
-/*
-$(document).ready(function() {
-    // lorsque je soumets le formulaire
-    $('#form-add-contacts').on('submit', function() {
- 
-    	var dataform = $('#form-add-contacts').serialize();
-    	console.log(dataform);
-    	alert(dataform);
- 
-        return false; // j'empêche le navigateur de soumettre lui-même le formulaire
-    });
-});
-*/
 {if isset($smarty.get.societe)}
 loadcomplementform({$smarty.get.societe});
 {/if}

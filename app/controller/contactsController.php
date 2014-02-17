@@ -188,6 +188,7 @@ class contactsController extends Controller{
 				$societe = new societe($data['ets']);
 				$societe->contact_id = $contact->id;
 				$societe->save();
+				echo "DANS SOCIETE";
 			}
 			
 			return $this->detailAction($id);
@@ -369,42 +370,26 @@ class contactsController extends Controller{
 				'body'				=>	$mail['body'],
 				'result'			=>	'none',
 				'date_send'			=>	date("Y-m-d H:i:s"),
-				'pj'				=>	null,
 			);
 
-			// Envoie de l email			
-			if(is_file($_FILES['pj']['tmp_name'])){
-				// Traitement email avec pj
-				$extension_upload = strtolower(  substr(  strrchr($_FILES['pj']['name'], '.')  ,1)  );
-				$name_file = md5(uniqid(rand(), true));
-				
-				$dest_file = ROOT_PATH.'web'.DS.'upload'.DS.'tmp'.DS.$name_file.'.'.$extension_upload;
-
-				move_uploaded_file($_FILES['pj']['tmp_name'],$dest_file);
-
-				$email['pj'] = $name_file.'.'.$extension_upload;
-
-				// Envoie de l email et recuperation du resultat
-				$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body'], $dest_file);
-			}else{
-				$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body']);
-			}
-
-			$email['result'] = $result;
-
 			// Sauvegarde dans la base du mail
-			$email_id = $this->registry->db->insert('contacts_email', $email);			
+			$email_id = $this->registry->db->insert('contacts_email', $email);
+
+			// Envoie de l email et recuperation du resultat
+			$result = sendEmail($mail['a'],$mail['de'],$mail['sujet'],'',$mail['body']);
 
 			if( $result === true){
+				$email['result'] = 'Succes';
 				$this->registry->db->update('entreprise_email', $email, array('id =' => $email_id));
 				sendEmail($mail['de'],$mail['de'], 'Copie message - '. $mail['sujet'], '',$mail['body']);
-				$this->registry->Helper->pnotify('Email','Email envoye. Une copie a ete envoye a l\\\'adresse suivante : '. $mail['de']);
+				$this->smarty->assign('FlashMessage','Email envoye. Une copie a ete envoye a l\\\'adresse suivante : '. $mail['de']);
 				// Enregistrement du log
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $eid, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Envoie email depuis la fiche #'. $email_id));
 				$clog->save();
 			}else{
+				$email['result'] = $result;
 				$this->registry->db->update('entreprise_email', $email, array('id =' => $email_id));
-				$this->registry->Helper->pnotify('FlashMessage','Une erreur est survenue durant l\\\'envoie : '. $result);
+				$this->smarty->assign('FlashMessage','Une erreur est survenue durant l\\\'envoie : '. $result);
 				// Enregistrement du log
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $eid, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Echec envoie email depuis la fiche #'. $email_id));
 				$clog->save();
@@ -414,26 +399,6 @@ class contactsController extends Controller{
 		}else{
 			return $this->detailAction($eid);
 		}
-	}
-
-	/**
-	 * Recupere et retourne les emails envoye depuis la fiche
-	 * @param  [type] $eid [description]
-	 * @return [type]      [description]
-	 */
-	public function ajax_get_email_detailAction($eid){
-		$email = $this->registry->db->get_one('contacts_email', array('id =' =>$eid));
-
-		if(!empty($email['pj'])){
-			// Verification PJ toujours sur le serveur
-			if(!is_file(ROOT_PATH.'web'.DS.'upload'.DS.'tmp'.DS.$email['pj'])){
-				$email['pj'] = 'Error file not found !';
-			}
-		}
-		
-		$this->registry->smarty->assign('email', $email);
-
-		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'get_email_detail.meg');
 	}
 	
 	/**
@@ -1066,7 +1031,7 @@ class contactsController extends Controller{
 		if(!is_null($this->registry->Http->get('json'))){
 			$i=0;
 			foreach($files as $file){
-				$files[$i]['url_download'] = $this->registry->config['url'] . 'web/upload/contacts/'. $cid . '/'. $file['disk_name'];
+				$files[$i]['url_download'] = $this->registry->config['url'] . 'upload/contacts/'. $cid . '/'. $file['disk_name'];
 				$i++;
 			}
 
@@ -1158,6 +1123,10 @@ class contactsController extends Controller{
 			$phone = new telephone($this->registry->Http->post('phone'));
 			$phone->clearnumber();
 			$phone->save();
+			
+			// Enregistrement du log
+			$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $phone->contact_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Ajout d un telephone'));
+			$clog->save();
 
 			$this->registry->smarty->assign('FlashMessage','Téléphone enregistré');
 
@@ -1193,28 +1162,6 @@ class contactsController extends Controller{
 		return json_encode($results);
 	}
 
-	/**
-	 * Retourne le formulaire pour ajouter un agence
-	 * @param  [type] $mother_id [description]
-	 * @return [type]            [description]
-	 */
-	public function ajax_form_add_agenceAction($mother_id){
-		$this->registry->smarty->assign('contact_id', $this->registry->Http->get('contact'));
-		$this->registry->smarty->assign('mother_id', $mother_id);
-		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-agence-add.meg');
-	}
-
-	/**
-	 * Retourne le formulaire pour ajouter un fichier
-	 * depuis la fiche du client
-	 * @param  [type] $cid [description]
-	 * @return [type]      [description]
-	 */
-	public function ajax_form_add_fileAction($cid){
-		$this->registry->smarty->assign('cid', $cid);
-		return $this->registry->smarty->fetch(VIEW_PATH . 'contacts' . DS . 'ajax-form-add-file.meg');
-	}
-
 	public function phone_deleteAction($pid){
 
 		$phone =  new telephone();
@@ -1236,10 +1183,13 @@ class contactsController extends Controller{
 	public function agence_addAction(){
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
-		$contact = $this->registry->Http->get('contact');
 		$this->registry->db->update('societe', array('parent_id' => $mother), array('id =' => $agence_id));
 		
-		return $this->detailAction($contact);
+		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $mother, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Ajout d une agence'));
+		
+		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $agence_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Societe rattachee a un siege social'));
+		
+		return $this->detailAction($mother);
 	}
 	
 	/**
@@ -1250,7 +1200,11 @@ class contactsController extends Controller{
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
 		$this->registry->db->update('societe', array('parent_id' => '0'), array('id =' => $agence_id));
-			
+		
+		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $mother, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression d une agence'));
+		
+		//$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $agence_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Societe retiree a un siege social'));
+		
 		return $this->detailAction($mother);
 	}
 

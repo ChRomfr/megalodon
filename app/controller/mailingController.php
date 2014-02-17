@@ -45,6 +45,7 @@ class mailingController extends Controller{
 	public function calendrierAction(){
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
+       // $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
         $this->registry->load_web_lib('fullcalendar/fullcalendar_year.js','js');
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'mailing'.DS.'calendar.tpl');
@@ -68,6 +69,7 @@ class mailingController extends Controller{
 				'title' 		=> 	$Data['libelle'], 
 				'start' 		=> 	$Data['date_wish'],
 				'url' 			=> 	$this->registry->Helper->getLink('mailing/fiche/'. $Data['id']),
+				//'backgroundColor'	=>	$Data['valid'] == 0 ? '#999999' : '#5cb85c',
 			);
 
 			// On determine la couleur du fond en fonction du statut
@@ -550,7 +552,6 @@ class mailingController extends Controller{
 	}
 
 	public function remove_invalid_emailsAction($mailing_id){
-
 		// Verification droit utilisateur
 		if( $_SESSION['utilisateur']['isAdmin'] == 0){
 			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas les droits pour effectuer cette action !');

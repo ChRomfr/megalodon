@@ -16,12 +16,12 @@
 		<li class="dropdown-submenu">
 			<a href="#" data-toggle="dropdown"><i class="fa fa-envelope"></i>&nbsp;<strong>Mailing</strong></a>
 			<ul class="dropdown-menu">
-				<li><a href="{$Helper->getLink("mailing")}" title="Liste des mailings"><i class="fa fa-list-ul"></i>&nbsp;{$lang.Liste}</a></li>				
-				<li><a href="{$Helper->getLink("mailing/calendrier")}" title="Calendrier"><i class="fa fa-calendar"></i>&nbsp;{$lang.Calendrier}</a></li>
+				<li><a href="{$Helper->getLink("mailing")}" title="Liste des mailings">Liste</a></li>				
+				<li><a href="{$Helper->getLink("mailing/calendrier")}" title="Calendrier"><i class="fa fa-calendar"></i>&nbsp;Calendrier</a></li>
 				{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_demand)}
-				<li><a href="{$Helper->getLink("mailing/add")}" title="Nouvelle demande"><i class="fa fa-bell"></i>&nbsp;Demande</a></li>
+				<li><a href="{$Helper->getLink("mailing/add")}" title="Nouvelle demande">Demande</a></li>
 				{/if}
-				<li><a href="{$Helper->getLink("mailing/actions")}#" title="Actions"><i class="fa fa-bolt"></i>&nbsp;Actions</a></li>
+				<li><a href="{$Helper->getLink("mailing/actions")}#" title="Actions">Actions</a></li>
 			</ul>
 		</li>
 		{/if}

@@ -16,12 +16,6 @@
 			<td>{$lang.Email}</td>
 			<td>{$smarty.session.utilisateur.email}</td>
 		</tr>
-		{if $smarty.session.utilisateur.sso_link == 1 && !empty($smarty.session.utilisateur.sso_link_token)}
-		<tr>
-			<td>Raccourcie pour une connexion automatique</td>
-			<td><a href="{$config.url}?sso_token={$smarty.session.utilisateur.sso_link_token}&amp;uid={$smarty.session.utilisateur.id}" title="Mettre ce lien en favoris">{$config.url}?sso_token={$smarty.session.utilisateur.sso_link_token}&amp;uid={$smarty.session.utilisateur.id}</a></td>
-		</tr>
-		{/if}
 	</table>
 
 	<div class="fright">

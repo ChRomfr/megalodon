@@ -27,7 +27,6 @@
 		<button class="btn btn-primary" onclick="startOptimisation();" id="btn-opt">Optimiser</button>&nbsp;
 		<button class="btn btn-primary" onclick="getemailerror();" id="btn-checkemail">Verifier les emails</button>&nbsp;
 		<button class="btn btn-primary" onclick="deletenoname();" id="btn-deletenoname">Supprimer les contacts sans nom</button>&nbsp;
-        <button class="btn btn-primary" onclick="get_contacts_no_email();" id="btn-get_contacts_no_email">Supprimer les contacts pro sans email</button>&nbsp;
         <a href="{$Helper->getLink("adm/contacts_delete_by_email_step1")}" title="" class="btn btn-primary">Suppression par email</a>
 	</div>
 	<div id="result-opt"></div>
@@ -192,17 +191,6 @@ function deletenoname(){
 	$.get(
         '{$Helper->getLink("contacts/maintenance_massdelete_noname")}',{literal}
         {nohtml:'nohtml'},{/literal}
-        function(data){
-            $('#result-opt').html('<div class="text-center">'+ data +'</div>');
-        }
-    );
-}
-
-function get_contacts_no_email(){
-    getsavoirinutile('result-opt');
-    $.get(
-        '{$Helper->getLink("adm/contacts_no_email")}',{literal}
-        {nohtml:'nohtml', go_to_trash:'y'},{/literal}
         function(data){
             $('#result-opt').html('<div class="text-center">'+ data +'</div>');
         }

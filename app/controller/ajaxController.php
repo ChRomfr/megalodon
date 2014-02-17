@@ -22,10 +22,6 @@ class ajaxController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'ajax' . DS . 'savoir_inutile.shark');
 	}
 
-	public function get_tokenAction(){
-		return getUniqueID();
-	}
-
 	public function add_taskAction(){
 
 		$task = array(

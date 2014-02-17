@@ -14,9 +14,6 @@ class clog extends Record{
 	
 	public $log;
 	
-	public function __construct(array $data = array()){
-		parent::__construct($data);
-		return $this;
-	}
+	
 	
 }

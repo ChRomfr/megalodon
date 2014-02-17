@@ -3,8 +3,8 @@
 {if isset($config.bootstrap_version) && $config.bootstrap_version == 3}
 
 <ol class="breadcrumb">
-	<li><a href="" title=""><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
-	<li class="active"><i class="fa fa-key"></i>&nbsp;&nbsp;Connexion</li>
+	<li><a href="" title="">Accueil</a></li>
+	<li class="active">Connexion</li>
 </ol>
 
 <div class="well">
@@ -44,7 +44,7 @@
 						</div>
 					</div>
 				</div><!-- /row -->
-				{if $config.register_open == 1}
+				
 				<div class="row">
 					<hr/>
 					<div class="col-md-1">
@@ -54,8 +54,7 @@
 						<div>Pas encore inscrit ?</div> 
 						<div><a href="{$Helper->getLink("utilisateur/register")}" title="{$lang.S_enregistrer}">Creer un compte</a></div>
 					</div>
-				</div><!-- /row -->	
-				{/if}	
+				</div><!-- /row -->		
 			</div><!-- /container -->				
 				{if $config.register_open == 1}
 				&nbsp;&nbsp;
@@ -105,7 +104,6 @@
 					</div>
 				</div>
 			</div>
-			{if $config.register_open == 1}
 			<div class="row-fluid">
 				<div class="span1">
 					<i class="icon-flag icon-4x"></i>
@@ -114,8 +112,7 @@
 					<div>Pas encore inscrit ?</div> 
 					<div><a href="{$Helper->getLink("utilisateur/register")}" title="{$lang.S_enregistrer}">Creer un compte</a></div>
 				</div>
-			</div>		
-			{/if}	
+			</div>			
 			</div><!-- /container -->				
 				{if $config.register_open == 1}
 				&nbsp;&nbsp;
