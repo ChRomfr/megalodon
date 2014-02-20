@@ -132,6 +132,8 @@ if(isset($_GET['sso_token']) && isset($_GET['uid'])){
 	if(!empty($result)){
 		$user = new utilisateur($result);
 		$registry->session->create($user);
+		$user->last_connexion = time();
+		$user->save();
 
 		$log = new log(array(
 			'log' 		=> 	'Connexion au logiciel via SSO LINK.',
