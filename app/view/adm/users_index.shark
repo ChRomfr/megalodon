@@ -9,12 +9,17 @@
 <div class="well">
 	<div class="pull-right">
 		<a href="{$Helper->getLink("adm/users_add")}" title="Ajouter"><i class="fa fa-plus fa-lg"></i></a>
+		{if $config.ldap_use == 1}
+		&nbsp;&nbsp;&nbsp;
+		<a href="{$Helper->getLink("adm/users_sync_ldap")}" title="Synchroniser avec l'annuaire"><i class="fa fa-refresh fa-lg"></i></a>
+		{/if}
 		&nbsp;&nbsp;&nbsp;
 		<a href="{$Helper->getLink("adm/groups")}" title="{$lang.Groupe_utilisateur}"><i class="fa fa-group fa-lg"></i></a>
 	</div>
-	<h4>Utilisateurs</h4>
+	<h4><i class="fa fa-user"></i>&nbsp;&nbsp;Utilisateurs</h4>
 	<div class="clearfix"></div>
-	<table class="table" id="users-liste">
+	<br/>
+	<table class="table table-striped" id="users-liste">
 		<thead>
 			<tr>
 				<th>#</th>
@@ -34,7 +39,7 @@
 				<td>{if $user.isAdmin > 0}<span class="label label-success">Oui</span>{else}<span class="label label-default">Non</span>{/if}</td>
 				<td>{$user.auth_type}</td>
 				<td>{if $user.actif == 1}<span class="label label-success">Oui</span>{else}<span class="label label-danger">Non</span>{/if}</td>
-				<td>{date('Y-m-d H:i:s',$user.last_connexion)}</td>
+				<td>{if !empty($user.last_connexion)}{date('Y-m-d H:i:s',$user.last_connexion)}{/if}</td>
 				<td>
 					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="fa fa-edit"></i></a>
 					&nbsp;&nbsp;

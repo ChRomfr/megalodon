@@ -138,7 +138,7 @@
             <div class="form-group">
                 <label class="control-label col-sm-2">Suffix :</label>
                 <div class="col-sm-5">
-                    <input type="text" name="config[ldap_accsuffix+]" id="config-ldap-accsuffix" value="{$config.ldap_accsuffix}" class="form-control"/>
+                    <input type="text" name="config[ldap_accsuffix]" id="config-ldap-accsuffix" value="{$config.ldap_accsuffix}" class="form-control"/>
                     <span class="help-block">@domaine.com</span>
                 </div>
             </div>

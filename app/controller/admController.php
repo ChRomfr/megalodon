@@ -548,6 +548,31 @@ class admController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_add_in_group.meg');
 	}
 
+	public function users_sync_ldapAction(){
+
+		if(!is_null($this->registry->Http->post('usync'))){
+			$users_to_sync = $this->registry->Http->post('usync');
+
+			foreach($users_to_sync as $k => $v){
+				// Verification si l utilisateur est dans la base
+				$result = $this->registry->db->count('user', array('identifiant =' => $v));
+
+				if($result == 0){
+
+					// Recuperation utilisateur
+					$user_ldap = $this->registry->adldap->user()->info($v, array("*"));
+
+					$utilisateur = user_add_sso($user_ldap);
+				}
+			}
+		}
+
+		$lists = $this->registry->adldap->user()->all();
+
+		$this->registry->smarty->assign('users_ldap', $lists);
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_sync_ldap_list.meg');
+	}
+
 	/**
 	 * Affioche la liste des groupes utilisateur dans la base
 	 * @return [type] [description]
