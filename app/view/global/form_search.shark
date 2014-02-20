@@ -159,34 +159,4 @@
 	</div>
 </form>
 {/strip}
-<script type="text/javascript">
-<!--
-function showsearchform(){
-	$('#global-search-form').css('display','block');
-	$('#select-view-form').html('<a href="javascript:hidesearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-up"></i></a>');
-}
-
-function hidesearchform(){
-	$('#global-search-form').css('display','none');
-	$('#select-view-form').html('<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>');
-}
-
-{if $config.ape_multi_choice == 0}
-jQuery(document).ready(function(){
-	$('#form-input-search-ape').autocomplete({
-		source : '{$Helper->getLink("ajax/search_ape?nohtml=nohtml")}',
-		minLength: 2,
-		dataType: "json",
-		selectFirst: true,
-		delay: 0,
-		select: function(e, ui){
-			var selectObj = ui.item;
-			$(this).val(selectObj.label)
-			$("#form-search-ape").val( ui.item.value );
-			return false;
-		}
-	});	
-});
-{/if}
-//-->
-</script>
+{if $config.ape_multi_choice == 0}<script type="text/javascript">var ape_multi_choice = 'n'</script>{/if}

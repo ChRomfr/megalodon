@@ -1,4 +1,4 @@
-<!-- view/adm/maintenance -->
+<!-- START view/adm/maintenance -->
 {strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;&nbsp;{$lang.Accueil}</a></li>
@@ -6,73 +6,116 @@
 	<li class="active"><i class="fa fa-gears"></i>&nbsp;&nbsp;Maintenance</li>
 </ol>
 
-<div class="well">
-	<h4>{$lang.Verification_configuration}</h4>
-	<div class="text-center">
-		<a href="{$Helper->getLink("adm/configuration_check")}" title="{$lang.Verifier}" class="btn btn-primary">{$lang.Verifier}</a>
+<div class="container-fluid">
+	<div class="row">
+		<div class="well col-xs-5">
+			<h4>{$lang.Verification_configuration}</h4>
+			<div class="text-center">
+				<a href="{$Helper->getLink("adm/configuration_check")}" title="{$lang.Verifier}" class="btn btn-primary">{$lang.Verifier}</a>
+			</div>
+		</div>
+		<div class="col-xs-1"></div>
+		<div class="well col-xs-5">
+			<h4>Cache</h4>
+			<hr/>
+			<div class="text-center"><a href="javascript:clean_cache();" title="" class="btn btn-primary">Supprimer</a></div>
+			<div id="result-cache"></div>
+		</div>
 	</div>
-</div>
 
-<div class="well">
-	<h4>Sessions</h4>
-	<hr/>
-	<div class="text-center"><a href="javascript:clean_sessions();" title="" class="btn btn-primary">Supprimer</a></div>
-	<div id="result-sessions"></div>
-	<br/>
-	<hr/>
-	<table class="table table-condensed table-striped">
-		<thead>
-			<tr>
-				<th>Utilisateur</th>
-				<th>IP</th>
-				<th>Dernier page vue</th>
-				<th>Date</th>
-			</tr>
-		</thead>
-		<tbody>
-			{foreach $sessions as $session}
-			<tr>
-				<td>{$session.identifiant}</td>
-				<td>{$session.ip}</td>
-				<td>{$session.url}</td>
-				<td>{date("Y-m-d H:i:s",$session.last_update)}
-			</tr>
-			{/foreach}
-		</tbody>
-	</table>
-</div>
+	<div class="row">
+		<div class="well">
+			<h4>Sessions</h4>
+			<hr/>
+			<div class="text-center"><a href="javascript:clean_sessions();" title="" class="btn btn-primary">Supprimer</a></div>
+			<div id="result-sessions"></div>
+			<br/>
+			<hr/>
+			<table class="table table-condensed table-striped">
+				<thead>
+					<tr>
+						<th>Utilisateur</th>
+						<th>IP</th>
+						<th>Dernier page vue</th>
+						<th>Date</th>
+					</tr>
+				</thead>
+				<tbody>
+					{foreach $sessions as $session}
+					<tr>
+						<td>{$session.identifiant}</td>
+						<td>{$session.ip}</td>
+						<td>{$session.url}</td>
+						<td>{date("Y-m-d H:i:s",$session.last_update)}
+					</tr>
+					{/foreach}
+				</tbody>
+			</table>
+		</div>
+	</div>
 
-<div class="well">
-	<h4>Cache</h4>
-	<hr/>
-	<div class="text-center"><a href="javascript:clean_cache();" title="" class="btn btn-primary">Supprimer</a></div>
-	<div id="result-cache"></div>
-</div>
+	<div class="row">
+		<div class="well" id="check_dir_in_app">
+			<h4>Verification des accès au dossier et au fichier</h4>
+			<div id="result-check-fichier"></div>
+		</div>
+	</div>
 
-<div class="well">
-	<h4>Parametre serveur</h4>
-	<table class="table">
-		<tr>
-			<td>SOFTWARE</td>
-			<td>{$smarty.server.SERVER_SOFTWARE}</td>
-		</tr>
-		<tr>
-			<td>PHP</td>
-			<td>{phpversion()}</td>
-		</tr>
-		<tr>
-			<td>ZEND</td>
-			<td>{zend_version()}</td>
-		</tr>
-		<tr>
-			<td>DOCUMENT ROOT</td>
-			<td>{$smarty.server.DOCUMENT_ROOT}</td>
-		</tr>
-	</table>
+	<div class="row">
+		<div class="well">
+			<h4>Parametre application</h4>
+			<table class="table">
+				<tr>
+					<td>MEG VERSION</td>
+					<td>{$smarty.const.MEG_VERSION}</td>
+				</tr>
+				<tr>
+					<td>SHARK VERSION</td>
+					<td>{$smarty.const.SHARK_VERSION}</td>
+				</tr>
+				<tr>
+					<td>CRON TOKEN</td>
+					<td>{$config.cron_token}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+
+	<div class="row">
+		<div class="well">
+			<h4>Parametre serveur</h4>
+			<table class="table">				
+				<tr>
+					<td>SOFTWARE</td>
+					<td>{$smarty.server.SERVER_SOFTWARE}</td>
+				</tr>
+				<tr>
+					<td>PHP</td>
+					<td>{phpversion()}</td>
+				</tr>
+				<tr>
+					<td>ZEND</td>
+					<td>{zend_version()}</td>
+				</tr>
+				<tr>
+					<td>DOCUMENT ROOT</td>
+					<td>{$smarty.server.DOCUMENT_ROOT}</td>
+				</tr>
+			</table>
+		</div>
+	</div>
 </div>
 {/strip}
 <script type="text/javascript">
 <!--
+$.get(
+    '{$Helper->getLink("adm/check_dir")}',{literal}
+    {nohtml:'nohtml'},{/literal}
+    function(data){
+        $('#result-check-fichier').html(data);
+    }
+);
+
 function clean_cache(){
 	$.get(
         '{$Helper->getLink("adm/ajax_clean_cache")}',{literal}
@@ -94,3 +137,4 @@ function clean_sessions(){
 }
 //-->
 </script>
+<!-- END view/adm/maintenance -->

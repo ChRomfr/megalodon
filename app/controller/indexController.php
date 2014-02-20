@@ -7,13 +7,16 @@ class indexController extends Controller{
 		
 		// Lib googlemap
 		if($_SESSION['utilisateur']['index_map_contacts'] == 1){
-			$this->registry->load_web_lib('gmap3/gmap3.js','js');
+			$this->registry->load_web_lib('gmap3/gmap3.js','js','footer');
 			$this->registry->load_web_lib('gmap3/gmap3.css','css');
 		}
 		
 		// Lib pour affichage calendrier
 		$this->registry->load_web_lib('fullcalendar/fullcalendar.css','css');
-        $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js');
+        $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js','footer');
+
+        // JS PAGE
+        $this->registry->load_web_lib('meg/index_index.min.js','js','footer');
 
 		$stats = array(
 			'nb_ctcs'		=>	$this->registry->db->count('contacts', array('isDelete =' => 0)),

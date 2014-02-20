@@ -35,6 +35,12 @@
 				<td>{if $user.actif == 1}<span class="label label-success">Oui</span>{else}<span class="label label-danger">Non</span>{/if}</td>
 				<td>
 					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="fa fa-edit"></i></a>
+					&nbsp;&nbsp;
+					<a href="javascript:get_logs({$user.id});" title=""><i class="fa fa-info"></i></a>
+					&nbsp;&nbsp;
+					{if $user.identifiant != 'admin'}
+					<a href="javascript:user_delete({$user.id});" title="{$lang.Supprimer}"><i class="fa fa-trash-o"></i></a>
+					{/if}
 				</tr>
 			</tr>
 			{/foreach}
@@ -69,6 +75,23 @@
 jQuery(document).ready(function(){
 	 $("#users-liste").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
 });
+function get_logs(uid){
+	$.get(
+        base_url + 'index.php/adm/users_view_log_contacts/'+uid,
+        {nohtml:'nohtml'},
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('LOG UTILISATEUR');
+    $('#modal-global').modal('show');
+}
 {/literal}
+function user_delete(uid){
+	if(confirm('Etes vous de vouloir supprimer cet utilisateur ?')){
+		window.location.href = base_url + 'index.php/adm/users_delete/'+uid;
+	}
+}
 </script>
 <!-- END app/view/adm/user_index.shark -->

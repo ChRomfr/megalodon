@@ -1,7 +1,7 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="">Accueil</a></li>
-	<li class="active">Contacts</li>
+	<li><a href="{$Helper->getLink("index")}" title="{$lang.Accueil}"><i class="fa fa-home"></i>&nbsp;{$lang.Accueil}</a></li>
+	<li class="active"><i class="fa fa-group"></i>&nbsp;Contacts</li>
 </ol>
 
 <div class="well">
@@ -13,43 +13,25 @@
 </div>
 {/strip}
 <script type="text/javascript">
-<!--
 jQuery(document).ready(function(){
 	paramUrl = getParameters();
 
-  var progress = setInterval(function() {
-      var $bar = $('.progress-bar');
-      
-      if ($bar.width()=='100%') {
-          //clearInterval(progress);
-          $bar.width('100%');
-          //$('.progress').removeClass('active');
-      } else {
-          $bar.width($bar.width()+40);
-      }
-      //$bar.text($bar.width()/4 + "%");
-  }, 100);
-
-	$.get(
-        '{$Helper->getLink("contacts/ajax_load_contacts")}',paramUrl
-		,{literal}        
-        function(data){
-        	$('#index2_contacts').html(data);
-        }
-    );{/literal}
+	$.get(base_url + 'contacts/ajax_load_contacts',paramUrl, function(data){
+    $('#index2_contacts').html(data);
+  });
 });
 
-function getParameters() {
-  var searchString = window.location.search.substring(1),
-      params = searchString.split("&"),
-      hash = {};
-
-  if (searchString == "") return {};
-  for (var i = 0; i < params.length; i++) {
-    var val = params[i].split("=");
-    hash[unescape(val[0])] = unescape(val[1]);
+// Progress bar
+var progress = setInterval(function() {
+  var $bar = $('.progress-bar');
+  
+  if ($bar.width()=='100%') {
+      //clearInterval(progress);
+      $bar.width('100%');
+      //$('.progress').removeClass('active');
+  } else {
+      $bar.width($bar.width()+40);
   }
-  return hash;
-}
-//-->
+  //$bar.text($bar.width()/4 + "%");
+}, 100);
 </script>

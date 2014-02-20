@@ -26,10 +26,12 @@
 {foreach registry::$js_lib as $k => $v}
 <script type="text/javascript" src="{$config.url}web/lib/{$v}"></script>
 {/foreach}
-<script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
-<!--[if lt IE 9]>
-<script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script>
-<![endif]-->
+
+<!--[if lt IE 9]><script src="http://html5shiv.googlecode.com/svn/trunk/html5.js"></script><![endif]-->
+<script type="text/javascript">
+var base_url = "{$config.url}";
+var suser = {$smarty.session.utilisateur|json_encode};
+</script>
 </head>
 <body>
 {strip}
@@ -105,20 +107,13 @@
       </div>
     </div>
 
-	
-	{* START header *}
 	<div id="header" style="padding-top:50px;"></div>
-	{* END header *}
 
 	{* START conteneur central *}
 	<div class="container-fluid">
-		<div class="row-fluid">
-			<div class="col-md-3 main-menu-span" style="padding-top:20px;">
-				{$nav_menu_left}
-			</div>{* /span3 *}
-			<div class="col-md-9">
-				{$content}
-			</div>{* /span9 *}
+		<div class="row">
+			<div class="col-md-3 col-xs-3 main-menu-span" style="padding-top:20px;">{$nav_menu_left}</div>
+			<div class="col-md-9 col-xs-9" id="content-central">{$content}</div>
 		</div>{* /row-fluid *}
 	</div>{* /container-fluid *}
 	{* END conteneur central *}
@@ -126,96 +121,37 @@
 	{* START footer *}
 	<footer class="footer_site">
 		<div class="container">
-			<div class="row-fluid">
-				<div class="span8">
-				</div><!-- /span8 -->
-				<div class="span4">
-				</div><!-- /span4 -->
-			</div><!-- /row-fluid-->
-		</div><!-- /container -->
+			<div class="row">
+				<div class="col-md-8 col-xs-8"></div>
+				<div class="col-md-4 col-xs-4"></div>
+			</div>
+		</div>
+
 		<div class="container">
-			<div class="row-fluid">
-				<div class="span8">	
-				</div>
-				<div class="span4">					
-				</div>
-			</div><!-- /row-fluid -->
-			<hr/>
-			<div class="pull-left">
-				
-			</div>
-			<div class="pull-right">
-				Réaliser avec <a href="http://www.sharkphp.com" title="Another CMS/FRAMEWORK">Sharkphp <img src="{$config.url}web/images/sharkphp.png" alt="" style="width:20px;" /></a>
-			</div>
-			<div class="clearfix"></div>
+			<div class="row">
+				<div class="col-md-8 col-xs-8"></div>
+				<div class="col-md-4 col-xs-4"></div>
+			</div>			
 		</div><!-- /container -->
+		<hr/>
+		<div class="pull-left"></div>
+		<div class="pull-right">
+			Powered <a href="http://www.sharkphp.com" title="PHP CMS/FRAMEWORK">Sharkphp<img src="{$config.url}web/images/sharkphp.png" alt="" style="width:20px;" /></a>
+		</div>
+		<div class="clearfix"></div>		
 	</footer>
 	{* END footer *}
 
 {$modal_global}
 {/strip}
-<script type="text/javascript">
-<!--
-$(".chzn-select").chosen();
-$(".chozen").chosen();
-
-jQuery(document).ready(function(){	
-	$('#search-top-layout').autocomplete({
-		source : '{$Helper->getLink("contacts/ajax_search_global?nohtml=nohtml")}',
-		minLength: 2,
-		dataType: "json",
-		selectFirst: true,
-		delay: 0,
-		select: function(e, ui){
-			var selectObj = ui.item;
-			//$(this).val(selectObj.label)
-			//$("#societe-id").val( ui.item.value );
-			window.location.href = '{$Helper->getLink("contacts/detail/'+ui.item.value+'")}';
-			return false;
-		}
-	});	
-})
-
-{if isset($FlashMessage) && !empty($FlashMessage)}
-$(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>{$FlashMessage}</div>');
-{/if}
-
-{if $smarty.session.utilisateur.id != 'Visiteur'}
-var interval = 10000;
-var pagetitle = "";
-var userid = "{$smarty.session.utilisateur.id}";
-var count_url = "{$Helper->getLink("notifications/getcount")}";
-var list_url = "{$Helper->getLink("notifications/getlist")}";
-$(document).ready(function(){
-    startNotifications();
-});
-
-$(document).ready(function() {
-	$.get(
-        '{$Helper->getLink("ajax/my_tasks")}',{literal}
-        {
-        	nohtml:'nohtml',        	
-        },{/literal}
-        function(data){
-            $('#nav-menu-my-task').html(data);
-        }
-    );
-});
-{/if}
-
-{if isset($pnotify)}
-$(function(){
-	$.pnotify({
-	    title: '{$pnotify.title}',
-	    text: '{$pnotify.message}',
-	    type: '{$pnotify.type}',
-	    opacity: .{$pnotify.oppacity}
-	});
-});
-{/if}
-
-//-->
-</script>
+{* APPEL JS EN FOOTER *}
+{if isset($FlashMessage) && !empty($FlashMessage)}<script type="text/javascript">var flash_message = '{$FlashMessage}'</script>{/if}
+{if isset($pnotify) && !empty($pnotify)}<script type="text/javascript">var notify =  {$pnotify|json_encode}</script>{/if}
+<script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{$config.url}web/lib/meg/app.js"></script>
+{foreach registry::$js_lib_footer as $k => $v}
+<script type="text/javascript" src="{$config.url}web/lib/{$v}"></script>
+{/foreach}
 
 {if $smarty.const.IN_PRODUCTION === false}
 	<div class="pull-right">

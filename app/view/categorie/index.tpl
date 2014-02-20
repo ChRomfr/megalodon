@@ -1,14 +1,15 @@
 <!-- view/categorie/index.tpl -->
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("adm")}" title="Administration">Administration</a></li>
-	<li>Catégorie</li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("adm")}" title="Administration"<i class="fa fa-dashboard"></i>&nbsp;Administration</a></li>
+	<li><a href="{$Helper->getLink("adm/contacts")}" title="{$lang.Contacts}"><i class="fa fa-group"></i>&nbsp;{$lang.Contacts}</a></li>
+	<li class="active">Catégorie</li>
 </ol>
 
 <div class="well">
 	<div class="pull-right">
-		<a href="{$Helper->getLink("categorie/add")}" title=""><i class="icon icon-add"></i></a>
+		<a href="{$Helper->getLink("categorie/add")}" title=""><i class="fa fa-plus fa-lg"></i></a>
 	</div>
 	<h4>Catégories</h4>
 	<div class="clearfix"></div>

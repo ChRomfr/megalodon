@@ -1,0 +1,9 @@
+<table class="table">
+	{foreach $logs as $row}
+	<tr>
+		<td>{$row.date_log}</td>
+		<td>{if !empty($row.raison_social)}{$row.raison_social}{else}{$row.nom}&nbsp;{$row.prenom}{/if}</td>
+		<td>{$row.log}</td>
+	</tr>
+	{/foreach}
+</table>

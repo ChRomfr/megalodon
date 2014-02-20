@@ -26,6 +26,24 @@ class utilisateur extends Baseutilisateur{
 
     public $index_map_contacts;
 
+    /**
+     * Jeton de securite pour auth auto
+     * @var [type]
+     */
+    public $token;
+
+    /**
+     * Jeton de securite pour le sso via link
+     * @var [type]
+     */
+    public $sso_link_token;
+
+    /**
+     * Active ou non le sso link pour l utilisateur
+     * @var [type]
+     */
+    public $sso_link;
+
     public function checkLogin(){
     	global $registry;
         
@@ -35,6 +53,10 @@ class utilisateur extends Baseutilisateur{
             
     		// On test le resultat
     		if(!$result){
+                if($registry->config['auth_php'] == 1){
+                    goto auth_php;
+                }
+
     			return false;
     		}
 
@@ -59,6 +81,7 @@ class utilisateur extends Baseutilisateur{
         
         // Verification via base PHP
         if($registry->config['auth_php'] == 1){
+            auth_php:
             $tmp = $registry->db->get_one('user', array('identifiant =' => $this->identifiant));
             
             if(empty($tmp)){

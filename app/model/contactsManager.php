@@ -401,4 +401,17 @@ class contactsManager extends BaseModel{
 			
 		return $this->db->get_one();
 	}
+
+	/**
+	 * Recupere tout les contacts sans email de type pro
+	 * @return [type] [description]
+	 */
+	public function get_no_email(){
+		$this->db->select('c.*, p.nom, p.prenom')
+			->from('contacts c')
+			->left_join('personne p', 'p.contact_id = c.id')
+			->where_free('c.ctype = "societe_contact" AND (c.email IS NULL OR c.email = "")');
+
+		return $this->db->get();
+	}
 }

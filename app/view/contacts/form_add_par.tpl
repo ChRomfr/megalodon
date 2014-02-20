@@ -1,23 +1,25 @@
+<!-- START app/view/contacts/form_add_par.tpl -->
 {strip}
 <div class="form-group">
 	<label class="control-label col-sm-2">Nom :</label>
 	<div class="col-sm-5">
-		<input type="text" name="contact[per][nom]" id="contact-par-nom" class="form-control"/>
+		<input type="text" name="contact[per][nom]" id="contact-par-nom" class="form-control" required/>
 	</div>
 </div>
 
 <div class="form-group">
 	<label class="control-label col-sm-2">Prenom :</label>
 	<div class="col-sm-5">
-		<input type="text" name="contact[per][prenom]" id="contact-par-prenom" class="form-control"/>
+		<input type="text" name="contact[per][prenom]" id="contact-par-prenom" class="form-control" required/>
 	</div>
 </div>
-
+{/strip}
 {if $smarty.get.typesocio == 1}
+{strip}
 <div class="form-group">
 	<label class="control-label col-sm-2">Societe :</label>
 	<div class="col-sm-5">
-		<input type="text" id="search_societe" class="form-control" {if isset($smarty.get.societe)}value="{$ets.raison_social}"{/if}/>
+		<input type="text" id="search_societe" class="form-control" {if isset($smarty.get.societe) && isset($ets)}value="{$ets.raison_social}"{/if} required/>
 		<input type="hidden" name="contact[per][societe_id]" id="societe-id" {if isset($smarty.get.societe)}value="{$smarty.get.societe}"{/if}/>
 	</div>
 </div>
@@ -47,15 +49,12 @@
 </div>
 {/strip}
 <script type="text/javascript">
-<!--
 $(".chozen").chosen();
 
 jQuery(document).ready(function(){
-	// binds form submission and fields to the validation engine
-	jQuery("#formNewRepas").validationEngine();
 	
 	$('#search_societe').autocomplete({
-		source : '{$Helper->getLink("contacts/ajax_search_societe?nohtml=nohtml")}',
+		source : base_url + 'index.php/contacts/ajax_search_societe?nohtml=nohtml',
 		minLength: 2,
 		dataType: "json",
 		selectFirst: true,
@@ -68,6 +67,6 @@ jQuery(document).ready(function(){
 		}
 	});	
 });
-//-->
 </script>
 {/if}
+<!-- END app/view/contacts/form_add_par.tpl -->

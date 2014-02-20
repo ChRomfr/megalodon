@@ -10,15 +10,15 @@ class admController extends Controller{
 		parent::__construct($registry);
 
 		if( isAdmin() < 1 ){
-			$i = $this->load_controller('index');
-			return $i->indexAction();
+			header('location'. $this->registry->config['url']);
+			exit('Error not allow');
 		}
 	}
 
 	public function indexAction(){
-		$this->registry->load_web_lib('flot/jquery.flot.js','js');
-        $this->registry->load_web_lib('flot/jquery.flot.pie.js','js');
-
+		$this->registry->load_web_lib('flot/jquery.flot.js','js', 'footer');
+        $this->registry->load_web_lib('flot/jquery.flot.pie.js','js', 'footer');
+        $this->registry->load_web_lib('meg/adm_index.js','js', 'footer');
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'index.shark');
 	}
 
@@ -29,6 +29,73 @@ class admController extends Controller{
 		$this->registry->smarty->assign('sessions', $sessions);
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'maintenance.shark');
+	}
+
+	/**
+	 * Verifie l'existance et les droits sur les dossiers MEG
+	 * @return string HTML
+	 */
+	public function check_dirAction(){
+		$check_dir = array(
+			'/cache'		=>	array(
+					'name'	=>	'/cache',
+					'dir'	=>	ROOT_PATH.'cache',
+				),
+			'/cache/_sessions' => array(
+					'name'	=>	'/cache/_sessions',
+					'dir'	=>	ROOT_PATH.'cache'.DS.'_sessions',
+				),
+			'/web/upload'	=>	array(
+					'name'	=>	'/web/upload',
+					'dir'	=>	ROOT_PATH .'web'.DS.'upload',
+				),
+			'/web/upload/contacts'	=>	array(
+					'name'	=>	'/web/upload/contacts',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'contacts',
+				),
+			'/web/upload/csv'	=>	array(
+					'name'	=>	'/web/upload/csv',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'csv',
+				),
+			'/web/upload/logo'	=>	array(
+					'name'	=>	'/web/upload/logo',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'logo',
+				),
+			'/web/upload/tmp'	=>	array(
+					'name'	=>	'/web/upload/tmp',
+					'dir'	=>	ROOT_PATH . 'web'.DS.'upload'.DS.'tmp',
+				),
+			'/log'	=>	array(
+					'name'	=>	'/log',
+					'dir'	=>	ROOT_PATH . 'log',
+				),
+			'/log/error'	=>	array(
+					'name'	=>	'/log/error',
+					'dir'	=>	ROOT_PATH . 'log'.DS.'error',
+				),
+			'/log/import'	=>	array(
+					'name'	=>	'/log/import',
+					'dir'	=>	ROOT_PATH . 'log'.DS.'import',
+				),
+		);
+
+		foreach ($check_dir as $dir) {
+			if(!is_dir($dir['dir'])){
+				$check_dir[$dir['name']]['result']= 'Dossier absent';
+
+				if(@mkdir($dir['dir'], '0777'))
+					$check_dir[$dir['name']]['result'] = '<br/>OK';
+				else
+					$check_dir[$dir['name']]['result'] = '<br/>Erreur';			
+				
+			}else{
+				$check_dir[$dir['name']]['result']= '<span class="label label-success"><strong>OK</strong></span>';
+			}
+		}
+		
+		$this->registry->smarty->assign('check_dir', $check_dir);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'check_dir.meg');
 	}
 
 	public function ajax_clean_cacheAction(){
@@ -113,9 +180,13 @@ class admController extends Controller{
 	 */
 	public function configuration_checkAction(){
 		$config_check = array(
-			'ape_multi_choice'	=>	0,
-			'logo'				=>	'',
-			'logo_name'			=>	'',
+			'ape_multi_choice'				=>	0,
+			'cron_token'					=>	getUniqueID(),
+			'logo'							=>	'',
+			'logo_name'						=>	'',
+			'mailing_group_receive_resume'	=>	'',
+			'register_open'					=>	0,
+			'version_installed'				=>	'1.0.20140130',
 		);
 		
 
@@ -151,6 +222,28 @@ class admController extends Controller{
 		$this->registry->smarty->assign('postes', $this->registry->db->get('poste', null, 'libelle'));
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'contacts_postes.tpl');
+	}
+
+	/**
+	 * Recupere et affiche tout les contacts de type societe_contact sans email
+	 * @return mixed resultat au format HTML ou JSON
+	 */
+	public function contacts_no_emailAction(){
+
+		// Mise a la corbeille des contacts directements
+		if( !is_null($this->registry->Http->get('go_to_trash')) ){
+			$query = "UPDATE contacts SET isDelete = '1' WHERE ctype = 'societe_contact' AND (email IS NULL OR email = '') ";
+			$result = $this->registry->db->query($query);
+			return 'Contacts supprimés ('. $result .')';
+		}
+
+		/*$this->load_manager('contacts');
+
+		$contacts = $this->manager->contacts->get_no_email();
+		var_dump($this->registry->db->queries);
+		var_dump($contacts);*/
+
+
 	}
 
 	/**
@@ -289,6 +382,22 @@ class admController extends Controller{
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_index.shark');
 	}
+
+	public function users_view_log_contactsAction($uid){
+		$logs = $this->registry->db->select('cl.*, s.raison_social, p.nom, p.prenom')
+					->from('contacts_log cl')
+					->left_join('contacts c', 'cl.contact_id = c.id')
+					->left_join('societe s', 's.contact_id = c.id')
+					->left_join('personne p', 'p.contact_id = c.id')
+					->where(array('cl.user_id = ' => $uid))
+					->order('cl.date_log DESC')
+					->limit(100)
+					->get();
+
+		$this->registry->smarty->assign('logs',$logs);
+
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_view_log_contacts.meg');
+	}
 	
 	public function users_addAction(){
 		if(!is_null($this->registry->Http->post('user'))){
@@ -351,6 +460,13 @@ class admController extends Controller{
 				}
 			}
 
+			$log = new log(array(
+				'log' 		=> 	'Edition du l utilisateur : <a href="'.$this->registry->Helper->getLink("adm/users_edit/".$user->id) .'" title="">'. $user->identifiant .'</a>',
+				'module'	=>	'user',
+				'link_id'	=>	$user->id,
+			));
+			$log->save();
+
 			$this->registry->Helper->pnotify('Utilisateur', 'modifications enregistrées', 'success');
 
 			return $this->users_indexAction();
@@ -366,6 +482,23 @@ class admController extends Controller{
 		$this->registry->smarty->assign('sites', $sites->get());
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'users_edit.shark');
+	}
+
+	public function users_deleteAction($uid){
+
+		$user = new utilisateur();
+		$user->get($uid);
+
+		if($user->identifiant == 'admin'){
+			$this->registry->Helper->pnotify('Utilisateur', '<strong>Il n est pas possible cet utilisateur.</strong>');
+			return $this->users_indexAction();	
+		}
+
+		$this->registry->db->delete('user', $uid);
+
+		$this->registry->Helper->pnotify('Utilisateur', 'Utilisateur supprimé de la base.');
+
+		return $this->users_indexAction();
 	}
 
 	/**
@@ -701,12 +834,45 @@ class admController extends Controller{
 		return $this->contacts_maintenanceAction();
 	}
 
+	public function mailingsAction(){
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings.meg');
+	}
+
 	public function mailingtypeAction(){
 		$types = new mailing_type();
 		
 		$this->registry->smarty->assign('types', $types->get());
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailingtype.shark');
+	}
+
+	/**
+	 * Affiche et traite les preferences du modules mailings
+	 * @return [type] [description]
+	 */
+	public function mailings_settingsAction(){
+
+		// Traitement du formulaire
+		if(!is_null($this->registry->Http->post('config'))){
+            
+            $config = $this->registry->Http->post('config');
+            
+            foreach($config as $key => $value){                
+                $this->registry->db->update('config', array('valeur' => $value), array('cle =' => $key));
+            }
+            
+            // Suppression du cache actuel
+            $this->registry->cache->remove('config');
+            
+            $this->registry->Helper->pnotify('Configuration', 'Configuration enregistrée');
+          	
+          	return $this->mailingsAction();
+        }
+        
+        printform:
+
+		$this->registry->smarty->assign('groups', $this->registry->db->get('groupe'));
+		return $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings_settings.meg');
 	}
 
 	/**
@@ -738,6 +904,91 @@ class admController extends Controller{
 		$type->delete($type->id);
 		$this->registry->Helper->pnotify('Type supprime', 'Le type a été supprimé');
 		return $this->mailingtypeAction();
+	}
+
+	public function mailings_resumeAction($type="hebdo"){
+
+		if(empty($type)){
+			$type = 'hebdo';
+		}
+
+		// Recuperation des mailins entre deux dates
+		$this->load_manager('mailing');
+
+		if($type=='hebdo'){
+			// Tache à effectue le dimanche
+			$date =  date("Y-m-d");
+
+			if( !is_null($this->registry->Http->get('date')) ){
+				$date = $this->registry->Http->get('date');	
+			}	
+
+			// Recuperation des jours de le semaine
+			$days_of_week = week_from_monday($date);
+
+			// Mailing a venir
+			$mailings = $this->manager->mailing->get(1000,0, array('date_send >=' => $days_of_week[0], 'date_send <=' => $days_of_week[6], 'send =' => 1, 'valid =' => 1));
+			
+			// Mailing passe
+			list($year_n, $month_n, $day_n) = explode('-', $days_of_week['6']);
+			$date_next_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) + 86400)); 
+			$days_of_next_week = week_from_monday($date_next_week);
+
+			$next_mailings = $this->manager->mailing->get(1000,0, array('date_wish >=' => $days_of_next_week[0], 'date_wish <=' => $days_of_next_week[6]));
+
+			$date_feature_mailing = array($days_of_next_week[0], $days_of_next_week[6]);
+			$date_previous_mailing = array($days_of_week[0], $days_of_week[6]); 
+
+		}elseif($type=="week_pair"){
+			// Tache a effectue le lundi
+			
+			// Recuperation du numéro de semaine
+			$num_week = date('W');
+
+			// On teste le numero de semaine
+			if($num_week%2==1){
+				return 'invalid week';
+			}
+
+			// Recuperation des mailings a venir sur la semaine pair et impair a venir
+			$week_1 = week_from_monday(date("Y-m-d"));
+
+			list($year_n, $month_n, $day_n) = explode('-', $week_1['6']);
+			$date_next_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) + 86400)); 
+			$week_2 = week_from_monday($date_next_week);
+
+			$next_mailings = $this->manager->mailing->get(1000,0, array('date_wish >=' => $week_1[0], 'date_wish <=' => $week_2[6]));
+
+			// Recuperation des mailings envoye sur la semaines impair et pair passés
+			list($year_n, $month_n, $day_n) = explode('-', $week_1['0']);
+			$date_p_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) - 86400)); 
+			$previous_week_1 = week_from_monday($date_p_week);
+
+			list($year_n, $month_n, $day_n) = explode('-', $previous_week_1['0']);
+			$date_p_week = date('Y-m-d', (mktime(12,0,0,$month_n, $day_n, $year_n) - 86400)); 
+			$previous_week_2 = week_from_monday($date_p_week);
+			
+			$mailings = $this->manager->mailing->get(1000,0, array('date_send >=' => $previous_week_2[0], 'date_send <=' => $previous_week_1[6], 'send =' => 1, 'valid =' => 1));
+
+			$date_feature_mailing = array($week_1[0], $week_2[6]);
+			$date_previous_mailing =  array($previous_week_2[0], $previous_week_1[6]);
+		}
+
+		$this->registry->smarty->assign(array(
+			'date_feature_mailing'	=>	$date_feature_mailing,
+			'date_previous_mailing' => 	$date_previous_mailing,
+			'type'					=>	$type,
+		));
+
+		$this->registry->smarty->assign('mailings', $mailings);		
+		$this->registry->smarty->assign('next_mailings', $next_mailings);
+
+		$mail_sujet = "Recap hebdomadaire des mailings";
+		$mail_body =  $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings_mail_body_resume.meg');
+
+		sendEmail(array('romain.drouche@afpi-centre-valdeloire.com', 'elise.bordier@afpi-centre-valdeloire.com', 'pierre.szwiec@afpi-centre-valdeloire.com'), 'nepasrepondre@afpi-centre-valdeloire', $mail_sujet, '', $mail_body);
+
+		return 'ok';
 	}
 
 	public function modulesAction(){
@@ -941,4 +1192,18 @@ class admController extends Controller{
 
 
 	/*-- PRODUCT --*/
+
+	/*-- LOGS --*/
+	public function logsAction(){
+		$per_page = 50;
+
+		$nb_rows = $this->registry->db->count('logs');
+
+		// Recuperation des logs dans la base
+		$logs = $this->registry->db->get('logs', null, 'date_log DESC', $per_page, getOffset($per_page));
+
+		$this->registry->smarty->assign('logs', $logs);
+		
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'logs.meg');
+	}
 }

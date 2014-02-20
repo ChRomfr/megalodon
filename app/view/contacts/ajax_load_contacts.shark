@@ -1,6 +1,6 @@
 {strip}
 <div class="pull-right">
-	<a href="{$Helper->getLink("contacts/add")}" title="Nouveau contact"><i class="fa fa-plus"></i></a>
+	<a href="{$Helper->getLink("contacts/add")}" title="Nouveau contact" class="btn btn-default"><i class="fa fa-plus"></i></a>
 </div>
 <div class="clearfix"></div>
 

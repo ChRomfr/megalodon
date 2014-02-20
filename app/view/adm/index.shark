@@ -17,9 +17,9 @@
 		</li>
 
 		<li>
-			<a href="{$Helper->getLink("adm/mailingtype")}" title="Mailing">
+			<a href="{$Helper->getLink("adm/mailings")}" title="{$lang.Mailings}">
 				<span class="fa fa-envelope fa-3x"></span>
-				<span class="glyphicon-class">Mailing</span>
+				<span class="glyphicon-class">{$lang.Mailings}</span>
 			</a>
 		</li>
 
@@ -34,6 +34,13 @@
 			<a href="{$Helper->getLink("adm/modules")}" title="{$lang.Modules}">
 				<span class="fa fa-puzzle-piece fa-3x"></span>
 				<span class="glyphicon-class">{$lang.Modules}</span>
+			</a>
+		</li>
+
+		<li>
+			<a href="{$Helper->getLink("adm/logs")}" title="{$lang.Logs}">
+				<span class="fa fa-info-circle fa-3x"></span>
+				<span class="glyphicon-class">{$lang.Logs}</span>
 			</a>
 		</li>
 
@@ -92,62 +99,6 @@
 {/strip}
 <script type="text/javascript">
 <!--
-jQuery(document).ready(function(){
-	$.get(
-        '{$Helper->getLink("adm/ajax_stats")}',
-        {
-        	nohtml:'nohtml'
-        }
-		,{literal}        
-        function(data){
-        	$('#adm-stats').html(data);
-        }
-    );{/literal}
 
-	$.getJSON(
-		'{$Helper->getLink("adm/ajax_dataforgraph_repart_constacts")}', {literal}
-		{nohtml:'nohtml'},{/literal}   
-		function(data){     
-			$.plot($("#contacts-type-repart"), data,{
-				series: {
-					pie: {
-							show: true
-					}
-				},
-				grid: {
-					hoverable: true,
-					clickable: true
-				},      
-				legend: {
-					show: false
-				}
-			}); 
-			
-		}
-	);
-	
-	$.getJSON(
-		'{$Helper->getLink("adm/ajax_dataforgraph_repart_mailing_type")}', {literal}
-		{nohtml:'nohtml'},{/literal}   
-		function(data){     
-			$.plot($("#mailings-type-repart"), data,{
-				series: {
-					pie: {
-							show: true
-					}
-				},
-				grid: {
-					hoverable: true,
-					clickable: true
-				},      
-				legend: {
-					show: false
-				}
-			}); 
-			
-		}
-	);
-
-});
 //-->
 </script>

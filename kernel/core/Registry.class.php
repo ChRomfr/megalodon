@@ -13,6 +13,7 @@ Class Registry {
  public $config = array();
  public static $css_lib = array();
  public static $js_lib = array();
+ public static $js_lib_footer = array();
 
  /**
  *
@@ -128,15 +129,17 @@ Class Registry {
 		endforeach;	
 	}
 	
-	public function load_web_lib($file, $type){
-		if( $type == 'css' ):
-			self::$css_lib[] = $file;
-		elseif( $type == 'js' ):
-			self::$js_lib[] = $file;
-		elseif( $type == 'javascript' ):
-			// null
-		endif;
+	public function load_web_lib($file, $type, $place = 'header'){
+		if($place == 'header'){
+			if( $type == 'css' ):
+				self::$css_lib[] = $file;
+			elseif( $type == 'js' ):
+				self::$js_lib[] = $file;
+			elseif( $type == 'javascript' ):
+				// null
+			endif;
+		}elseif($place == 'footer'){
+			self::$js_lib_footer[] = $file;
+		}			
 	}
 }
-
-?>

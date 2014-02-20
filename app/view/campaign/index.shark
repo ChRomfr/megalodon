@@ -5,7 +5,7 @@
 
 <div class="well">
 	<div class="pull-right">
-		<a href="{$Helper->getLink("campaign/add")}" title="Nouvelle campagne"><i class="icon icon-add"></i></a>
+		<a href="{$Helper->getLink("campaign/add")}" title="Nouvelle campagne"><i class="fa fa-plus fa-lg"></i></a>
 	</div>
 	<h3>Campagnes</h3>
 	<div class="clearfix"></div>

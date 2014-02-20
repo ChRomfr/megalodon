@@ -37,6 +37,29 @@ class utilisateurController extends BaseutilisateurController{
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'utilisateur' . DS . 'edit.shark');
 	}
+
+	/**
+	 * Affiche les logs sur les contacts liés a l utilisateur
+	 * @return [type] [description]
+	 */
+	public function view_log_contactsAction(){
+		$user_id = $_SESSION['utilisateur']['id'];
+
+		$logs = $this->registry->db->select('cl.*, s.raison_social, p.nom, p.prenom')
+					->from('contacts_log cl')
+					->left_join('contacts c', 'cl.contact_id = c.id')
+					->left_join('societe s', 's.contact_id = c.id')
+					->left_join('personne p', 'p.contact_id = c.id')
+					->where(array('cl.user_id = ' => $user_id))
+					->order('cl.date_log DESC')
+					->limit(100)
+					->get();
+
+		$this->registry->smarty->assign('logs', $logs);
+
+		return $this->registry->smarty->fetch(VIEW_PATH . 'utilisateur' . DS . 'mylogs.meg');
+
+	}
 	
 	/**
 	*	Permet l edition d un utilisateur par son id

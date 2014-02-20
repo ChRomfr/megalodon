@@ -32,6 +32,14 @@
 @package : require sharkphp
 */
 
+define('MEG_VERSION', '1.0.20140130');
+define('SHARK_VERSION', '1.0.0-beta');
+
+$ajax_query = false;
+
+// Detection du type de requete
+if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') $ajax_query = true;
+
 // System de notification pour le bootstrap
 $registry->load_web_lib('notifications/notifications.css','css');
 $registry->load_web_lib('notifications/notifications.js','js');
@@ -47,6 +55,7 @@ require_once ROOT_PATH.'app'.DS.'local'.DS.'french.php';
 $registry->smarty->assign('lang', $lang);
 $registry->modules = getModules();
 $registry->smarty->assign('modules', $registry->modules);
+
 
 /**
  * Fonction autoload de l'application
@@ -65,7 +74,8 @@ function AppAutoload(){
 		'contacts_suivi'	=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts_suivi.php',
 		'mailing'			=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing.php',
 		'mailing_actions'	=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing_actions.php', 
-		'mailing_type'		=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing_type.php', 
+		'mailing_type'		=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing_type.php',
+		'log'				=>	ROOT_PATH.'app'.DS.'model'.DS.'log.php', 
 		'organisme'			=>	ROOT_PATH.'app'.DS.'model'.DS.'organisme.php',
 		'personne'			=>	ROOT_PATH.'app'.DS.'model'.DS.'personne.php',
 		'site'				=>	ROOT_PATH.'app'.DS.'model'.DS.'site.php',
@@ -87,6 +97,58 @@ spl_autoload_register('AppAutoload');
 
 getGlobalDatas();
 
+
+/**
+ * Traitement cas particulier ou TOKEN CRON EXISTE
+ * Si le token cron existe on cree un session ADMIN pour l excution de la tache
+ * qui sera detruit directement a la fin
+ * On verifie egalement que le controller demander soit bien cronController
+ */
+if( isset($_GET['cron_token'])){
+	$cron_token = $_GET['cron_token'];
+
+	// Verification du token
+	if($cron_token != $registry->config['cron_token']){
+		exit('Error invalid REQUEST !');
+	}
+
+	// Creation d'une session admin
+	$admin = $registry->db->get_one('user', array('identifiant =' => 'admin'));
+	$user = new utilisateur($admin);
+	$registry->session->create($user);
+}
+
+/**
+ * Traitement cas particulier si TOKEN SSO EXISTE
+ * Permet de créer un session directe depuis un lien envoye depuis un email
+ * Cela evite a l utilisateur de s identifier a chaque fois.
+ */
+if(isset($_GET['sso_token']) && isset($_GET['uid'])){
+	$token = $_GET['sso_token'];
+	$uid = $_GET['uid'];
+
+	$result = $registry->db->get_one('user', array('sso_link =' => '1', 'sso_link_token =' => $token, 'id =' => $uid));
+
+	if(!empty($result)){
+		$user = new utilisateur($result);
+		$registry->session->create($user);
+
+		$log = new log(array(
+			'log' 		=> 	'Connexion au logiciel via SSO LINK.',
+			'module'	=>	'connexion',
+			'link_id'	=>	$user->id,
+		));
+	}else{
+		$log = new log(array(
+			'log' 		=> 	'Echec connexion SSO. Information du client : {token:'.$token.', uid:'.$uid.', ip:'.$_SERVER['REMOTE_ADDR'].'} ',
+			'module'	=>	'connexion',
+			'link_id'	=>	$uid,
+		));
+	}
+
+	$log->save();
+}
+
 if($registry->config['ldap_use'] == 1){
 	require ROOT_PATH . 'LibApp' . DS . 'adldap' . DS . 'adLDAP.php';
 	$registry->adldap = new adLDAP(array(
@@ -102,8 +164,6 @@ if($registry->config['ldap_use'] == 1){
 // On traite l Auth SSO si activee
 //
 if( $registry->config['auth_sso_apache'] == 1 ){
-	//require ROOT_PATH . 'LibApp' . DS . 'adldap' . DS . 'adLDAP.php';
-	//$registry->adldap = new adLDAP();
 
 	// Recuperation utilisateur
 	$user_ldap = $registry->adldap->user()->info($_SERVER['REMOTE_USER'], array("*"));
@@ -129,16 +189,15 @@ if($registry->session->check() == false || $_SESSION['utilisateur']['id'] == 'Vi
 	$registry->router->controller = 'connexion';
 }
 
-/**
- * Code qui permet le suivi utilisateur dans l app
- */
-if( $_SESSION['utilisateur']['id'] != 'Visiteur' ){
+
+// Code qui permet le suivi utilisateur dans l app
+if( $_SESSION['utilisateur']['id'] != 'Visiteur' && $ajax_query === false){
 	$session = array(
 		'session_id' 	=> $_SESSION['session_id'], 
 		'user_id' 		=> $_SESSION['utilisateur']['id'],
 		'last_update' 	=> time(),
-		'url'		=>	$_SERVER['REQUEST_URI'],
-		'ip'		=>	$_SERVER['REMOTE_ADDR']
+		'url'			=>	$_SERVER['REQUEST_URI'],
+		'ip'			=>	$_SERVER['REMOTE_ADDR']
 	);
 
 	$registry->db->update('sessions', $session, array('session_id =' => $_SESSION['session_id']) );
@@ -298,4 +357,36 @@ function getModules(){
 	}
 
 	return $modules;
+}
+
+function week_from_monday($date) {
+    // Assuming $date is in format DD-MM-YYYY
+   // list($day, $month, $year) = explode("-", $date);
+   list($year, $month, $day) = explode('-', $date);
+
+    // Get the weekday of the given date
+    $wkday = date('l',mktime('0','0','0', $month, $day, $year));
+
+    switch($wkday) {
+        case 'Monday': $numDaysToMon = 0; break;
+        case 'Tuesday': $numDaysToMon = 1; break;
+        case 'Wednesday': $numDaysToMon = 2; break;
+        case 'Thursday': $numDaysToMon = 3; break;
+        case 'Friday': $numDaysToMon = 4; break;
+        case 'Saturday': $numDaysToMon = 5; break;
+        case 'Sunday': $numDaysToMon = 6; break;   
+    }
+
+    // Timestamp of the monday for that week
+    $monday = mktime('0','0','0', $month, $day-$numDaysToMon, $year);
+
+    $seconds_in_a_day = 86400;
+
+    // Get date for 7 days from Monday (inclusive)
+    for($i=0; $i<7; $i++)
+    {
+        $dates[$i] = date('Y-m-d',$monday+($seconds_in_a_day*$i));
+    }
+
+    return $dates;
 }

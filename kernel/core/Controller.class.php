@@ -209,11 +209,14 @@ class Controller extends App{
 	}
 	
 	protected function getFormValidatorJs(){
+		/*
 		$this->registry->addJS('jquery.validationEngine.js');
 		$this->registry->addJS('jquery.validationEngine-fr.js');
 		$this->registry->addCSS('formValidator/template.css');
 		$this->registry->addCSS('formValidator/validationEngine.jquery.css');
 		$this->registry->addJS('validation/jquery.validate.js');
+		*/
+		$this->registry->load_web_lib('validation/jquery.validate.min.js', 'js', 'footer');
 	}
     
     protected function getCkEditorJs(){

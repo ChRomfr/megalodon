@@ -1,9 +1,9 @@
-<!-- app/view/contact/add.tpl -->
+<!-- START app/view/contact/add.tpl -->
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("contacts")}" title="Contacts">Contacts</a></li>
-	<li class="active">Nouveau</li>
+	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-group"></i>&nbsp;Contacts</a></li>
+	<li class="active"><i class="fa fa-plus"></i>&nbsp;Nouveau</li>
 </ol>
 
 <div class="well">
@@ -14,7 +14,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2 ">Type :</label>
 					<div class="col-xs-5">
-						<select name="contact[type]" id="contact-type" required onchange="loadgoodtype()" class="form-control">
+						<select name="contact[type]" id="contact-type" onchange="loadgoodtype()" class="form-control">
 							<option value=""></option>
 							<option value="1" {if isset($smarty.get.societe)}selected="selected"{/if} >Professionel</option>
 							<option value="2">Particulier</option>
@@ -25,7 +25,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2">Type de contact :</label>
 					<div class="col-xs-5">
-						<select id="contacts-type-contact" name="structure" onchange="loadcomplementform();" required class="form-control">
+						<select id="contacts-type-contact" name="structure" onchange="loadcomplementform();" class="form-control">
 							<option value=""></option>
 							<option value="entreprise">Entreprise</option>
 							<option value="personne" {if isset($smarty.get.societe)}selected="selected"{/if}>Personne</option>
@@ -152,97 +152,13 @@
 			&nbsp;&nbsp;&nbsp;
 			<a href="{$Helper->getLink("contacts")}" title="" class="btn btn-danger">Annuler</a>
 		</div>
-	</form>
-	
-</div>{* /well *}
+	</form>	
+</div>
 {/strip}
-<script type="text/javascript">
-<!--
-function loadcomplementform(societe){
-	if( typeof(societe) == 'undefined' ){
-        societe = null;
-    }
-	$("#complement-form-add-contacts").html('<div class="text-center"><i class="glyphicon glyphicon-refresh"></i> Chargement ...</div>');
-	$.get(
-        '{$Helper->getLink("contacts/ajaxloadaddtypeform")}',{literal}
-        {nohtml:'nohtml',type:$('#contacts-type-contact').val(),typesocio:$('#contact-type').val(),societe:societe},{/literal}
-        function(data){
-            $("#complement-form-add-contacts").html(data);
-        }
-    );
-}
-
-function loadgoodtype(){
-	if($('#contact-type').val() == '2'){
-		$('#contacts-type-contact').val('personne');
-		$('#contacts-type-contact').prop('disabled', 'disabled');
-		loadcomplementform();
-	}else{
-		$('#contacts-type-contact').prop('disabled', false);
-		$('#contacts-type-contact').val('');
-		$("#complement-form-add-contacts").html('');
-	}
-}
-
-jQuery(document).ready(function(){
-	$('#contact-codepostal').autocomplete({
-		source:'{$Helper->getLink("ajax/getVilleByCp?nohtml=nohtml")}',
-		minLength:3,
-		dataType:"json",
-		delay:0,
-		select: function(e,ui){			
-			$("#contact-ville").val(ui.item.label);	
-			$("#contact-codepostal").val(ui.item.value);		
-			return false;
-		}		
-	});
-	
-	$("#form-add-contacts").validate({
-		rules:{
-			"contact[code_postal]":{
-				required:true,
-			},
-			"contact[ville]":{
-				required:true,
-			},
-			"contact[email]":{
-				email:true,
-				remote: '{$Helper->getLink("contacts/checkemail/'+$('#email').val()+'?nohtml")}',
-			},
-			"contact[pays]":{
-				required:true,
-			}
-		},
-		messages:{
-			"contact[code_postal]":{
-				required:"Veuillez indiquer le code postal",
-			},
-			"contact[ville]":{
-				required:"Veuillez indiquer la ville",
-			},
-			"contact[email]":{
-				email:"Veuillez saisir une adresse email valide",
-				remote:"Cette adresse email est deja utilise",
-			},
-			"contact[pays]":{
-				required:"Veuillez indiquer le pays",
-			}
-		},
-		highlight:function(element)
-        {
-            $(element).parents('.form-group').removeClass('success');
-            $(element).parents('.form-group').addClass('error');
-        },
-        unhighlight: function(element)
-        {
-            $(element).parents('.form-group').removeClass('error');
-            $(element).parents('.form-group').addClass('success');
-        }
-	});
-	
-});
 {if isset($smarty.get.societe)}
-loadcomplementform({$smarty.get.societe});
-{/if}
-//-->
-</script>
+<script type="text/javascript">
+$(document).ready(function() {
+	loadcomplementform({$smarty.get.societe});
+});
+</script>{/if}
+<!-- END app/view/contact/add.tpl -->
