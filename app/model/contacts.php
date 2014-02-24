@@ -25,9 +25,9 @@ class contacts extends Record{
 	
 	/**
 	*	Adresse
-	*	@Db: {"name":"adresse1", "type":"TEXT", "default":NULL}
+	*	@Db: {"name":"adress", "type":"TEXT", "default":NULL}
 	*/
-	public $adresse1;
+	public $adress;
 	
 	/**
 	*	Adresse suite
@@ -59,9 +59,9 @@ class contacts extends Record{
 	*/
 	public $type;
 	
-	public $code_postal;
+	public $zip_code;
 	
-	public $ville;
+	public $city;
 	
 	public $pays;
 	
@@ -101,7 +101,6 @@ class contacts extends Record{
 				$this->$k = $v;
 			}
 		}
-
 	}
 
 	public function save(){
@@ -110,8 +109,8 @@ class contacts extends Record{
 			$this->email = NULL;
 		}
 
-		if(empty($this->adresse1)){
-			$this->adresse1 = NULL;
+		if(empty($this->adress)){
+			$this->adress = NULL;
 		}
 
 		return parent::save();

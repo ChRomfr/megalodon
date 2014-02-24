@@ -1,13 +1,13 @@
 jQuery(document).ready(function(){
 	$.get(
-        base_url + 'adm/ajax_stats',{nohtml:'nohtml'},      
+        base_url + 'index.php/adm/ajax_stats',{nohtml:'nohtml'},      
         function(data){
         	$('#adm-stats').html(data);
         }
     );
 
 	$.getJSON(
-		base_url + 'adm/ajax_dataforgraph_repart_constacts', 
+		base_url + 'index.php/adm/ajax_dataforgraph_repart_constacts', 
 		{nohtml:'nohtml'},  
 		function(data){     
 			$.plot($("#contacts-type-repart"), data,{
@@ -29,7 +29,7 @@ jQuery(document).ready(function(){
 	);
 	
 	$.getJSON(
-		base_url + 'adm/ajax_dataforgraph_repart_mailing_type',
+		base_url + 'index.php/adm/ajax_dataforgraph_repart_mailing_type',
 		{nohtml:'nohtml'},   
 		function(data){     
 			$.plot($("#mailings-type-repart"), data,{

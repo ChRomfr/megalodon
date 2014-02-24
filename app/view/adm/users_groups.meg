@@ -26,7 +26,7 @@
 			{foreach $groups as $row}
 			<tr>
 				<td>{$row.id}</td>
-				<td><a href="{$Helper->getLink("adm/groups_detail/{$row.id}")}" title="{$lang.Detail}">{$row.name}</a></td>
+				<td><a href="{$Helper->getLink("adm/groups_detail/{$row.id}")}" title="detail of {$row.name}">{$row.name}</a></td>
 				<td></td>
 				<td></td>
 				<td>
@@ -40,35 +40,4 @@
 	</table>
 </div>
 {/strip}
-<script type="text/javascript">
-function group_add(){
-	$.get(
-        '{$Helper->getLink("adm/groups_get_form")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $("#modal-global-body").html('<div class="well">'+data+'</div>');
-        }        
-    );
-    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Nouveau_groupe}');
-    $('#modal-global').modal('show');
-}
-
-function group_edit(tid){
-	$.get(
-        '{$Helper->getLink("adm/groups_get_form/'+tid+'")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $("#modal-global-body").html('<div class="well">'+data+'</div>');
-        }        
-    );
-    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$lang.Edition_groupe}');
-    $('#modal-global').modal('show');
-}
-
-function group_delete(gid){
-	if(confirm('Etes vous sur de vouloir supprimer ce groupe ?')){
-		window.location.href='{$Helper->getLink("adm/groups_delete/'+gid+'")}';
-	}
-}
-</script>
 <!-- END app/view/adm/users_groups.meg -->

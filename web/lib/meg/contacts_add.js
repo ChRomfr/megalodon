@@ -4,10 +4,10 @@ $(document).ready(function() {
 			'contact[type]':{
 				required:true,
 			},
-			"contact[code_postal]":{
+			"contact[zip_code]":{
 				required:true,
 			},
-			"contact[ville]":{
+			"contact[city]":{
 				required:true,
 			},
 			"contact[email]":{
@@ -19,10 +19,10 @@ $(document).ready(function() {
 			}
 		},
 		messages:{
-			"contact[code_postal]":{
+			"contact[zip_code]":{
 				required:"Veuillez indiquer le code postal",
 			},
-			"contact[ville]":{
+			"contact[city]":{
 				required:"Veuillez indiquer la ville",
 			},
 			"contact[email]":{
@@ -54,7 +54,7 @@ jQuery(document).ready(function(){
 		dataType:"json",
 		delay:0,
 		select: function(e,ui){			
-			$("#contact-ville").val(ui.item.label);	
+			$("#contact-city").val(ui.item.label);	
 			$("#contact-codepostal").val(ui.item.value);		
 			return false;
 		}		

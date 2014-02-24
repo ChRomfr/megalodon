@@ -1,3 +1,28 @@
+CREATE TABLE `rdv` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `date_rdv` DATETIME NOT NULL,
+  `user_id` INT NOT NULL,
+  `tier_type` VARCHAR(25) NULL,
+  `tier_id` INT NULL,
+  `source_type` VARCHAR(25) NULL,
+  `source_id` INT NULL,
+  `description` TEXT NULL,
+  `add_by` INT NOT NULL,
+  `add_on` DATETIME NOT NULL,
+  `statut` INT(2) NULL DEFAULT 0,
+  `lieu` TEXT NULL,
+  `rapport` TEXT NULL,
+  `result` INT(3) NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Contient les rendez vous';
+
+ALTER TABLE `contacts` 
+CHANGE COLUMN `adresse1` `adress` TEXT NULL DEFAULT NULL ,
+CHANGE COLUMN `code_postal` `zip_code` VARCHAR(20) NULL DEFAULT NULL ,
+CHANGE COLUMN `ville` `city` VARCHAR(200) NULL DEFAULT NULL ;
+
+--
 ALTER TABLE `user` ADD COLUMN `token` VARCHAR(100) NULL AFTER `index_map_contacts`;
 ALTER TABLE `contacts_email` ADD COLUMN `pj` VARCHAR(100) NULL AFTER `result`;
 ALTER TABLE `user` ADD COLUMN `sso_link_token` VARCHAR(100) NULL AFTER `token`, ADD COLUMN `sso_link` INT(1) NULL DEFAULT 0 AFTER `sso_link_token`;

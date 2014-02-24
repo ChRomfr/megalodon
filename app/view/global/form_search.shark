@@ -1,12 +1,12 @@
 {* FORMULAIRE DE RECHERCHE APPELLE SUR TOUTE LES PAGES *}
 {strip}
 <hr/>
-<div class="pull-right" id="select-view-form">
-	<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>
+<div class="pull-right" id="select-view-form" class="sh-search-form">
+	<i class="glyphicon glyphicon-chevron-down"></i>
 </div>
-<li class="nav-header hidden-tablet"><i class="fa fa-search"></i>&nbsp;&nbsp;Recherche</li>
+<li class="nav-header hidden-tablet sh-search-form" id="text-view-form"><i class="fa fa-search"></i>&nbsp;&nbsp;Recherche</li>
 <div class="clearfix"></div>
-
+<br/>
 <form method="get" action="{$Helper->getLink("contacts/index")}" style="display:none;" id="global-search-form" role="form">
 <fieldset>
 	<div class="form-group">

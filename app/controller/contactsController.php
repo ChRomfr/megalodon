@@ -25,7 +25,7 @@ class contactsController extends Controller{
 		
 		$nb_contact = $this->manager->contacts->count($this->getWhere());
 
-		$contacts = $this->manager->contacts->get($this->getWhere(),$per_page, getOffset($per_page), 'c.ctype, c.ville, c.email');
+		$contacts = $this->manager->contacts->get($this->getWhere(),$per_page, getOffset($per_page), 'c.ctype, c.city, c.email');
 
 		// Recuperation des entreprises avec paginations
 		$base_url = $_SERVER['REQUEST_URI'];		
@@ -814,7 +814,7 @@ class contactsController extends Controller{
 		$contacts = $this->registry->db->get('contacts');
 
 		foreach($contacts as $row){
-			$coord = $gmap->geocoding($row['adresse1'] .' '. $row['code_postal'] . ' '. $row['ville'] . ' FRANCE');
+			$coord = $gmap->geocoding($row['adress'] .' '. $row['zip_code'] . ' '. $row['city'] . ' FRANCE');
 			if(is_numeric($coord[2])){
 				// Geoloc OK
 				$data = array(

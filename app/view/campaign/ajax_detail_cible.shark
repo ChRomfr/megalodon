@@ -23,6 +23,8 @@
 		</tr>
 		{/if}
 	</table>
+	<!-- link take rdv -->
+	<button class="btn btn-info" onclick="get_rdv_campaign({$contact.contact_id},{$campaign_data.id});">RDV</button>
 </div>
 
 <div class="well">

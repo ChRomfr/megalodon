@@ -65,7 +65,7 @@ if(suser.index_map_contacts == 1){
 }
 
 $.getJSON(
-	base_url + 'mailing/getmailingforcalendar',
+	base_url + 'index.php/mailing/getmailingforcalendar',
 	{nohtml:'nohtml'},   
 	function(data){		
 		$(document).ready(function() {

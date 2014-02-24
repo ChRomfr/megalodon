@@ -32,6 +32,10 @@ class campaignController extends Controller{
 		$campaign = $this->manager->campaign->getById($id);
 		
 		$this->registry->smarty->assign('campaign', $campaign);
+
+		$this->registry->load_web_lib('moment-2.4.0.js','js','footer');
+		$this->registry->load_web_lib('bt3_datapicker/css/bootstrap-datetimepicker.min.css','css');
+		$this->registry->load_web_lib('bt3_datapicker/js/bootstrap-datetimepicker.min.js','js','footer');
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'campaign' . DS . 'view.shark');
 

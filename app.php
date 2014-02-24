@@ -35,6 +35,8 @@
 define('MEG_VERSION', '1.0.20140130');
 define('SHARK_VERSION', '1.0.0-beta');
 
+define('LDAP_IGNORE', false);
+
 $ajax_query = false;
 
 // Detection du type de requete
@@ -78,6 +80,7 @@ function AppAutoload(){
 		'log'				=>	ROOT_PATH.'app'.DS.'model'.DS.'log.php', 
 		'organisme'			=>	ROOT_PATH.'app'.DS.'model'.DS.'organisme.php',
 		'personne'			=>	ROOT_PATH.'app'.DS.'model'.DS.'personne.php',
+        'rdv'               =>  ROOT_PATH.'app'.DS.'model'.DS.'rdv.php',
 		'site'				=>	ROOT_PATH.'app'.DS.'model'.DS.'site.php',
 		'societe'			=>	ROOT_PATH.'app'.DS.'model'.DS.'societe.php',
 		'telephone'			=>	ROOT_PATH.'app'.DS.'model'.DS.'telephone.php',
@@ -151,10 +154,10 @@ if(isset($_GET['sso_token']) && isset($_GET['uid'])){
 	$log->save();
 }
 
-if($registry->config['ldap_use'] == 1){
+if($registry->config['ldap_use'] == 1 && LDAP_IGNORE === false){
 	require ROOT_PATH . 'LibApp' . DS . 'adldap' . DS . 'adLDAP.php';
 	$registry->adldap = new adLDAP(array(
-		'base_dn'				=>	$registry->config['ldap_basedn'],	//'DC=domain,DC=local',
+		'base_dn'				=>	$registry->config['ldap_basedn'],		//'DC=domain,DC=local',
 		'account_suffix'		=>	$registry->config['ldap_accsuffix'],	//@domain.local', 
 		'domain_controllers' 	=>	$registry->config['ldap_server'],
 		'admin_username'		=>	$registry->config['ldap_user'],
@@ -271,7 +274,7 @@ function getGlobalDatas(){
 
 	if(!$global_data = $registry->cache->get('global_data')){
 
-		$result = $registry->db->select('DISTINCT(LEFT(e.code_postal,2)) as dpt')->from('contacts e')->having('dpt <>""')->order('dpt')->get();
+		$result = $registry->db->select('DISTINCT(LEFT(e.zip_code,2)) as dpt')->from('contacts e')->having('dpt <>""')->order('dpt')->get();
 
 		$dpt = array();
 

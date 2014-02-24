@@ -371,7 +371,7 @@ class contactsManager extends BaseModel{
 			$this->db
 				->select('c.*')
 				->from('contacts c')
-				->where_free('(lat IS NULL OR lat = "") AND adresse1 != "" AND code_postal != "" AND ville != "" AND (date_last_geoloc = "" OR date_last_geoloc < "'. $date_15_days .'" OR date_last_geoloc IS NULL)');
+				->where_free('(lat IS NULL OR lat = "") AND adress != "" AND zip_code != "" AND city != "" AND (date_last_geoloc = "" OR date_last_geoloc < "'. $date_15_days .'" OR date_last_geoloc IS NULL)');
 				
 		if( !is_null($limit) && is_numeric($limit) ){
 			$this->db->limit($limit);
@@ -384,7 +384,7 @@ class contactsManager extends BaseModel{
 	
 	public function getAgences($parent_id){
 		$this->db
-			->select('s.raison_social, c.ville, c.id as contacts_id')
+			->select('s.raison_social, c.city, c.id as contacts_id')
 			->from('societe s')
 			->left_join('contacts c','s.contact_id = c.id')
 			->where(array('s.parent_id =' => $parent_id, 'c.isDelete =' => 0));
@@ -394,7 +394,7 @@ class contactsManager extends BaseModel{
 	
 	public function getSiegeSocial($id){
 		$this->db
-			->select('s.raison_social, c.ville, c.id as contacts_id')
+			->select('s.raison_social, c.city, c.id as contacts_id')
 			->from('societe s')
 			->left_join('contacts c','s.contact_id = c.id')
 			->where(array('s.id =' => $id, 'c.isDelete =' => 0));

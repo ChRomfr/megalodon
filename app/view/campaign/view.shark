@@ -83,6 +83,7 @@
 <script type="text/javascript">
 <!--
 var filter_cible = '';
+var campaign_id = {$campaign.id};
 
 function generateCible(cid){
 	$('#campaign-result-generation').html('<div class="alert alert-info text-center">Generation en cours ...</div>');
@@ -124,7 +125,7 @@ jQuery(document).ready(function(){
 	    	nohtml:'nohtml',
 	    },{literal}        
 	    function(data){
-	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="fa fa-edit"></i></a></tr>';
+	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="fa fa-edit fa-x2"></i></a>&nbsp;&nbsp;<a href="javascript:get_rdv_campaign({{cc_id}}, '+campaign_id+')" title="Prise de rendez vous"><i class="fa fa-clock-o"></a></i></tr>';
 	    	for( var i in data ){      
 	        	$('#table-targets').append( Mustache.render(tpl, data[i]) );
 	    	}
@@ -143,7 +144,7 @@ jQuery(document).ready(function(){
         {nohtml:'nohtml'},{/literal}
         function(data){
            $("#progress-campaign").html(data);
-           console.log(data);
+           //console.log(data);
         }       
     );
 });

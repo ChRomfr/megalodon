@@ -35,6 +35,20 @@ function getParameters() {
   return hash;
 }
 
+$(document).ready(function(){	
+	$('.autocomplete-user').autocomplete({
+		source : base_url + 'index.php/ajax/search_user?nohtml=nohtml',
+		minLength: 2,
+		dataType: "json",
+		selectFirst: true,
+		delay: 0,
+		select: function(e, ui){
+			//window.location.href = base_url + 'index.php/contacts/detail/'+ui.item.value;
+			return false;
+		}
+	});	
+})
+
 jQuery(document).ready(function(){	
 	$('#search-top-layout').autocomplete({
 		source : base_url + 'index.php/contacts/ajax_search_global?nohtml=nohtml',
@@ -55,14 +69,14 @@ if(suser.id != 'Visiteur'){
 	var pagetitle = "";
 	var userid = suser.id;
 	var count_url = base_url + "index.php/notifications/getcount";
-	var list_url = base_url + "notifications/getlist";
+	var list_url = base_url + "index.php/notifications/getlist";
 	$(document).ready(function(){
 	    startNotifications();
 	});
 
 	$(document).ready(function() {
 		$.get(
-	        base_url + 'ajax/my_tasks',
+	        base_url + 'index.php/ajax/my_tasks',
 	        {nohtml:'nohtml',},
 	        function(data){
 	            $('#nav-menu-my-task').html(data);
@@ -72,15 +86,15 @@ if(suser.id != 'Visiteur'){
 }
 
 //-- START Formulaire menu navigation --//
-function showsearchform(){
-	$('#global-search-form').css('display','block');
-	$('#select-view-form').html('<a href="javascript:hidesearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-up"></i></a>');
-}
-
-function hidesearchform(){
-	$('#global-search-form').css('display','none');
-	$('#select-view-form').html('<a href="javascript:showsearchform();" title="" class="btn"><i class="glyphicon glyphicon-chevron-down"></i></a>');
-}
+$(document).on('click', '.sh-search-form',function(){
+	if($('#global-search-form').css('display') == 'none'){
+		$('#global-search-form').css('display','block');
+		$('#select-view-form').html('<i class="glyphicon glyphicon-chevron-up"></i>');
+	}else{
+		$('#global-search-form').css('display','none');
+		$('#select-view-form').html('<i class="glyphicon glyphicon-chevron-down"></i>');
+	}
+});
 
 if (typeof ape_multi_choice != 'undefined'){
 	jQuery(document).ready(function(){
@@ -101,3 +115,29 @@ if (typeof ape_multi_choice != 'undefined'){
 }
 
 //-- END Formulaire menu navigation --//
+$(document).on('click', '.call-form-rdv',function(){
+	$.get(
+        base_url + 'index.php/rdv/get_form/',
+        {nohtml:'nohtml'},
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('Nouveau rendez vous');
+    $('#modal-global').modal('show');
+});
+
+function get_rdv_campaign(tid, sid){
+	$.get(
+        base_url + 'index.php/rdv/get_form/',
+        {nohtml:'nohtml', tier_type:'contacts', tier_id:tid, source_type:'campaign', source_id:sid},
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('Nouveau rendez vous');
+    $('#modal-global').modal('show');
+}
+//-- RDV --//

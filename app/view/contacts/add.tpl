@@ -38,7 +38,7 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2">Adresse :</label>
 					<div class="col-xs-5">
-						<textarea name="contact[adresse1]" id="contact-adresse1" class="form-control">{if isset($ets)}{$ets.adresse1}{/if}</textarea>
+						<textarea name="contact[adress]" id="contact-adresse1" class="form-control">{if isset($ets)}{$ets.adress}{/if}</textarea>
 					</div>
 				</div>
 				
@@ -53,14 +53,14 @@
 				<div class="form-group">
 					<label class="control-label col-sm-2">Code postal :</label>
 					<div class="col-xs-1">
-						<input type="text" name="contact[code_postal]" id="contact-codepostal" {if isset($ets)}value="{$ets.code_postal}"{/if} class="form-control"/>
+						<input type="text" name="contact[zip_code]" id="contact-codepostal" {if isset($ets)}value="{$ets.zip_code}"{/if} class="form-control"/>
 					</div>
 				</div>
 				
 				<div class="form-group">
 					<label class="control-label col-sm-2">Ville :</label>
 					<div class="col-xs-5">
-						<input type="text" name="contact[ville]" id="contact-ville" {if isset($ets)}value="{$ets.ville}"{/if} class="form-control"/>
+						<input type="text" name="contact[city]" id="contact-ville" {if isset($ets)}value="{$ets.city}"{/if} class="form-control"/>
 					</div>
 				</div>				
 				

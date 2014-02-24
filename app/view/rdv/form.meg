@@ -1,0 +1,90 @@
+<!-- START app/rdv/form.meg -->
+{strip}
+<form method="post" action="{if !isset($rdv)}{$Helper->getLink('rdv/add')}{/if}" id="rdv-form" class="form-horizontal">
+
+	<div class="form-group">
+		<label for="date-rdv" class="control-label col-md-4 col-xs-4">Date :</label>
+		<div class="col-md-8 col-xs-8">
+			<input type="text" required class="form-control" value="" id="rdv-date" data-format="YYYY-MM-DD HH:MM" name="rdv[date_rdv]"/>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="user-id" class="control-label col-md-4 col-xs-4">Utilisateur :</label>
+		<div class="col-md-8 col-xs-8">
+			<input type="text" required class="form-control autocomplete-user" />
+			<input type="hidden" name="rdv[user_id]" id="a-user-id" />
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="date-rdv" class="control-label col-md-4 col-xs-4">Description :</label>
+		<div class="col-md-8 col-xs-8">
+			<textarea class="form-control" name="rdv[description]" id="rdv-description"></textarea>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label class="control-label col-md-4 col-xs-4">Catégorie :</label>
+		<div class="col-md-8 col-xs-8">
+			<select name="rdv[categorie_id]" id="rdc-categorie-id" class="form-control">
+				<option value=""></option>
+			</select>
+		</div>
+	</div>
+
+	<div class="form-group">
+		<label for="date-rdv" class="control-label col-md-4 col-xs-4">Lieux :</label>
+		<div class="col-md-8 col-xs-8">
+			<textarea class="form-control" name="rdv[lieu]" id="rdv-lieux">{if isset($tier)}{$tier->adress}{$tier->zip_code} {$tier->city}{/if}</textarea>
+		</div>
+	</div>
+
+	<hr/>
+	{if isset($smarty.get.tier_type)}
+	<input type="hidden" name="rdv[tier_type]" value="{$smarty.get.tier_type}" />
+	{/if}
+	{if isset($smarty.get.tier_id)}
+	<input type="hidden" name="rdv[tier_id]" value="{$smarty.get.tier_id}" />
+	{/if}
+
+	{if isset($smarty.get.source_type)}
+	<input type="hidden" name="rdv[source_type]" value="{$smarty.get.source_type}" />
+	{/if}
+	{if isset($smarty.get.source_id)}
+	<input type="hidden" name="rdv[source_id]" value="{$smarty.get.source_id}" />
+	{/if}
+	<div class="text-center"><button type="submit" class="btn btn-primary">Enregistrer</button></div>
+</form>
+{/strip}
+
+<script type="text/javascript">
+$(document).ready(function(){	
+	$('.autocomplete-user').autocomplete({
+		source : base_url + 'index.php/ajax/search_user?nohtml=nohtml',
+		minLength: 2,
+		dataType: "json",
+		selectFirst: true,
+		delay: 0,
+		select: function(e, ui){
+			var selectObj = ui.item;
+			$(this).val(selectObj.label)
+			$("#a-user-id").val( ui.item.value );
+			return false;
+		}
+	});	
+
+    $(function () {
+            $('#rdv-date').datetimepicker({
+                icons: {
+                    time: "fa fa-clock-o",
+                    date: "fa fa-calendar",
+                    up: "fa fa-arrow-up",
+                    down: "fa fa-arrow-down"
+                }
+            });
+        });
+
+})
+</script>
+<!-- END app/rdv/form.meg -->

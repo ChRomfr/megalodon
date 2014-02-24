@@ -82,23 +82,6 @@
 jQuery(document).ready(function(){
 	 $("#users-liste").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});
 });
-function get_logs(uid){
-	$.get(
-        base_url + 'index.php/adm/users_view_log_contacts/'+uid,
-        {nohtml:'nohtml'},
-        function(data){
-            $("#modal-global-body").html('<div class="well">'+data+'</div>');
-        }        
-    );
-
-    $('#modal-global-label').html('LOG UTILISATEUR');
-    $('#modal-global').modal('show');
-}
 {/literal}
-function user_delete(uid){
-	if(confirm('Etes vous de vouloir supprimer cet utilisateur ?')){
-		window.location.href = base_url + 'index.php/adm/users_delete/'+uid;
-	}
-}
 </script>
 <!-- END app/view/adm/user_index.shark -->

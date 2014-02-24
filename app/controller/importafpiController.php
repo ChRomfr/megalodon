@@ -31,9 +31,7 @@ class importafpiController extends Controller{
 	            $fichier->process($dir);
 				
 	            return $this->registry->Helper->redirect($this->registry->Helper->getLink('importafpi/step2/' . $name));
-			endif;
-
-			
+			endif;			
 		endif;
 
 		return $this->registry->smarty->fetch(VIEW_PATH . 'importafpi' . DS . 'index.tpl');
@@ -66,10 +64,10 @@ class importafpiController extends Controller{
 
 		$data_ets = array(
 			'raison_social'	=> 	'Raison social', 
-			'adresse1'		=> 	'Adresse 1', 
+			'adress'		=> 	'Adresse 1', 
 			'adresse2'		=> 	'Adresse 2', 
-			'code_postal'	=>	'Code postal',
-			'ville'			=>	'Ville',
+			'zip_code'		=>	'Code postal',
+			'city'			=>	'Ville',
 			'telephone'		=>	'Telephone',
 			'fax'			=>	'Fax',
 			'email'			=>	'Email',
@@ -640,20 +638,20 @@ class importafpiController extends Controller{
 			$row->client = 0;
 		}
 		
-		if( isset($correspondance['adresse1']) && !empty($correspondance['adresse1']) && !empty($record[$correspondance['adresse1']]) ){
-			$row->adresse1  = utf8_encode($record[$correspondance['adresse1']]);
+		if( isset($correspondance['adress']) && !empty($correspondance['adress']) && !empty($record[$correspondance['adress']]) ){
+			$row->adress  = utf8_encode($record[$correspondance['adress']]);
 		}
 		
 		if( isset($correspondance['adresse2']) && !empty($correspondance['adresse2']) && !empty($record[$correspondance['adresse2']]) ){
 			$row->adresse2  = utf8_encode($record[$correspondance['adresse2']]);			
 		}
 		
-		if( isset($correspondance['code_postal']) && !empty($correspondance['code_potal']) ){
-			$row->code_postal  = utf8_encode($record[$correspondance['code_postal']]);
+		if( isset($correspondance['zip_code']) && !empty($correspondance['zip_code']) ){
+			$row->zip_code  = utf8_encode($record[$correspondance['zip_code']]);
 		}
 		
-		if( isset($correspondance['ville']) && !empty($correspondance['ville']) && !empty($record[$correspondance['ville']])  ){
-			$row->ville  = utf8_encode($record[$correspondance['ville']]);
+		if( isset($correspondance['city']) && !empty($correspondance['city']) && !empty($record[$correspondance['city']])  ){
+			$row->city  = utf8_encode($record[$correspondance['city']]);
 		}
 		
 		if( isset($correspondance['code_interne']) && !empty($correspondance['code_interne']) ){
@@ -714,6 +712,8 @@ class importafpiController extends Controller{
 		if( isset($correspondance['siret']) && !empty($correspondance['siret']) && !empty($record[$correspondance['siret']]) ){
 			$row->siret =	clearsiret(trim($record[$correspondance['siret']]));			
 		}
+
+		$row->mother = 0;
 		
 		return $row;
 
@@ -813,14 +813,14 @@ class importafpiController extends Controller{
 		$ets->raison_social 	=	utf8_encode($record[$correspondance['raison_social']]);
 		$ets->siret 			=	clearsiret(trim($record[$correspondance['siret']]));
 
-		if( isset($correspondance['adresse1']) && !empty($correspondance['adresse1']) )
-			$ets->adresse1 = utf8_encode($record[$correspondance['adresse1']]);
+		if( isset($correspondance['adress']) && !empty($correspondance['adress']) )
+			$ets->adress = utf8_encode($record[$correspondance['adress']]);
 		
 		if( isset($correspondance['adresse2']) && !empty($correspondance['adresse2']) )
 			$ets->adresse2 = utf8_encode($record[$correspondance['adresse2']]);
 		
-		$ets->code_postal		=	$record[$correspondance['code_postal']];
-		$ets->ville 			=	utf8_encode($record[$correspondance['ville']]);	
+		$ets->zip_code		=	$record[$correspondance['zip_code']];
+		$ets->city 			=	utf8_encode($record[$correspondance['city']]);	
 		
 		if( isset($correspondance['telephone']) && !empty($correspondance['telephone']) )
 			$ets->telephone 		= 	clearphonenumber($record[$correspondance['telephone']]);

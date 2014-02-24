@@ -47,7 +47,7 @@ class connexionController extends BaseconnexionController{
             	
             	$index = $this->load_controller('index');
 
-				$this->registry->Helper->pnotify('Bienvenu', 'Vous êtes maintenance connecté !', 'success');
+				$this->registry->Helper->pnotify('Bonjour !', 'Vous êtes maintenant connecté !', 'success');
 
 				return $index->indexAction();
             }elseif( $Result !== true){
@@ -67,5 +67,14 @@ class connexionController extends BaseconnexionController{
 		$this->Helper->getFormValidatorJs();
 		return $this->app->smarty->fetch(BASE_APP_PATH . 'view' . DS . 'connexion' . DS . 'index.tpl');
 	}
+
+    public function logoutAction(){
+        # Destruction de la session
+        $this->registry->session->destroy();
+
+        $this->registry->Helper->pnotify('Au revoir', $this->lang['Vous_etes_maintenant_deconnecte'],'success');
+
+       return $this->indexAction();
+    }
 
 }

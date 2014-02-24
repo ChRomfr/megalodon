@@ -1,3 +1,4 @@
+<!-- START app/view/mailing/calendar.tpl -->
 {strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
@@ -6,13 +7,27 @@
 </ol>
 
 <div class="well">
+	<div>
+		Légende : 
+			<span class="label label-success">Envoyé</span>
+			<span class="label label-info">Programmé</span>
+			<span class="label label-default">En attente</span>
+	</div>
+	<hr/>
 	<div id="calmailing" style="width:80%;"></div>
+	<hr/>
+	<div>
+		Légende : 
+			<span class="label label-success">Envoyé</span>
+			<span class="label label-info">Programmé</span>
+			<span class="label label-default">En attente</span>
+	</div>
+	<div class="clearfix"></div>
 </div>
 {/strip}
 <script type="text/javascript">
-<!--
 $.getJSON(
-	'{$Helper->getLink("mailing/getmailingforcalendar")}', {literal}
+	base_url + 'index.php/mailing/getmailingforcalendar', {literal}
 	{nohtml:'nohtml'},{/literal}   
 	function(data){ 
 		
@@ -36,5 +51,5 @@ $.getJSON(
 		}); 		
 	}
 );
-//-->
 </script>
+<!-- END app/view/mailing/calendar.tpl -->

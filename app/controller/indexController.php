@@ -76,9 +76,9 @@ class indexController extends Controller{
 				if( empty($row['societe_id'])){
 					$Markers[] = array('lat' => $row['lat'], 'lng' => $row['lng'], 'data' => array(
 						'rs'				=>	!empty($row['raison_social']) ? $row['raison_social'] : $row['prenom'] .' '. $row['nom'] ,
-						'adresse'			=>	$row['adresse1'],
-						'code_postal'		=>	$row['code_postal'],
-						'ville'				=>	$row['ville']
+						'adresse'			=>	$row['adress'],
+						'code_postal'		=>	$row['zip_code'],
+						'ville'				=>	$row['city']
 						),
 						'options'	=> array(
 							'icon'	=>	!empty($row['client']) ? $this->registry->config['url'] . 'web/images/markers/pin1.png' : 	$this->registry->config['url'] . 'web/images/markers/pin2.png'
@@ -86,71 +86,6 @@ class indexController extends Controller{
 					);
 				}				
 			}		
-
-			$this->registry->cache->save(serialize($Markers));
-
-			return $Markers;
-		}else{
-			return unserialize($Markers);
-		}
-	}
-
-
-	private function getallcoordmap(){
-
-		if( !$Markers = $this->registry->cache->get('markers_index') ){
-			$Markers = array();
-			require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'GoogleMapAPIv3.class.php';
-
-			// Recuperation des adresses
-			$villes = $this->registry->db->select('id,raison_social,adresse1, ville, code_postal,lat,lng, client, date_last_geoloc')->from('entreprises')->where_free('ville != "" AND code_postal != "" ')->get();
-
-			$gmap = new GoogleMapApi();
-
-			$date_now = new DateTime(date("Y-m-d H:i:s"));
-
-			foreach($villes as $ville){
-				$date_geoloc = new DateTime($ville['date_last_geoloc']);
-				$interval = $date_now->diff($date_geoloc);
-				$diff = intval($interval->format('%a'));
-				
-				if( is_null($ville['date_last_geoloc']) || (!empty($ville['lat']) && 10 < $diff) || (empty($ville['lat']) && 3 < $diff) ){				
-					$coord = $gmap->geocoding($ville['adresse1'] .' '. $ville['code_postal'] . ' '. $ville['ville'] . ' FRANCE');
-					if(is_numeric($coord[2])){
-						$Markers[] = array(
-							'lat' 	=> $coord[2], 
-							'lng' 	=> $coord[3], 
-							'data' 	=> array(
-								'rs'				=>	$ville['raison_social'],
-								'adresse'			=>	$ville['adresse1'],
-								'code_postal'		=>	$ville['code_postal'],
-								'ville'				=>	$ville['ville']
-								),
-							'options'	=> array(
-								'icon'	=>	!empty($ville['client']) ? 'http://meg.intranet.domaineb/web/images/markers/pin1.png' : 	'http://meg.intranet.domaineb/web/images/markers/pin2.png'
-							),
-						);
-						
-						$this->registry->db->update('entreprises',array('lat' => $coord[2], 'lng' => $coord[3], 'date_last_geoloc' => date("Y-m-d H:i:s")), array('id =' => $ville['id']));
-					}else{
-						// On met quand meme a jour la date de la derniere geoloc
-						$this->registry->db->update('entreprises',array('id' => $ville['id'], 'date_last_geoloc' => date("Y-m-d H:i:s")));
-					}
-					
-				}elseif(!is_null($ville['lat'])){
-					$Markers[] = array('lat' => $ville['lat'], 'lng' => $ville['lng'], 'data' => array(
-							'rs'				=>	$ville['raison_social'],
-							'adresse'			=>	$ville['adresse1'],
-							'code_postal'		=>	$ville['code_postal'],
-							'ville'				=>	$ville['ville']
-							),
-							'options'	=> array(
-								'icon'	=>	!empty($ville['client']) ? 'http://meg.intranet.domaineb/web/images/markers/pin1.png' : 	'http://meg.intranet.domaineb/web/images/markers/pin2.png'
-							),
-					);
-				}
-				
-			}
 
 			$this->registry->cache->save(serialize($Markers));
 

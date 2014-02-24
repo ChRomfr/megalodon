@@ -13,6 +13,8 @@ class admController extends Controller{
 			header('location'. $this->registry->config['url']);
 			exit('Error not allow');
 		}
+
+		  $this->registry->load_web_lib('meg/adm_global.js','js', 'footer');
 	}
 
 	public function indexAction(){
@@ -565,6 +567,10 @@ class admController extends Controller{
 					$utilisateur = user_add_sso($user_ldap);
 				}
 			}
+
+			$this->registry->Helper->pnotify('Utilisateurs', 'utilisateur importé', 'success');
+
+			return $this->users_indexAction();
 		}
 
 		$lists = $this->registry->adldap->user()->all();

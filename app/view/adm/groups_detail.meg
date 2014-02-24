@@ -28,7 +28,7 @@
 				<td>{$row.id}</td>
 				<td>{$row.identifiant}</td>
 				<td>
-					<a href="javascript:remove_group({$group->id}, {$row.id}, '{$row.identifiant}')" title="{$lang.Enlever_du_groupe}"><i class="fa fa-unlink"></i></a>
+					<a href="javascript:remove_group({$group->id}, {$row.id}, '{$row.identifiant}')" title="Remove from group"><i class="fa fa-unlink"></i></a>
 				</td>
 			</tr>
 			{/foreach}
@@ -36,29 +36,9 @@
 	</table>
 	<hr/>
 	<div class="text-center">
-		<a href="javascript:form_add_user({$group->id});" title="{$lang.Ajouter_un_utilisateur_au_groupe}" class="btn btn-default">{$lang.Ajouter}</a>
+		<a href="javascript:form_add_user({$group->id}, '{$group->name}');" title="Add user in group" class="btn btn-default">{$lang.Ajouter}</a>
 	</div>
 	{/if}
 </div>
 {/strip}
-<script type="text/javascript">
-function form_add_user(gid){
-	$.get(
-        '{$Helper->getLink("adm/groups_form_add_in/'+gid+'")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $("#modal-global-body").html('<div class="well">'+data+'</div>');
-        }        
-    );
-    $('#modal-global-label').html('<i class="fa fa-group"></i>&nbsp;&nbsp;{$group->name}');
-    $('#modal-global').modal('show');
-
-}
-
-function remove_group(gid, uid, identifiant){
-	if(confirm('Etes vous sur de vouloir retirer l\' utilisateur '+ identifiant +' du groupe ?')){
-		window.location.href='{$Helper->getLink("adm/groups_remove_user/'+gid+'?uid='+uid+'")}';
-	}
-}
-</script>
 <!-- END app/view/adm/groups_detail.meg -->

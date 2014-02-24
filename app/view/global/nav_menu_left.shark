@@ -4,6 +4,7 @@
 	<!--<ul class="nav nav-tabs nav-stacked main-menu"> -->
 		<ul class="nav nav-pills nav-stacked">
 		<li class="nav-header hidden-tablet"></li>
+		{if $smarty.session.utilisateur.id != 'Visiteur'}
 		{if isset($modules.contacts) && $modules.contacts.actif == 1}<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-group"></i>&nbsp;<strong>Contacts</strong></a></li>{/if}
 		{if isset($modules.campaign) && $modules.campaign.actif == 1}
 		{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.campaign_access)}
@@ -26,11 +27,13 @@
 		</li>
 		{/if}
 		{/if}
+		{/if}
 
 		{if $smarty.session.utilisateur.isAdmin > 0}
 		<li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;<strong>{$lang.Administration}</strong></a></li>		
 		{/if}
-		{$global_form_search}
+
+		{if $smarty.session.utilisateur.id != 'Visiteur'}{$global_form_search}{/if}
 		<div id="nav-menu-my-task"></div>						
 	</ul>
 </div>

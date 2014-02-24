@@ -39,9 +39,9 @@
 			<td>Adresse :</td>
 			<td>
 				<div class="pull-left">
-					{$contact.adresse1}<br/>
+					{$contact.adress}<br/>
 					{if !empty($contact.adresse2)}{$contact.adresse2}<br/>{/if}
-					{$contact.code_postal}&nbsp;{$contact.ville}<br/>
+					{$contact.zip_code}&nbsp;{$contact.city}<br/>
 					{if !empty($contact.pays)}{$contact.pays}{/if}
 				</div>
 				{if !empty($contact.lat) && !empty($contact.lng)}

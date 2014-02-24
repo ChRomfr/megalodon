@@ -4,7 +4,7 @@ class ajaxController extends Controller{
 	
 	public function getVilleByCpAction(){
 		$Cp = $this->app->HTTPRequest->getData('term');		
-		$Datas = $this->app->db->select('DISTINCT(ville) as label, code_postal as value')->from(PREFIX . 'contacts')->where_free( 'code_postal LIKE "'. $Cp .'%"' )->get();
+		$Datas = $this->app->db->select('DISTINCT(city) as label, zip_code as value')->from(PREFIX . 'contacts')->where_free( 'zip_code LIKE "'. $Cp .'%"' )->get();
 		return json_encode($Datas);			
 	}
 	
@@ -80,6 +80,12 @@ class ajaxController extends Controller{
 	public function search_apeAction(){
 		$search = $this->registry->HTTPRequest->getData('term');
 		$results = $this->registry->db->select('code as label, id as value')->from('ape')->where_free('code LIKE "%'. $search .'%"')->limit(10)->get();
+		return json_encode($results);
+	}
+
+	public function search_userAction(){
+		$search = $this->registry->HTTPRequest->getData('term');
+		$results = $this->registry->db->select('identifiant as label, id as value')->from('user')->where_free('identifiant LIKE "%'. $search .'%"')->limit(10)->get();
 		return json_encode($results);
 	}
 }

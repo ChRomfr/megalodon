@@ -16,7 +16,7 @@
 jQuery(document).ready(function(){
 	paramUrl = getParameters();
 
-	$.get(base_url + 'contacts/ajax_load_contacts',paramUrl, function(data){
+	$.get(base_url + 'index.php/contacts/ajax_load_contacts',paramUrl, function(data){
     $('#index2_contacts').html(data);
   });
 });

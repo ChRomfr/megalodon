@@ -22,7 +22,7 @@
 		{foreach $contacts as $row}
 		<tr>
 			<td><a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Detail">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a></td>
-			<td>{$row.ville}</td>
+			<td>{$row.city}</td>
 			<td>{$row.email}</td>
 			<td>
 				{if $row.ctype == 'societe'}Societe
