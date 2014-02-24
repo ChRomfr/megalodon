@@ -25,7 +25,19 @@ class rdvController extends Controller{
 			$rdv->save();
 
 			if($rdv->source_type == 'campaign'){
+				$cc_data = $this->registry->db->get_one('campaign_contacts', array('campaign_id =' => $rdv->source_id, 'contact_id =' => $rdv->tier_id));
+
 				// Ajout d un suivi a la campagne
+				$campaign_suivi = array(
+					'campaign_id'	=>	$rdv->source_id,
+					'contact_id'	=>	$rdv->tier_id,
+					'cam_con_id'	=>	$cc_data['id'],
+					'suivi'			=>	'Nouveau rendez vous pris',
+					'add_by'		=>	$_SESSION['utilisateur']['id'],
+					'add_on'		=>	date('Y-m-d H:i:s'),
+				);
+
+				$this->registry->db->insert('campaign_contacts_suivi', $campaign_suivi);
 			}
 
 			// Ajout notification à l utilisateur qui a eu un rdv de pris

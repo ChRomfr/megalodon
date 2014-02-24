@@ -147,6 +147,7 @@ class campaignController extends Controller{
 
 		// Traitement suivi
 		if( !empty($suivi['suivi'])){
+			
 			$suivi['campaign_id'] = $data['campaign_id'];
 			$suivi['contact_id'] = $data['contact_id'];
 			$suivi['cam_con_id'] = $cc_id;
