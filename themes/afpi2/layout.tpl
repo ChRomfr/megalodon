@@ -92,6 +92,10 @@ var suser = {$smarty.session.utilisateur|json_encode};
 				<a href="#" class="dropdown-toggle" data-toggle="dropdown"><i class="glyphicon glyphicon-user"></i> {if !empty($smarty.session.utilisateur.prenom)}&nbsp;<strong>{$smarty.session.utilisateur.prenom}</strong>{/if} <b class="caret"></b></a>
 				<ul class="dropdown-menu">
 					<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i> Profil</a></li>
+					{if $modules.rdv.actif == 1}
+					<li class="divider"></li>
+					<li><a href="{$config.url}index.php/rdv/my" title="Mes rendez vous"><i class="fa fa-clock-o"></i> Rendez-vous</a></li>
+					{/if}
 					<li class="divider"></li>
 					<li><a href="{$Helper->getLink("tasks/mytasks")}" title="Mes tâches"><i class="fa fa-tasks"></i> Tâches</a></li>
 					<li><a href="{$Helper->getLink("notifications/viewall")}" title="Notifications"><i class="fa fa-globe"></i> Notifications</a></li>

@@ -1,0 +1,14 @@
+<html>
+<head>
+
+</head>
+<body>
+<p>Un nouveau rendez vous vient d'etre programme</p>
+<ul>
+	<li>Date : {$rdv->date_rdv}</li>
+	<li>Participant : <a href="{$config.url}index.php/contacts/detail/{$contact.contact_id}" title="Voir la fiche">{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</a></li>
+	<li>Pris par : {$smarty.session.utilisateur.identifiant}</li>
+	<li>Description : {$rdv->description|nl2br}</li>
+</ul>
+</body>
+</html>

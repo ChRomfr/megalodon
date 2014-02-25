@@ -2,7 +2,44 @@
 
 class rdvController extends Controller{
 	
-     
+    public function myAction(){
+    	$uid = $_SESSION['utilisateur']['id'];
+    	$rdv = new rdv();
+
+    	$this->registry->smarty->assign('meet',$rdv->getByUserId($uid));
+
+    	return $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'my.meg');
+    }
+
+    public function get_detailAction($rid){
+    	$rdv = new rdv();
+    	$rdv->get($rid);
+
+    	if($rdv->tier_type == 'contacts'){
+    		$this->load_manager('contacts');
+    		$tier = $this->manager->contacts->getById($rdv->tier_id);
+    	}
+
+    	$this->registry->smarty->assign(array(
+    		'rdv'	=>	$rdv,
+    		'tier'	=>	$tier,
+    	));
+
+    	return $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'get_detail.meg');
+    }
+
+    public function ajax_get_infos_tierAction($rid){
+    	$rdv = new rdv();
+
+    	$rdv->get($rid);
+
+    	if($rdv->tier_type == 'contacts'){
+    		$this->load_manager('contacts');
+    		$result = $this->manager->contacts->getById($rdv->tier_id);
+    		return json_encode($result);
+    	}
+    }
+
 	public function get_formAction(){
 
 	   if( isset($_GET['tier_type']) && $_GET['tier_type'] == 'contacts'){
@@ -22,31 +59,7 @@ class rdvController extends Controller{
 			$rdv->add_by = $_SESSION['utilisateur']['id'];
 			$rdv->add_on = date('Y-m-d H:i:s');
 			$rdv->statut = 0;
-			$rdv->save();
-
-			if($rdv->source_type == 'campaign'){
-				$cc_data = $this->registry->db->get_one('campaign_contacts', array('campaign_id =' => $rdv->source_id, 'contact_id =' => $rdv->tier_id));
-
-				// Ajout d un suivi a la campagne
-				$campaign_suivi = array(
-					'campaign_id'	=>	$rdv->source_id,
-					'contact_id'	=>	$rdv->tier_id,
-					'cam_con_id'	=>	$cc_data['id'],
-					'suivi'			=>	'Nouveau rendez vous pris',
-					'add_by'		=>	$_SESSION['utilisateur']['id'],
-					'add_on'		=>	date('Y-m-d H:i:s'),
-				);
-
-				$this->registry->db->insert('campaign_contacts_suivi', $campaign_suivi);
-			}
-
-			// Ajout notification à l utilisateur qui a eu un rdv de pris
-			
-			// Envoie d'un email 
-
-			// Ajout d'un log utilisateur
-			
-			// Ajout d'un log contact
+			$rid = $rdv->save();
 
 			print_r($rdv);
 

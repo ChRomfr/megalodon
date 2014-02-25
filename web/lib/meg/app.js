@@ -130,7 +130,7 @@ $(document).on('click', '.call-form-rdv',function(){
 
 function get_rdv_campaign(tid, sid){
 	$.get(
-        base_url + 'index.php/rdv/get_form/',
+        base_url + 'index.php/campaign/take_rdv',
         {nohtml:'nohtml', tier_type:'contacts', tier_id:tid, source_type:'campaign', source_id:sid},
         function(data){
             $("#modal-global-body").html('<div class="well">'+data+'</div>');
@@ -139,5 +139,9 @@ function get_rdv_campaign(tid, sid){
 
     $('#modal-global-label').html('Nouveau rendez vous');
     $('#modal-global').modal('show');
+}
+
+function go_to_contacts_view(cid){
+	window.location.href=base_url + 'index.php/contacts/detail/'+ cid;
 }
 //-- RDV --//

@@ -1,6 +1,6 @@
 <!-- START app/rdv/form.meg -->
 {strip}
-<form method="post" action="{if !isset($rdv)}{$Helper->getLink('rdv/add')}{/if}" id="rdv-form" class="form-horizontal">
+<form method="post" action="{if isset($submit_url)}{$config.url}{$submit_url}{/if}" id="rdv-form" class="form-horizontal">
 
 	<div class="form-group">
 		<label for="date-rdv" class="control-label col-md-4 col-xs-4">Date :</label>

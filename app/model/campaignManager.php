@@ -26,7 +26,7 @@ class campaignManager extends BaseModel{
 
 	public function getTargetByCampaignId($id, $filter = 'all'){
 
-		$this->db->select(' DISTINCT(c.id), concat_ws("",s.raison_social, p.nom) as nom, p.prenom, cc.id as cc_id, cc.statut')
+		$this->db->select(' DISTINCT(c.id), concat_ws("",s.raison_social, p.nom) as nom, p.prenom, cc.id as cc_id, cc.statut, cc.contact_id')
 			->from('campaign_contacts cc')
 			->left_join('contacts c','cc.contact_id = c.id')
 			->left_join('personne p','c.id = p.contact_id')

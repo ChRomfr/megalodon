@@ -1,0 +1,34 @@
+<!-- START app/view/rdv/get_detail.meg -->
+
+<table class="table table-condensed table-striped">
+	<tr>
+		<td>Date :</td>
+		<td>{$rdv->date_rdv}</td>
+	</tr>
+	<tr>
+		<td>Lieu :</td>
+		<td>{$rdv->lieu}</td>
+	</tr>
+	<tr>
+		<td>Tier :</td>
+		<td>{if isset($tier.raison_social) && !empty($tier.raison_social)}{$tier.raison_social}{else}{$tier.prenom} {$tier.nom}{/if}</td>
+	</tr>
+	<tr>
+		<td>Source :</td>
+		<td>{$rdv->source_type}</td>
+	</tr>
+	<tr>
+		<td>Statut: </td>
+		<td>
+			<select id="statut-rdv">
+				<option value="1" {if $rdv->statut == 1}selected="selected"{/if}>A valider</option>
+				<option value="2" {if $rdv->statut == 2}selected="selected"{/if}>A confirmer</option>
+				<option value="3" {if $rdv->statut == 3}selected="selected"{/if}>Reporter</option>
+				<option value="4" {if $rdv->statut == 4}selected="selected"{/if}>Traiter</option>
+				<option value="5" {if $rdv->statut == 5}selected="selected"{/if}>Annuler</option>
+			</select>
+		</td>
+	</tr>
+</table>
+
+<!-- END app/view/rdv/get_detail.meg -->

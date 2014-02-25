@@ -311,4 +311,93 @@ class campaignController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH . 'campaign' . DS . 'ajax_detail_cible.shark');
 	}
 
+	/**
+	 * Affiche et traite le prise de rendez vous pour le module CAMPAIGN
+	 * @return [type] [description]
+	 */
+	public function take_rdvAction(){
+		if($this->registry->modules['rdv']['actif'] != 1){
+			exit('This module is unactive, please contact your administrator');
+		}
+
+		if(!is_null($this->registry->Http->post('rdv'))){
+
+			$rdv = new rdv($this->registry->Http->post('rdv'));
+			$rdv->add_by = $_SESSION['utilisateur']['id'];
+			$rdv->add_on = date('Y-m-d H:i:s');
+			$rdv->statut = 0;
+			$rid = $rdv->save();
+
+			$this->registry->smarty->assign('rdv',$rdv);
+
+			if($rdv->source_type == 'campaign'){
+				$cc_data = $this->registry->db->get_one('campaign_contacts', array('campaign_id =' => $rdv->source_id, 'contact_id =' => $rdv->tier_id));
+
+				// Ajout d un suivi a la campagne
+				$campaign_suivi = array(
+					'campaign_id'	=>	$rdv->source_id,
+					'contact_id'	=>	$rdv->tier_id,
+					'cam_con_id'	=>	$cc_data['id'],
+					'suivi'			=>	'Nouveau rendez vous pris',
+					'add_by'		=>	$_SESSION['utilisateur']['id'],
+					'add_on'		=>	date('Y-m-d H:i:s'),
+				);
+
+				$this->registry->db->insert('campaign_contacts_suivi', $campaign_suivi);
+
+				// Recuperation info tier
+				$this->load_manager('contacts');
+
+				$contact = $this->manager->contacts->getById($rdv->tier_id);
+
+				$this->registry->smarty->assign('contact',$contact);
+
+				// Envoie d'un email 
+				$user = new utilisateur();
+				$user->get($rdv->user_id);
+				if(!empty($user->email)){
+					$email_corp = $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'email_notification.meg');
+					sendEmail($user->email, $this->registry->config['email_sender'], 'Nouveau rendez vous le '. $rdv->date_rdv, strip_tags($email_corp), $email_corp);
+				}
+
+				// Ajout des log utilisateur
+				$log = new log(array(
+					'log' 		=> 	'Prise d un rendez vous dans la campagne #'. $rdv->source_id .' pour l utilisateur : '. $user->identifiant . ' #'. $user->id .' rdv #'. $rid ,
+					'module'	=>	'rdv',
+					'link_id'	=>	$rid,
+				));
+				$log->save();
+				
+				$log = new log(array(
+					'log' 		=> 	'Nouveau rendez vous pris  dans la campagne #'. $rdv->source_id .' par l utilisateur : '. $_SESSION['utilisateur']['identifiant'] . ' #'. $_SESSION['utilisateur']['id'] .' rdv #'. $rid ,
+					'module'	=>	'rdv',
+					'link_id'	=>	$rid,
+					'user_id'	=>	$user->id,
+				));
+				$log->save();
+
+				// Ajout d'un log contact
+				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $rdv->tier_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Nouveau rendez vous #'. $rid));
+				$clog->save();
+
+				// PNOTIFY
+				$this->registry->Helper->pnotify('Rendez vous', 'Rendez vous ajouté !', 'success');
+
+				if($this->registry->config['campaign_rdv_success'] == 1){
+					$this->registry->db->update('campaign_contacts', array('statut' => 2), array('id =' => $cc_data['id']));
+				}
+
+				// Retourne la campagne a l utilisateur
+				return $this->viewAction($rdv->source_id);
+			}
+		}
+
+		showform:
+		$row = new contacts();
+	   	$row->get($_GET['tier_id']);
+	   	$this->registry->smarty->assign('tier', $row);
+		$this->registry->smarty->assign('submit_url', 'index.php/campaign/take_rdv');
+		return $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'form.meg');
+	}
+
 }// end class

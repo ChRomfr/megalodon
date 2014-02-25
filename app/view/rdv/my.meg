@@ -1,0 +1,54 @@
+<ol class="breadcrumb">
+
+</ol>
+
+<div class="well">
+<table class="table table-condensed table-striped">
+	<thead>
+		<tr>
+			<th>#</th>
+			<th>Date</th>
+			<th>Tier</th>
+		</tr>
+	</thead>
+	<tbody>
+		{foreach $meet as $row}
+		<tr>
+			<td>{$row.id}</td>
+			<td><a href="javascript:get_rdv_detail({$row.id})" title="">{$row.date_rdv}</a></td>
+			<td class="rdv_infos_tier" id="rdv_infos_tier_{$row.id}"><i class="fa fa-spin fa-spinner"></i></td>
+		</tr>
+		{/foreach}
+	</tbody>
+</table>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+	{foreach $meet as $row}
+		get_infos_tier({$row.id});
+	{/foreach}
+});
+{literal}
+function get_infos_tier(rid){
+	$.get(
+	    base_url + 'index.php/rdv/ajax_get_infos_tier/'+rid, {nohtml:'nohtml'},        
+	    function(data){
+	    	var content = '';
+	    	if(data.raison_social != ''){ content = data.raison_social;	}
+	    	else{content = data.nom +' '+ data.prenon}
+	    	$('#rdv_infos_tier_'+rid).html('<a href="javascript:go_to_contacts_view('+data.contact_id+');" title="">'+content+'</a>');
+	    },'json');}
+
+function get_rdv_detail(rid){
+	$.get(
+	    base_url + 'index.php/rdv/get_detail/'+rid, {nohtml:'nohtml'},        
+	    function(data){
+			$("#modal-global-body").html(data);    	
+		}
+	);
+	$('#modal-global-label').html('Suivi de cible');
+    $('#modal-global').modal('show');
+}
+{/literal}
+</script>
+	

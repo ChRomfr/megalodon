@@ -189,6 +189,8 @@ class admController extends Controller{
 			'mailing_group_receive_resume'	=>	'',
 			'register_open'					=>	0,
 			'version_installed'				=>	'1.0.20140130',
+			'email_sender'					=>	'',
+			'campaign_rdv_success'			=>	0,
 		);
 		
 

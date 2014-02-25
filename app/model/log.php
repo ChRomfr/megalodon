@@ -20,7 +20,7 @@ class log extends Record{
 
 	public function save(){
 		$this->date_log = date("Y-m-d H:i:s");
-		$this->user_id = $_SESSION['utilisateur']['id'];
+		if(empty($this->user_id)) $this->user_id = $_SESSION['utilisateur']['id'];
 		$this->user = $_SESSION['utilisateur']['identifiant'];
 		return parent::save();
 	}
