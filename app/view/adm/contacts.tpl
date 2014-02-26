@@ -33,13 +33,6 @@
 		</li>
 
 		<li>
-			<a href="{$Helper->getLink("organisme")}" title="">
-				<span class="fa fa-puzzle-piece fa-3x"></span>
-				<span class="glyphicon-class">Organismes</span>
-			</a>
-		</li>
-
-		<li>
 			<a href="{$Helper->getLink("adm/contacts_postes")}" title="Dictionnaire des potes">
 				<span class="fa fa-suitcase fa-3x"></span>
 				<span class="glyphicon-class">Postes</span>

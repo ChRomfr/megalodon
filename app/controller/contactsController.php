@@ -512,26 +512,6 @@ class contactsController extends Controller{
 				}
 			}
 
-			// Organismes
-			if(isset($filtres['organisme']) && !empty($filtres['organisme'])){
-				$organismes = $filtres['organisme'];
-				
-				if(!empty($organismes)){
-					
-					$param .= " AND ( ";
-					$i=0;
-					foreach($organismes as $k => $v){
-						if($i!=0){
-							$param .= " OR co.organisme_id = ". $v ." ";
-						}else{
-							$param .= " co.organisme_id = ". $v ." ";
-						}
-						$i++;
-					}
-					$param .= " ) ";
-				}
-			}
-			
 			// Effectif
 			if( isset($filtres['effectif_mini']) && !empty($filtres['effectif_mini']) && isset($filtres['effectif_max']) && !empty($filtres['effectif_max']) ){
 				$param .= " AND s.effectif >= ". $filtres['effectif_mini'] ." AND s.effectif <= ". $filtres['effectif_max'] ." ";
@@ -924,7 +904,6 @@ class contactsController extends Controller{
 		$s2->delete($s2->id);
 		$this->registry->db->delete('contacts_log', null, array('contact_id =' => $c2->id));
 		$this->registry->db->delete('contacts_mailing', null, array('contact_id =' => $c2->id));
-		$this->registry->db->delete('contacts_organisme', null, array('contact_id =' => $c2->id));
 		$this->registry->db->delete('contacts_suivi', null, array('cid =' => $c2->id));
 		$this->registry->db->delete('contacts_files', null, array('contact_id =' => $c2->id));
 		$this->registry->db->delete('contacts_email', null, array('entreprise_id =' => $c2->id));

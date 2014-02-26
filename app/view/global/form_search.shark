@@ -61,25 +61,6 @@
 		</select>
 	</div>
 	
-	{* Organisme *}
-	<div class="form-group">
-		<label for="filtre_organismes">Organismes :</label><br/>
-		<select name="filtre[organisme][]" class="form-control chzn-select" multiple >
-			{foreach $global_organismes as $row}
-			<option value="{$row.id}"
-				{if isset($smarty.get.filtre.organisme)}
-					{foreach $smarty.get.filtre.organisme as $k => $v}
-						{if $row.id == $v}
-							selected="selected"
-						{/if}
-					{/foreach}
-				{/if}
-				>{$row.libelle}
-			</option>
-			{/foreach}
-		</select>
-	</div>
-	
 	<div class="form-group">
 		<label>Effectif : </label>
 		<div class="row">

@@ -1,3 +1,6 @@
+DROP TABLE `megalodon`.`contacts_organisme`;
+DROP TABLE `megalodon`.`organismes`;
+
 INSERT INTO `modules` (`name`, `actif`) VALUES ('rdv', '1');
 
 
