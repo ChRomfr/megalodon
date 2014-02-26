@@ -3,24 +3,36 @@
 </ol>
 
 <div class="well">
-<table class="table table-condensed table-striped">
-	<thead>
-		<tr>
-			<th>#</th>
-			<th>Date</th>
-			<th>Tier</th>
-		</tr>
-	</thead>
-	<tbody>
-		{foreach $meet as $row}
-		<tr>
-			<td>{$row.id}</td>
-			<td><a href="javascript:get_rdv_detail({$row.id})" title="">{$row.date_rdv}</a></td>
-			<td class="rdv_infos_tier" id="rdv_infos_tier_{$row.id}"><i class="fa fa-spin fa-spinner"></i></td>
-		</tr>
-		{/foreach}
-	</tbody>
-</table>
+	<table class="table table-condensed table-striped">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Date</th>
+				<th>Tier</th>
+				<th>Statut</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $meet as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td><a href="javascript:get_rdv_detail({$row.id})" title="">{$row.date_rdv}</a></td>
+				<td class="rdv_infos_tier" id="rdv_infos_tier_{$row.id}"><i class="fa fa-spin fa-spinner"></i></td>
+				<td>
+					{if $row.statut == 1}A valider
+					{elseif $row.statut == 2}A confirmer
+					{elseif $row.statut == 3}Reporter
+					{elseif $row.statut == 4}Traiter
+					{elseif $row.statut == 5}Annuler
+					{/if}
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+	{if isset($Pagination)}
+	<div class="pull-left">{$Pagination->render()}</div><div class="clearfix"></div>
+	{/if}
 </div>
 <script type="text/javascript">
 $(document).ready(function(){
@@ -39,16 +51,7 @@ function get_infos_tier(rid){
 	    	$('#rdv_infos_tier_'+rid).html('<a href="javascript:go_to_contacts_view('+data.contact_id+');" title="">'+content+'</a>');
 	    },'json');}
 
-function get_rdv_detail(rid){
-	$.get(
-	    base_url + 'index.php/rdv/get_detail/'+rid, {nohtml:'nohtml'},        
-	    function(data){
-			$("#modal-global-body").html(data);    	
-		}
-	);
-	$('#modal-global-label').html('Suivi de cible');
-    $('#modal-global').modal('show');
-}
+
 {/literal}
 </script>
 	

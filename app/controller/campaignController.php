@@ -387,6 +387,18 @@ class campaignController extends Controller{
 					$this->registry->db->update('campaign_contacts', array('statut' => 2), array('id =' => $cc_data['id']));
 				}
 
+				$notification = array(
+					'sender_id'			=>	0,
+					'user_id'			=>	$rdv->user_id,
+					'is_read'			=>	0,
+					'is_delete'			=>	0,
+					'date_notification'	=>	date("Y-m-d H:i:s"),
+					'message'			=>	'Un nouveau rendez vous vient d etre pris',
+					'third_type'		=>	'rdv',
+					'third_id'			=>	$rid,
+				);
+				$this->registry->db->insert('notifications', $notification);
+
 				// Retourne la campagne a l utilisateur
 				return $this->viewAction($rdv->source_id);
 			}

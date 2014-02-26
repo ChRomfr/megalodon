@@ -94,7 +94,8 @@ var suser = {$smarty.session.utilisateur|json_encode};
 					<li><a href="{$Helper->getLink("utilisateur")}" title="Mon compte"><i class="glyphicon glyphicon-user"></i> Profil</a></li>
 					{if $modules.rdv.actif == 1}
 					<li class="divider"></li>
-					<li><a href="{$config.url}index.php/rdv/my" title="Mes rendez vous"><i class="fa fa-clock-o"></i> Rendez-vous</a></li>
+					<li><a href="{$config.url}index.php/rdv/my" title="Mes rendez vous"><i class="fa fa-clock-o"></i>&nbsp;Rendez-vous</a></li>
+					<li><a href="{$config.url}index.php/rdv/mycalendar" title="Mon calendrier"><i class="fa fa-calendar"></i>&nbsp;Mon calenderier</a></li>
 					{/if}
 					<li class="divider"></li>
 					<li><a href="{$Helper->getLink("tasks/mytasks")}" title="Mes tâches"><i class="fa fa-tasks"></i> Tâches</a></li>

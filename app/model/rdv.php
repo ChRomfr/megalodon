@@ -42,16 +42,37 @@ class rdv extends Record{
 
 	public $rapport;
 
-	public function getByUserId($uid){
+	public function setStatut($value){
+		$this->statut = $value;
+	}
+
+	public function setRapport($value){
+		$this->rapport = $value;
+	}
+
+	public function getByUserId($uid, $limit = 10, $offset = 0){
 		global $db;
 
 		$db->select('r.*')
 			->from('rdv r')
 			->where(array('user_id =' => $uid))
-			->order('r.date_rdv DESC');
+			->order('r.date_rdv DESC')
+			->limit($limit)
+			->offset($offset);
 
 		return $db->get();
 
 	}
 
+	public function countByUserId($uid){
+		global $db;
+
+		return $db->count('rdv',array('user_id =' => $uid) );
+	}
+
+	public function getByUserIdForFullCalendar(){
+		global $db;
+
+		
+	}
 }

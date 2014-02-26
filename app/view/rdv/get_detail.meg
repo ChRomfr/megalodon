@@ -1,5 +1,5 @@
 <!-- START app/view/rdv/get_detail.meg -->
-
+{strip}
 <table class="table table-condensed table-striped">
 	<tr>
 		<td>Date :</td>
@@ -17,10 +17,20 @@
 		<td>Source :</td>
 		<td>{$rdv->source_type}</td>
 	</tr>
+	{if isset($by) && !empty($by)}
+	<tr>
+		<td>Pris par : </td>
+		<td>{$by.identifiant}</td>
+	</tr>
+	{/if}
+	<tr>
+		<td>Pris le:</td>
+		<td>{$rdv->add_on}</td>
+	</tr>
 	<tr>
 		<td>Statut: </td>
 		<td>
-			<select id="statut-rdv">
+			<select id="statut-rdv" {if $rdv->user_id == $smarty.session.utilisateur.id}onchange="rdv_save_statut()"{else}disabled{/if}>
 				<option value="1" {if $rdv->statut == 1}selected="selected"{/if}>A valider</option>
 				<option value="2" {if $rdv->statut == 2}selected="selected"{/if}>A confirmer</option>
 				<option value="3" {if $rdv->statut == 3}selected="selected"{/if}>Reporter</option>
@@ -29,6 +39,19 @@
 			</select>
 		</td>
 	</tr>
+	<tr>
+		<td>Rapport :</td>
+		<td>
+			{if $rdv->user_id == $smarty.session.utilisateur.id || $rdv->add_by == $smarty.session.utilisateur.id}
+			<textarea id="rdv-rapport" class="form-control">{$rdv->rapport}</textarea>
+			<br/>
+			<button class="btn btn-primary save-rdv-rapport">Enregistrer</button>
+			{else}
+			{$rdv->rapport|nl2br}
+			{/if}
+		</td>
+	</tr>
 </table>
-
+{/strip}
+<script type="text/javascript">var rid = {$rdv->id};</script>
 <!-- END app/view/rdv/get_detail.meg -->

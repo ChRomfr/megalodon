@@ -115,6 +115,8 @@ if (typeof ape_multi_choice != 'undefined'){
 }
 
 //-- END Formulaire menu navigation --//
+
+//-- START RDV --//
 $(document).on('click', '.call-form-rdv',function(){
 	$.get(
         base_url + 'index.php/rdv/get_form/',
@@ -126,6 +128,18 @@ $(document).on('click', '.call-form-rdv',function(){
 
     $('#modal-global-label').html('Nouveau rendez vous');
     $('#modal-global').modal('show');
+});
+
+$(document).on('click', '.save-rdv-rapport',function(){
+	$.get(
+	    base_url + 'index.php/rdv/ajax_save_rapport/'+rid, {rapport:$('#rdv-rapport').val()},        
+	    function(data){
+			console.log(data);
+			if(data == 'ok'){
+				alert('Rapport enregistré');
+			}    	
+		}
+	);
 });
 
 function get_rdv_campaign(tid, sid){
@@ -144,4 +158,34 @@ function get_rdv_campaign(tid, sid){
 function go_to_contacts_view(cid){
 	window.location.href=base_url + 'index.php/contacts/detail/'+ cid;
 }
-//-- RDV --//
+
+/**
+ * Enregistrement le changement de statut
+ * @param  INT rid ID du rdv dans la base
+ * @return {[type]}     [description]
+ */
+function rdv_save_statut(){
+	var rdv_statut = $('#statut-rdv').val();
+	$.get(
+	    base_url + 'index.php/rdv/ajax_save_statut/'+rid, {rdv_statut:rdv_statut},        
+	    function(data){
+			console.log(data);
+			if(data == 'ok'){
+				alert('Statut modifie');
+			}    	
+		}
+	);
+}
+
+
+function get_rdv_detail(rid){
+	$.get(
+	    base_url + 'index.php/rdv/get_detail/'+rid, {nohtml:'nohtml'},        
+	    function(data){
+			$("#modal-global-body").html(data);    	
+		}
+	);
+	$('#modal-global-label').html('Suivi de cible');
+    $('#modal-global').modal('show');
+}
+//-- END RDV --//

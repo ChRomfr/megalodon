@@ -59,7 +59,7 @@ $registry->smarty->assign('global_form_search', $registry->smarty->fetch(VIEW_PA
 $registry->smarty->assign('nav_menu_left',$registry->smarty->fetch(VIEW_PATH.'global'.DS.'nav_menu_left.shark'));
 $registry->smarty->assign('modal_global',$registry->smarty->fetch(VIEW_PATH.'global'.DS.'modal_global.shark'));
 
-if( !$registry->HTTPRequest->getExists('nohtml') && !$registry->HTTPRequest->getExists('print') ):
+if( !$registry->HTTPRequest->getExists('nohtml') && !$registry->HTTPRequest->getExists('print') && $ajax_query == false ):
 
 	if( IN_PRODUCTION === false ){
 		require_once 'dvlp_mod.php';

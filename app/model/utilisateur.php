@@ -50,7 +50,7 @@ class utilisateur extends Baseutilisateur{
     	// Verification auth via LDAP
     	if($registry->config['auth_sso'] == 1){
     		$result = $registry->adldap->user()->authenticate($this->identifiant, $this->password);	
-            
+           
     		// On test le resultat
     		if(!$result){
                 if($registry->config['auth_php'] == 1){

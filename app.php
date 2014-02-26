@@ -154,7 +154,7 @@ if(isset($_GET['sso_token']) && isset($_GET['uid'])){
 	$log->save();
 }
 
-if($registry->config['ldap_use'] == 1 && LDAP_IGNORE === false){
+if($registry->config['ldap_use'] == 1 && LDAP_IGNORE == false){
 	require ROOT_PATH . 'LibApp' . DS . 'adldap' . DS . 'adLDAP.php';
 	$registry->adldap = new adLDAP(array(
 		'base_dn'				=>	$registry->config['ldap_basedn'],		//'DC=domain,DC=local',
