@@ -29,20 +29,22 @@ define('USE_TABLE_CONFIG',true);
 require ROOT_PATH . 'app.php';
 # END CODE SPECIFIQUE APP
 
-if(ACL_ADMIN){
-	$registry->constructConstAdm();	
-}
+if(ACL_ADMIN){ 	$registry->constructConstAdm();	}
 
 # Envoie du JS & CSS
 $jquery_theme = 'overcast';
-$registry->addJS('jquery-last.min.js');								# Jquery
-$registry->addJS('jquery-migrate-1.1.0.min.js'); 					# Jquery BC
-$registry->addJS('jquery-ui-last.custom.min.js');					# Jquery ui
+$registry->load_web_lib('jquery/jquery-1.11.0.min.js','js');
+$registry->load_web_lib('jquery/jquery-migrate-1.2.1.min.js','js');
 $registry->addCSS($jquery_theme . '/jquery-ui-last.custom.min.css');
-$registry->addJS('jquery.maskedinput.min.js');
-$registry->addJS('mustache.js');
+
+// Lib js
+$registry->load_web_lib('jquery-ui/jquery-ui-last.custom.min.js','js','footer'); 
+$registry->load_web_lib('mustache.js','js','footer');
+$registry->load_web_lib('jquery.maskedinput.min.js','js','footer');
+// Tablesorter
 $registry->load_web_lib('tablesorter/jquery.tablesorter.min.js','js');
 $registry->load_web_lib('tablesorter/jquery.tablesorter.pager.js','js');
+// Chosen
 $registry->load_web_lib('chosen/chosen.jquery.min.js','js');
 $registry->load_web_lib('chosen/chosen.css','css');
 

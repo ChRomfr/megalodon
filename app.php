@@ -44,8 +44,8 @@ if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUE
 
 // System de notification pour le bootstrap
 $registry->load_web_lib('notifications/notifications.css','css');
-$registry->load_web_lib('notifications/notifications.js','js');
-$registry->load_web_lib('pnotify/jquery.pnotify.min.js','js');
+$registry->load_web_lib('notifications/notifications.js','js','footer');
+$registry->load_web_lib('pnotify/jquery.pnotify.min.js','js','footer');
 $registry->load_web_lib('pnotify/jquery.pnotify.default.css','css');
 $registry->load_web_lib('shark_tasks/shark_tasks.css','css');
 /**

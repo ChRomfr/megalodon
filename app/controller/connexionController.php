@@ -64,7 +64,7 @@ class connexionController extends BaseconnexionController{
 		}
 		# Affichage du formulaire
 		print_form:
-		$this->Helper->getFormValidatorJs();
+		$this->getFormValidatorJs();
 		return $this->app->smarty->fetch(BASE_APP_PATH . 'view' . DS . 'connexion' . DS . 'index.tpl');
 	}
 
