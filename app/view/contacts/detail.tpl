@@ -154,6 +154,7 @@
             {if !empty($contact.raison_social)}<li><a href="#tabContactsOfSociete" data-toggle="tab">Contacts</a></li>{/if}
 			{if !empty($contact.raison_social) && $contact.mother == 1}<li><a href="#tabAgences" data-toggle="tab">Agences</a></li>{/if}
             <li {if $smarty.session.utilisateur.historique_contact == 0}class="active"{/if}><a href="#tabSuivi" data-toggle="tab">Suivi</a></li>
+            <li><a href="#tab-rdv" data-toggle="tab">Rendez vous</a></li>
 			<li><a href="#tabContactsEmailSend" data-toggle="tab">Emails</a></li>
 			<li><a href="#tabMailingSend" data-toggle="tab">Mailings</a></li>
 			<li><a href="#tabContactsFiles" data-toggle="tab">Fichiers</a></li>
@@ -200,6 +201,14 @@
         	{/if}
         </div>
         <!-- END tab-suivis -->
+
+        <div id="tab-rdv" class="tab-pane">
+        	<br/>
+			<table class="table table-striped table-condensed" id="table-contacts-rdv">
+				<thead><tr><th>#</th><th>Date</th><th>Collorateur</th><th>Statut</th></tr></thead>
+				<tbody></tbody>
+			</table>
+        </div>
 
         <!-- START tab-mailing envoye -->
         <div id="tabMailingSend" class="tab-pane">

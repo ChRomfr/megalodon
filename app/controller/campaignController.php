@@ -376,10 +376,6 @@ class campaignController extends Controller{
 				));
 				$log->save();
 
-				// Ajout d'un log contact
-				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $rdv->tier_id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Nouveau rendez vous #'. $rid));
-				$clog->save();
-
 				// PNOTIFY
 				$this->registry->Helper->pnotify('Rendez vous', 'Rendez vous ajouté !', 'success');
 

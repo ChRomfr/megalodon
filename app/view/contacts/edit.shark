@@ -173,6 +173,24 @@
 			</select>
 		</div>
 	</div>
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2 col-xs-2">Catégories :</label>
+		<div class="col-sm-5 col-xs-5 col-md-5">
+			<select name="categories[]" id="" class="chzn-select form-control" multiple>
+				<option value=""></option>
+				{foreach $global_categories as $row}
+				<option value="{$row.id}"
+					{foreach $contact.categories as $data}
+						{if $row.id == $data.id}
+							selected="selected"
+						{/if}
+					{/foreach}
+					>{$row.libelle}</option>
+				{/foreach}
+			</select>
+		</div>
+	</div>
 
 	{if isAdmin() > 0}
 	<div class="form-group">

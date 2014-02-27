@@ -182,8 +182,6 @@ class contactsController extends Controller{
 			$contact = new contacts($data);
 			$contact->id = $id;
 			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
-			
-			//$contact->save();
 
 			if( isset($data['per']) ){
 				// Personne physique
@@ -198,6 +196,25 @@ class contactsController extends Controller{
 				$societe->save();
 			}
 			
+			// Traitements catégories
+			$categories = $this->registry->Http->post('categories');
+			
+			// Suppression de tout les liens avec les catégories pour ce contact
+			$this->registry->db->delete('contacts_categorie', null, array('contact_id =' => $id));
+			
+			// Boucle sur les categories soumises
+			foreach($categories as $k => $v){
+				$this->registry->db->insert('contacts_categorie', array('contact_id' => $id, 'categorie_id' => $v));
+			}
+			
+			// Ajout des log utilisateur
+			$log = new log(array(
+				'log' 		=> 	'Modification du contact #'.$id ,
+				'module'	=>	'contacts',
+				'link_id'	=>	$id,
+			));
+			$log->save();
+		
 			return $this->detailAction($id);
 		}
 
@@ -1310,8 +1327,7 @@ class contactsController extends Controller{
 	 * @return [type]             [description]
 	 */
 	public function get_logs_of_contactAction($contact_id){
-		$this->load_manager('contacts');
-		$logs = $this->manager->contacts->getLogs($contact_id);
+		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id));
 
 		return json_encode($logs);
 	}
@@ -1336,5 +1352,18 @@ class contactsController extends Controller{
 		}
 
 		return json_encode($mailings);
+	}
+
+	public function get_meetingsAction($cid){
+
+		$result = $this->registry->db->select('r.*, u1.identifiant as collab, u2.identifiant')
+					->from('rdv r')
+					->left_join('user u1', 'r.user_id = u1.id')
+					->left_join('user u2', 'r.add_by = u2.id')
+					->where(array('tier_type =' => 'contacts', 'tier_id =' => $cid))
+					->order('r.date_rdv DESC')
+					->get();
+
+		return json_encode($result);
 	}
 }

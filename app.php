@@ -78,7 +78,6 @@ function AppAutoload(){
 		'mailing_actions'	=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing_actions.php', 
 		'mailing_type'		=>	ROOT_PATH.'app'.DS.'model'.DS.'mailing_type.php',
 		'log'				=>	ROOT_PATH.'app'.DS.'model'.DS.'log.php', 
-		'organisme'			=>	ROOT_PATH.'app'.DS.'model'.DS.'organisme.php',
 		'personne'			=>	ROOT_PATH.'app'.DS.'model'.DS.'personne.php',
         'rdv'               =>  ROOT_PATH.'app'.DS.'model'.DS.'rdv.php',
 		'site'				=>	ROOT_PATH.'app'.DS.'model'.DS.'site.php',

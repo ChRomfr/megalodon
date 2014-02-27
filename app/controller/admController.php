@@ -388,13 +388,10 @@ class admController extends Controller{
 	}
 
 	public function users_view_log_contactsAction($uid){
-		$logs = $this->registry->db->select('cl.*, s.raison_social, p.nom, p.prenom')
-					->from('contacts_log cl')
-					->left_join('contacts c', 'cl.contact_id = c.id')
-					->left_join('societe s', 's.contact_id = c.id')
-					->left_join('personne p', 'p.contact_id = c.id')
-					->where(array('cl.user_id = ' => $uid))
-					->order('cl.date_log DESC')
+		$logs = $this->registry->db->select('*')
+					->from('logs')
+					->where(array('user_id = ' => $uid))
+					->order('date_log DESC')
 					->limit(100)
 					->get();
 
@@ -1238,5 +1235,26 @@ class admController extends Controller{
 		$this->registry->smarty->assign('logs', $logs);
 		
 		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'logs.meg');
+	}
+	
+	public function logs_import_form_clogAction(){
+		set_time_limit(0);
+		
+		// Recuperation de tout les clogs
+		$clogs = $this->registry->db->get('contacts_log');
+		
+		// On boucles pour les inseres et supprimé les clogs
+		foreach($clogs as $row){
+			$data = array(
+				'date_log' 	=> 	$row['date_log'],
+				'log'		=>	$row['log'],
+				'user_id'	=>	$row['user_id'],
+				'module'	=>	'contacts',
+				'link_id'	=>	$row['contact_id'],
+			);
+			$log = new log($data);
+			$log->save();
+			$this->registry->db->delete('contacts_log', $row['id']);
+		}
 	}
 }

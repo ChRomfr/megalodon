@@ -2,7 +2,7 @@
 	<thead>
 		<tr>
 			<th>Date</th>
-			<th>Contacts</th>
+			<th>Modules</th>
 			<th>Action</th>
 		</tr>
 	</thead>
@@ -10,7 +10,7 @@
 		{foreach $logs as $row}
 		<tr>
 			<td><small>{$row.date_log}</small></td>
-			<td><small>{if !empty($row.raison_social)}{$row.raison_social}{else}{$row.nom}&nbsp;{$row.prenom}{/if}</small></td>
+			<td><small>{$row.module} #{$row.link_id}</small></td>
 			<td><small>{$row.log}</small></td>
 		</tr>
 		{/foreach}

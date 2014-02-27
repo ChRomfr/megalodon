@@ -198,7 +198,7 @@ if(suser.historique_contact == 1){
 	        base_url + 'index.php/contacts/get_logs_of_contact/'+ contact.contact_id,
 	        {nohtml:'nohtml'},
 	        function(data){ 
-	            var tpl = '<tr><td>{{date_log}}</td><td>{{log_user}}</td><td>{{& log}}</td></tr>';
+	            var tpl = '<tr><td>{{date_log}}</td><td>{{user}}</td><td>{{& log}}</td></tr>';
 	            for( var i in data ){
 	                $('#table-contacts-logs').append( Mustache.render(tpl, data[i]) );
 	            };
@@ -220,3 +220,15 @@ if(contact.raison_social != ''){
         },'json');
 	})(jQuery);
 }
+
+(function($){
+    $.get(
+        base_url + 'index.php/contacts/get_meetings/'+contact.contact_id,
+        {nohtml:'nohtml'},
+        function(data){ 
+            var tpl = '<tr><td>{{id}}</td><td>{{date_rdv}}</td><td>{{collab}}</td><td>{{statut}}</td></tr>';
+            for( var i in data ){
+                $('#table-contacts-rdv').append( Mustache.render(tpl, data[i]) );
+            };
+        },'json');
+    })(jQuery);
