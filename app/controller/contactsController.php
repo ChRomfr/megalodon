@@ -488,15 +488,15 @@ class contactsController extends Controller{
 		if( !empty($filtres) ){
 
 			if( isset($filtres['departement']) && !empty($filtres['departement']) && !is_array($filtres['departement']) ){
-				$param .= " AND c.code_postal LIKE '". $filtres['departement'] ."%' ";
+				$param .= " AND c.zip_code LIKE '". $filtres['departement'] ."%' ";
 			}elseif( isset($filtres['departement']) && !empty($filtres['departement']) && is_array($filtres['departement']) ){
 				$param .= " AND ( ";
 					$i=0;
 					foreach($filtres['departement'] as $k => $v){
 						if($i!=0){
-							$param .= " OR c.code_postal LIKE '". $v ."%' ";
+							$param .= " OR c.zip_code LIKE '". $v ."%' ";
 						}else{
-							$param .= " c.code_postal LIKE '". $v ."%' ";;
+							$param .= " c.zip_code LIKE '". $v ."%' ";;
 						}
 						$i++;
 					}
@@ -1327,7 +1327,7 @@ class contactsController extends Controller{
 	 * @return [type]             [description]
 	 */
 	public function get_logs_of_contactAction($contact_id){
-		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id));
+		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id), 'date_log DESC', 50);
 
 		return json_encode($logs);
 	}

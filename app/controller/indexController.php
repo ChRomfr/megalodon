@@ -16,7 +16,7 @@ class indexController extends Controller{
         $this->registry->load_web_lib('fullcalendar/fullcalendar.min.js','js','footer');
 
         // JS PAGE
-        $this->registry->load_web_lib('meg/index_index.min.js','js','footer');
+        $this->registry->load_web_lib('meg/index_index.js','js','footer');
 
 		$stats = array(
 			'nb_ctcs'		=>	$this->registry->db->count('contacts', array('isDelete =' => 0)),
@@ -24,16 +24,41 @@ class indexController extends Controller{
 			'nb_per'		=>	$this->registry->db->count('personne'),
 			'nb_email'		=>	$this->registry->db->count('contacts', array('email != ' => '')),
 		);
-		
-		if($_SESSION['utilisateur']['index_map_contacts'] == 1){
-			$coord = $this->getcurrentcoordmap();
-		}
 
+		// Recuperation des campagnes
+		$campaigns = $this->registry->db->get('campaign', array('assign =' => $_SESSION['utilisateur']['id'], 'date_start <=' => date('Y-m-d'), 'date_end >=' => date('Y-m-d')));
+		if(!empty($campaigns)) $this->registry->smarty->assign('current_campaigns', json_encode($campaigns));
+
+		// Recuperation des rdv à venir
+		$meets = $this->registry->db->get('rdv', array('user_id =' => $_SESSION['utilisateur']['id'], 'date_rdv >=' => date('Y-m-d') .' 00:00:00'), 'date_rdv',10);
+		if(!empty($meets)){
+			$i=0;
+			// Parcours des rendez vous pour recuperer les tiers
+			$this->load_manager('contacts');
+			foreach($meets as $row){
+				if($row['tier_type'] == 'contacts'){
+					$tier = $this->manager->contacts->getResumeById($row['tier_id']);
+					if(!empty($tier['raison_social'])){
+						$meets[$i]['participant'] = $tier['raison_social'];
+					}else{
+						$meets[$i]['participant'] = $tier['prenom'] . ' ' . $tier['nom'];
+					}
+				}
+				$i++;
+			}
+			$this->registry->smarty->assign('meets', json_encode($meets));
+		}
+		
+		// Recuperation des coordonnées pour la carte google
+		if($_SESSION['utilisateur']['index_map_contacts'] == 1){ $coord = $this->getcurrentcoordmap();	}
+
+		// Envoie des variables a smarty
 		$this->registry->smarty->assign(array(
-			'stats'				=>	$stats,
-			'Markers'			=>	$_SESSION['utilisateur']['index_map_contacts'] == 1 ?json_encode($coord, JSON_NUMERIC_CHECK) : '',
+			'stats'		=>	$stats,
+			'Markers'	=>	$_SESSION['utilisateur']['index_map_contacts'] == 1 ?json_encode($coord, JSON_NUMERIC_CHECK) : '',
 		));
 		
+		// Generationde la page
 		return $this->registry->smarty->fetch(VIEW_PATH.'index'.DS.'index.tpl'); 
 	}
 

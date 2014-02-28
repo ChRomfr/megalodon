@@ -25,19 +25,14 @@
 	</table>
 </div>
 <div class="col-md-1"></div>
-<div class="col-md-6 well">
-	<h4><i class="fa fa-calendar">&nbsp;&nbsp;</i>Calendrier des mailings</h4>
-	{if $smarty.session.utilisateur.mailing_adm == 1}
-	<div id="calmailingindex"style="width:95%;"></div>
-	<div id="calmailingindex-progress">
-		<div class="progress">
-			<div class="progress-bar progress-striped active" style="width: 0%;"></div>
-	    </div>
-	</div>
+<div class="col-md-6">
+	{if isset($smarty.session.acl.mailing_access) || $smarty.session.utilisateur.isAdmin > 0}
+	<div id="widget-mailing" class="well"></div>
 	{/if}
 </div>
 <div class="clearfix"></div>
 
+<div id="end-widget-index"></div>
 {if $smarty.session.utilisateur.index_map_contacts == 1}
 <div class="col-md-12 well">
 	<h4><i class="fa fa-globe"></i>&nbsp;&nbsp;Cartes des contacts</h4>
@@ -50,3 +45,5 @@
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script>
 <script type="text/javascript">var markers = {$Markers}</script>
 {/if}
+{if isset($current_campaigns)}<script type="text/javascript">var current_campaigns = {$current_campaigns}</script>{/if}
+{if isset($meets)}<script type="text/javascript">var meets = {$meets}</script>{/if}

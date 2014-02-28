@@ -226,7 +226,7 @@ if(contact.raison_social != ''){
         base_url + 'index.php/contacts/get_meetings/'+contact.contact_id,
         {nohtml:'nohtml'},
         function(data){ 
-            var tpl = '<tr><td>{{id}}</td><td>{{date_rdv}}</td><td>{{collab}}</td><td>{{statut}}</td></tr>';
+            var tpl = '<tr><td>{{id}}</td><td><a href="javascript:get_rdv_detail({{id}})" title="Detail rendez vous">{{date_rdv}}</a></td><td>{{collab}}</td><td>{{statut}}</td></tr>';
             for( var i in data ){
                 $('#table-contacts-rdv').append( Mustache.render(tpl, data[i]) );
             };

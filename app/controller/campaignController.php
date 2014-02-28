@@ -55,9 +55,17 @@ class campaignController extends Controller{
 			
 			$campaign->target = serialize($campaign->target);
 			
-			$campaign->save();
+			$cid = $campaign->save();
 			
 			$this->registry->smarty->assign('FlashMessage','Campagne enregistrée');
+
+			$log = new log(array(
+				'log' 		=> 	'Creation de la campagne',
+				'module'	=>	'campaign',
+				'link_id'	=>	$cid,
+				'user_id'	=>	$_SESSION['utilisateur']['id'],
+			));
+			$log->save();
 			
 			return $this->indexAction();
 		}
@@ -118,6 +126,14 @@ class campaignController extends Controller{
 
 		$this->registry->db->update('campaign', array('id' => $id, 'generated' => 1));
 
+		$log = new log(array(
+				'log' 		=> 	'Generation de la liste des cibles',
+				'module'	=>	'campaign',
+				'link_id'	=>	$id,
+				'user_id'	=>	$_SESSION['utilisateur']['id'],
+			));
+			$log->save();
+
 		return 'Campagne genere. Au total : '. $cpt;
 	}
 
@@ -166,6 +182,22 @@ class campaignController extends Controller{
 		}
 
 		$this->registry->smarty->assign('FlashMessage','Suivi enregistrée');
+
+		$log = new log(array(
+			'log' 		=> 	'Ajout d\'un suivi pour l\'utilisateur #'. $data['contact_id'],
+			'module'	=>	'campaign',
+			'link_id'	=>	$data['campaign_id'],
+			'user_id'	=>	$_SESSION['utilisateur']['id'],
+		));
+		$log->save();
+
+		$log = new log(array(
+			'log' 		=> 	'Ajout d\'un suivi dans la campagne #'. $data['campaign_id'],
+			'module'	=>	'contacts',
+			'link_id'	=>	$data['contact_id'],
+			'user_id'	=>	$_SESSION['utilisateur']['id'],
+		));
+		$log->save();
 
 		return $this->viewAction($data['campaign_id']);
 		

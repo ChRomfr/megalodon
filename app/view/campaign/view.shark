@@ -1,13 +1,15 @@
 {strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
+	<li><a href="{$config.url}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+	<li><a href="{$config.url}index.php/campaign" title="Campagne"><i class="fa fa-phone-square"></i>&nbsp;Campagne</a></li>
 	<li class="active">Detail</li>
 </ol>
 
 <div class="well">
 	{if $smarty.session.utilisateur.isAdmin > 0}
 	<div class="pull-right">
+		<a href="javascript:get_logs('campaign', {$campaign.id})" title="Log de la campagne"><i class="fa fa-info fa-lg"></i></a>
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:delete_campaign({$campaign.id});" title="Supprimer cette campagne"><i class="fa fa-trash-o fa-lg"></i></a>
 	</div>
 	{/if}
@@ -125,14 +127,14 @@ jQuery(document).ready(function(){
 	    	nohtml:'nohtml',
 	    },{literal}        
 	    function(data){
-	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="fa fa-edit fa-x2"></i></a>&nbsp;&nbsp;<a href="javascript:get_rdv_campaign({{contact_id}}, '+campaign_id+')" title="Prise de rendez vous"><i class="fa fa-clock-o"></a></i></tr>';
+	    	var tpl = '<tr><td><a class="help-text" href="javascript:get_detail_contact({{cc_id}});" data-toggle="tooltip" data-placement="top" title="Suivi de cible">{{nom}} {{prenom}}</a></td><td>{{& statut}}</td><td><a class="help-text" href="javascript:get_detail_contact({{cc_id}});" data-toggle="tooltip" data-placement="top" title="Suivi de cible"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:get_rdv_campaign({{contact_id}}, '+campaign_id+')" title="Prise de rendez vous" class="help-text"><i class="fa fa-clock-o fa-lg"></i></a></tr>';
 	    	for( var i in data ){      
 	        	$('#table-targets').append( Mustache.render(tpl, data[i]) );
 	    	}
 
 	    	 $("#table-targets").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});  
 	    	 $('#table-targets-loader').css('display','none');
-
+	    	 $('.help-text').tooltip();
 	    },'json'
 	);{/literal}
 	{else}
@@ -169,18 +171,19 @@ function get_target_filter(filter){
 
 	$('#table-targets tbody').remove();
 	$.get(
-	    '{$Helper->getLink("campaign/ajax_get_targets/{$campaign.id}")}',
+	    base_url + 'index.php/campaign/ajax_get_targets/{$campaign.id}")}',
 	    {
 	    	nohtml:'nohtml', filter:filter,
 	    },{literal}        
 	    function(data){
-	    	var tpl = '<tr><td>{{nom}} {{prenom}}</td><td>{{& statut}}</td><td><a href="javascript:get_detail_contact({{cc_id}});"><i class="fa fa-edit"></i></a></tr>';
+	    	var tpl = '<tr><td><a class="help-text" href="javascript:get_detail_contact({{cc_id}});" data-toggle="tooltip" data-placement="top" title="Suivi de cible">{{nom}} {{prenom}}</a></td><td>{{& statut}}</td><td><a class="help-text" href="javascript:get_detail_contact({{cc_id}});" data-toggle="tooltip" data-placement="top" title="Suivi de cible"><i class="fa fa-edit fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:get_rdv_campaign({{contact_id}}, '+campaign_id+')" title="Prise de rendez vous" class="help-text"><i class="fa fa-clock-o fa-lg"></a></i></tr>';
 	    	for( var i in data ){      
 	        	$('#table-targets').append( Mustache.render(tpl, data[i]) );
 	    	}
 
 	    	 $("#table-targets").tablesorter({sortList:[[0,0]], widgets: ['zebra']}).tablesorterPager({container: $("#pager")});  
 	    	 $('#table-targets-loader').css('display','none');
+	    	  $('.help-text').tooltip();
 
 	    },'json'
 	);{/literal}

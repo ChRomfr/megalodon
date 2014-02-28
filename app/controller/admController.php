@@ -1239,6 +1239,7 @@ class admController extends Controller{
 	
 	public function logs_import_form_clogAction(){
 		set_time_limit(0);
+		ini_set("memory_limit","1024M");
 		
 		// Recuperation de tout les clogs
 		$clogs = $this->registry->db->get('contacts_log');

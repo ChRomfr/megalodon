@@ -1,5 +1,6 @@
-DROP TABLE `megalodon`.`contacts_organisme`;
-DROP TABLE `megalodon`.`organismes`;
+--
+DROP TABLE `contacts_organisme`;
+DROP TABLE `organismes`;
 
 INSERT INTO `modules` (`name`, `actif`) VALUES ('rdv', '1');
 
@@ -28,7 +29,7 @@ CHANGE COLUMN `adresse1` `adress` TEXT NULL DEFAULT NULL ,
 CHANGE COLUMN `code_postal` `zip_code` VARCHAR(20) NULL DEFAULT NULL ,
 CHANGE COLUMN `ville` `city` VARCHAR(200) NULL DEFAULT NULL ;
 
---
+
 ALTER TABLE `user` ADD COLUMN `token` VARCHAR(100) NULL AFTER `index_map_contacts`;
 ALTER TABLE `contacts_email` ADD COLUMN `pj` VARCHAR(100) NULL AFTER `result`;
 ALTER TABLE `user` ADD COLUMN `sso_link_token` VARCHAR(100) NULL AFTER `token`, ADD COLUMN `sso_link` INT(1) NULL DEFAULT 0 AFTER `sso_link_token`;

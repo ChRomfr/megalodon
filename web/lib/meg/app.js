@@ -4,6 +4,10 @@ jQuery(document).ready(function(){
 	$(".chozen").chosen();
 })
 
+$(document).ready(function(){
+    $('.help-text').tooltip();
+});
+
 // Affichage des message flash
 if (typeof flash_message != 'undefined'){
 	$(".breadcrumb").after('<div class="alert alert-info"><button type="button" class="close" data-dismiss="alert">&times;</button>'+flash_message+'</div>');
@@ -159,6 +163,10 @@ function go_to_contacts_view(cid){
 	window.location.href=base_url + 'index.php/contacts/detail/'+ cid;
 }
 
+function go_to_contacts_new_page(cid){
+	window.open(base_url + 'index.php/contacts/detail/'+ cid);
+}
+
 /**
  * Enregistrement le changement de statut
  * @param  INT rid ID du rdv dans la base
@@ -177,7 +185,6 @@ function rdv_save_statut(){
 	);
 }
 
-
 function get_rdv_detail(rid){
 	$.get(
 	    base_url + 'index.php/rdv/get_detail/'+rid, {nohtml:'nohtml'},        
@@ -189,3 +196,27 @@ function get_rdv_detail(rid){
     $('#modal-global').modal('show');
 }
 //-- END RDV --//
+
+//-- START LOGS --//
+function get_logs(module, link_id, user_id){
+	var result = null;
+	module = module || '';
+	link_id = link_id || '';
+	user_id = user_id || '';
+
+	// Ajout du tableau HTML dans le modal
+	$("#modal-global-body").html('<table class="table table-striped table-condensed" id="table-of-logs"><thead><tr><th>Date</th><th>Log</th><th>Module</th><th>#</th></tr></thead><tbody></tbody></table>');
+
+	$.get(
+	    base_url + 'index.php/ajax/get_logs', {module:module, link_id:link_id, user_id:user_id},        
+	    function(data){
+	    	var tpl = '<tr><td>{{date_log}}</td><td>{{log}}</td><td>{{module}}</td><td>{{link_id}}</td></tr>';
+	    	for( var i in data ){      
+	        	$('#table-of-logs').append( Mustache.render(tpl, data[i]) );
+	    	} 	
+		},'json'
+	);
+	
+	$('#modal-global-label').html('Logs');
+    $('#modal-global').modal('show');
+}

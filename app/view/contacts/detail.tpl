@@ -372,7 +372,7 @@
 		{if !empty($contact.raison_social)}
 		<div id="tabContactsOfSociete" class="tab-pane">
 			<div class="pull-right">
-				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title="Ajouter un contact"><i class="fa fa-plus"></i></a>
+				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title="Ajouter un contact" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
 			</div>
 			<div class="clearfix"></div>
 			<table class="table" id="table-contacts-societe">

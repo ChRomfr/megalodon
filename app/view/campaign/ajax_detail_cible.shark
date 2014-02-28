@@ -1,3 +1,5 @@
+<!-- START app/view/campaign/ajax_detai_cible.shark -->
+{strip}
 <div class="well">
 	<!-- Resume contacts -->
 	<h4>{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</h4>
@@ -24,7 +26,12 @@
 		{/if}
 	</table>
 	<!-- link take rdv -->
-	<button class="btn btn-info" onclick="get_rdv_campaign({$contact.contact_id},{$campaign_data.id});">RDV</button>
+	<div class="pull-right">
+		<button class="btn btn-default" onclick="go_to_contacts_new_page({$contact.contact_id});"><i class="fa fa-user"></i>&nbsp;Fiche</button>
+		&nbsp;&nbsp;
+		<button class="btn btn-default" onclick="get_rdv_campaign({$contact.contact_id},{$campaign.id});"><i class="fa fa-clock-o"></i>&nbsp;Rendez-vous</button>
+	</div>
+	<div class="clearfix"></div>
 </div>
 
 <div class="well">
@@ -86,3 +93,4 @@
 	</div>
 </form>
 {/if}
+{/strip}

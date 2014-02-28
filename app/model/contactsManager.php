@@ -224,6 +224,19 @@ class contactsManager extends BaseModel{
 		return $result;
 	}
 
+	public function getResumeById($id){
+		// Recuperation du contact
+		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id')
+			->from('contacts c')
+			->left_join('societe s','c.id = s.contact_id')
+			->left_join('personne p','c.id = p.contact_id')
+			->left_join('poste po','p.poste_id = po.id')
+			->left_join('service se','p.service_id = se.id')
+			->where(array('c.id =' => $id));
+			
+		return $this->db->get_one();
+	}
+
 	public function getContactsOfSociete($contact_id){
 		return 	$this->db->select('c.*, p.*, po.libelle as poste, se.libelle as service, c.id as cid')
 					->from('contacts c')

@@ -1,11 +1,12 @@
+{strip}
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
-	<li class="active">Campagne</li>
+	<li><a href="{$config.url}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
+	<li class="active"><i class="fa fa-phone-square"></i>&nbsp;Campagne</li>
 </ol>
 
 <div class="well">
 	<div class="pull-right">
-		<a href="{$Helper->getLink("campaign/add")}" title="Nouvelle campagne"><i class="fa fa-plus fa-lg"></i></a>
+		<a href="{$config.url}index.php/campaign/add" title="Nouvelle campagne"><i class="fa fa-plus fa-lg"></i></a>
 	</div>
 	<h3>Campagnes</h3>
 	<div class="clearfix"></div>
@@ -34,3 +35,4 @@
 		</tbody>
 	</table>
 </div>
+{/strip}

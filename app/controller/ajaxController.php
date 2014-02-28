@@ -88,4 +88,20 @@ class ajaxController extends Controller{
 		$results = $this->registry->db->select('identifiant as label, id as value')->from('user')->where_free('identifiant LIKE "%'. $search .'%"')->limit(10)->get();
 		return json_encode($results);
 	}
+
+	public function get_logsAction(){
+		$param_recup_log = array();
+
+		$uid = $this->registry->Http->get('user_id');
+		$module = $this->registry->Http->get('module');
+		$lid = $this->registry->Http->get('link_id');
+
+		if(!empty($uid)) $param_recup_log['l.user_id ='] = $uid;
+		if(!empty($module)) $param_recup_log['l.module ='] = $module;
+		if(!empty($lid)) $param_recup_log['l.link_id ='] = $lid;
+
+		$logs = $this->registry->db->get('logs l', $param_recup_log);
+
+		return json_encode($logs);
+	}
 }
