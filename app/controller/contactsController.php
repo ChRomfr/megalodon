@@ -1327,7 +1327,7 @@ class contactsController extends Controller{
 	 * @return [type]             [description]
 	 */
 	public function get_logs_of_contactAction($contact_id){
-		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id), 'date_log DESC', 50);
+		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id));
 
 		return json_encode($logs);
 	}

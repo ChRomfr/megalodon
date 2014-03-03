@@ -57,6 +57,7 @@ $Content = $registry->router->loader();
 $registry->smarty->assign('App',$registry);
 
 // Envoie du formulaire de recherche au layout
+$registry->smarty->assign('global_form_search', $registry->smarty->fetch(VIEW_PATH.'global'.DS.'form_search.shark'));
 $registry->smarty->assign('nav_menu_left',$registry->smarty->fetch(VIEW_PATH.'global'.DS.'nav_menu_left.shark'));
 $registry->smarty->assign('modal_global',$registry->smarty->fetch(VIEW_PATH.'global'.DS.'modal_global.shark'));
 

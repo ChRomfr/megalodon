@@ -98,7 +98,6 @@ function AppAutoload(){
 spl_autoload_register('AppAutoload');
 
 getGlobalDatas();
-$registry->smarty->assign('modal_search', $registry->smarty->fetch(VIEW_PATH.'global'.DS.'modal_search.shark'));
 
 
 /**

@@ -1,8 +1,8 @@
 <!-- START app/view/global/nav_menu_left.shark -->
 {strip}
-<div class=" " id="sidebar" role="navigation">
+<div class="well  well-lg sidebar-offcanvas" id="sidebar" role="navigation">
 	<!--<ul class="nav nav-tabs nav-stacked main-menu"> -->
-		<ul class="nav nav-pills nav-stacked nav-sidebar">
+		<ul class="nav nav-pills nav-stacked">
 		<li class="nav-header hidden-tablet"></li>
 		{if $smarty.session.utilisateur.id != 'Visiteur'}
 		{if isset($modules.contacts) && $modules.contacts.actif == 1}<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-group"></i>&nbsp;<strong>Contacts</strong></a></li>{/if}
@@ -32,7 +32,8 @@
 		{if $smarty.session.utilisateur.isAdmin > 0}
 		<li><a href="{$Helper->getLink("adm")}" title="Administration"><i class="fa fa-dashboard"></i>&nbsp;<strong>{$lang.Administration}</strong></a></li>		
 		{/if}
-		<li><a href="#modal-search" data-toggle="modal" date-target="#modal-search"><i class="fa fa-search"></i>&nbsp;<strong>Recherche</strong></a></li>
+
+		{if $smarty.session.utilisateur.id != 'Visiteur'}{$global_form_search}{/if}
 		<div id="nav-menu-my-task"></div>						
 	</ul>
 </div>

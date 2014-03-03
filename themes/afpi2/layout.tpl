@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="fr">
+<html>
 <head>
 <title>Meg - Mailing Export Gl0b@L</title>
 <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -35,7 +35,8 @@ var suser = {$smarty.session.utilisateur|json_encode};
 </head>
 <body>
 {strip}
-	<div class="navbar navbar-fixed-top navbar-inverse" role="navigation">
+	{* Bar de navigation *}
+	<div class="navbar navbar-default navbar-fixed-top navbar-inverse" role="navigation">
       <div class="container">
         <div class="navbar-header">
           <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
@@ -111,13 +112,13 @@ var suser = {$smarty.session.utilisateur|json_encode};
       </div>
     </div>
 
-	<!-- <div style="padding-top:50px;"></div> -->
+	<div id="header" style="padding-top:50px;"></div>
 
 	{* START conteneur central *}
 	<div class="container-fluid">
 		<div class="row">
-			<div class="col-sm-3 col-md-3 sidebar">{$nav_menu_left}</div>
-			<div class="col-sm-9 col-sm-offset-3 col-md-9 col-md-offset-3 main" id="content-central">{$content}</div>
+			<div class="col-md-3 col-xs-3 main-menu-span" style="padding-top:20px;">{$nav_menu_left}</div>
+			<div class="col-md-9 col-xs-9" id="content-central">{$content}</div>
 		</div>{* /row-fluid *}
 	</div>{* /container-fluid *}
 	{* END conteneur central *}
@@ -138,18 +139,15 @@ var suser = {$smarty.session.utilisateur|json_encode};
 			</div>			
 		</div><!-- /container -->
 		<hr/>
-		<div class="container">
-			<div class="pull-left"></div>
-			<div class="pull-right">
+		<div class="pull-left"></div>
+		<div class="pull-right">
 			Powered <a href="http://www.sharkphp.com" title="PHP CMS/FRAMEWORK">Sharkphp<img src="{$config.url}web/images/sharkphp.png" alt="" style="width:20px;" /></a>
-			</div>
-			<div class="clearfix"></div>	
-		</div>	
+		</div>
+		<div class="clearfix"></div>		
 	</footer>
 	{* END footer *}
 
 {$modal_global}
-{$modal_search}
 {/strip}
 {* APPEL JS EN FOOTER *}
 {if isset($FlashMessage) && !empty($FlashMessage)}<script type="text/javascript">var flash_message = '{$FlashMessage}'</script>{/if}
@@ -161,11 +159,9 @@ var suser = {$smarty.session.utilisateur|json_encode};
 {/foreach}
 
 {if $smarty.const.IN_PRODUCTION === false}
-<div class="container">
 	<div class="pull-right">
 		<a href="#dvlpModal" role="button" class="btn btn-primary" data-toggle="modal">Infos dev</a>
 	</div>
-	<div class="clearfix"></div>
 	<hr/>
 	<div style="size:9px; margin:auto; width:1000px;">
 		<div>
@@ -175,7 +171,6 @@ var suser = {$smarty.session.utilisateur|json_encode};
 		</div>
 	</div>
 	{$infosdev}
-</div>
 {/if}
 </body>
 </html>
