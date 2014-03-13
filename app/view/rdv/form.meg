@@ -24,14 +24,19 @@
 		</div>
 	</div>
 
+	{if isset($rdv_cats) && count($rdv_cats) >0}
 	<div class="form-group">
 		<label class="control-label col-md-4 col-xs-4">Catégorie :</label>
 		<div class="col-md-8 col-xs-8">
 			<select name="rdv[categorie_id]" id="rdc-categorie-id" class="form-control">
 				<option value=""></option>
+				{foreach $rdv_cats as $row}
+				<option value="{$row.id}">{$row.libelle}</option>
+				{/foreach}
 			</select>
 		</div>
 	</div>
+	{/if}
 
 	<div class="form-group">
 		<label for="date-rdv" class="control-label col-md-4 col-xs-4">Lieux :</label>
@@ -41,6 +46,9 @@
 	</div>
 
 	<hr/>
+	{if !isset($rdv_cats) || count($rdv_cats) ==0}
+	<input type="hidden" name="rdv[categorie_id]" value="" />
+	{/if}
 	{if isset($smarty.get.tier_type)}
 	<input type="hidden" name="rdv[tier_type]" value="{$smarty.get.tier_type}" />
 	{/if}

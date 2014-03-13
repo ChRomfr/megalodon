@@ -1,0 +1,13 @@
+<form method="post" action="{if isset($categorie)}{$config.url}index.php/adm/rdv_categories_edit/{$categorie.id}{else}{$config.url}index.php/adm/rdv_categories_add{/if}" class="form-horizontal">
+	<div class="form-group">
+		<label for="libelle" class="control-label col-md-3">Libelle :</label>
+		<div class="col-md-5">
+			<input type="text" class="form-control" name="categorie[libelle]" id="libelle" required {if isset($categorie)}value="{$categorie.libelle}"{/if}/>
+		</div>
+	</div>
+	<hr/>
+	<div class="text-center">
+		{if isset($categorie)}<input type="hidden" name="categorie[id]" value="{$categorie.id}" />{/if}
+		<button type="submit" class="btn btn-primary">{$lang.Enregistrer}</button>
+	</div>
+</form>

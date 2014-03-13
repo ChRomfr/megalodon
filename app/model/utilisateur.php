@@ -44,6 +44,13 @@ class utilisateur extends Baseutilisateur{
      */
     public $sso_link;
 
+    /**
+     * Active ou non les notifications des contacts lié
+     * @var int(1)
+     * @Db: {"name":"mailing_adm","type":"INT","length":1,"notnull":1,"default":0}
+     */
+    public $follow_my_contact;
+
     public function checkLogin(){
     	global $registry;
         

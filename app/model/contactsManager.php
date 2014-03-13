@@ -145,12 +145,13 @@ class contactsManager extends BaseModel{
 	public function getById($id, $history = 1){
 		
 		// Recuperation du contact
-		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id')
+		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id, collab.identifiant as collab')
 			->from('contacts c')
 			->left_join('societe s','c.id = s.contact_id')
 			->left_join('personne p','c.id = p.contact_id')
 			->left_join('poste po','p.poste_id = po.id')
 			->left_join('service se','p.service_id = se.id')
+			->left_join('user collab','c.collab_id = collab.id')
 			->where(array('c.id =' => $id));
 			
 		$result = $this->db->get_one();
@@ -176,16 +177,6 @@ class contactsManager extends BaseModel{
 			//$result['societe'] = $this->db->get_one('societe', array('id =' => $result['societe_id']));
 			$result['societe'] = $this->db->get_one('societe', array('contact_id =' => $result['societe_id']));
 		}
-				
-		// Recuperation des logs
-		/*if( $history == 1){
-			$result['logs']	=	$this->db->select('cl.*,u.identifiant as log_user')
-									->from('contacts_log cl')
-									->left_join('user u','cl.user_id = u.id')
-									->where(array('cl.contact_id =' => $id))
-									->order('cl.date_log DESC')
-									->get();
-		}*/
 								
 		// Recuperation des emails
 		$result['emails'] = $this->db->select('ce.*, u.identifiant as email_user')
@@ -195,13 +186,6 @@ class contactsManager extends BaseModel{
 							->order('ce.date_send DESC')
 							->get();
 
-		// Recuperation des mailings
-		/*$result['mailings'] = 	$this->db->select('m.id, m.libelle')
-								->from('mailings m')
-								->left_join('contacts_mailing cm','cm.mailing_id = m.id')
-								->where(array('cm.contact_id =' => $id))
-								->get();
-		*/
 		// Recuperation des suivis
 		$result['suivis'] 	= 	$this->db->select('s.*, u.identifiant')
 								->from('contacts_suivi s')
@@ -209,18 +193,7 @@ class contactsManager extends BaseModel{
 								->where(array('s.cid =' => $id))
 								->order('s.date_suivi DESC')
 								->get();
-								
-		// Recuperation des fichiers
-		$result['files']	=	$this->db->select('cf.*, u.identifiant')
-								->from('contacts_files cf')
-								->left_join('user u','cf.user_id = u.id')
-								->where(array('cf.contact_id =' => $id))
-								->order('cf.name')
-								->get();
-		
-		/*echo '<br/><br/><br><pre>';
-		print_r($result);*/
-		
+			
 		return $result;
 	}
 

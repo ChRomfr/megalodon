@@ -1,12 +1,18 @@
-// Mise en forme formulaire
+
 jQuery(document).ready(function(){	
+	// Mise en forme des formulaires
 	$(".chzn-select").chosen();
 	$(".chozen").chosen();
+	// Infobulle
+	$('.help-text').tooltip();
+	// Scrollup
+	$.scrollUp({
+		animation: 'fade',
+		/*activeOverlay: '#00FFFF',*/
+		scrollImg: { active: true, type: 'background', src: 'img/top.png' }
+	});
+	$('#scrollUpTheme').attr('href', 'css/themes/image.css?1.1');
 })
-
-$(document).ready(function(){
-    $('.help-text').tooltip();
-});
 
 // Affichage des message flash
 if (typeof flash_message != 'undefined'){
@@ -159,6 +165,24 @@ function get_rdv_campaign(tid, sid){
     $('#modal-global').modal('show');
 }
 
+/**
+ * Affiche le formulaire de contact depuis le controller contacts
+ * @param  {[type]} cid [description]
+ * @return {[type]}     [description]
+ */
+function get_rdv_contacts(cid){
+	$.get(
+        base_url + 'index.php/contacts/take_rdv/'+cid,
+        {tier_type:'contacts', tier_id:cid, source_type:'fiche'},
+        function(data){
+            $("#modal-global-body").html('<div class="well">'+data+'</div>');
+        }        
+    );
+
+    $('#modal-global-label').html('Nouveau rendez vous');
+    $('#modal-global').modal('show');
+}
+
 function go_to_contacts_view(cid){
 	window.location.href=base_url + 'index.php/contacts/detail/'+ cid;
 }
@@ -219,4 +243,40 @@ function get_logs(module, link_id, user_id){
 	
 	$('#modal-global-label').html('Logs');
     $('#modal-global').modal('show');
+}
+
+//-- END LOGS --//
+
+//-- START CA --//
+/**
+ * Affiche le formulaire pour ajouter un CA
+ * @param  {[type]} cid [description]
+ * @return {[type]}     [description]
+ */
+function get_form_ca(cid){
+	$.get(
+	    base_url + 'index.php/ca/get_modal_form/'+cid, {},        
+	    function(data){
+			$("#modal-global-body").html(data);    	
+		}
+	);
+	$('#modal-global-label').html('Ajout CA');
+    $('#modal-global').modal('show')
+}
+
+/**
+ * Affiche le formulaire permettant l edition du CA
+ * @param  {[type]} contact_id [description]
+ * @param  {[type]} ca_id      [description]
+ * @return {[type]}            [description]
+ */
+function get_form_edit_ca(contact_id, ca_id){
+	$.get(
+	    base_url + 'index.php/ca/get_modal_form/'+contact_id, {ca_id:ca_id},        
+	    function(data){
+			$("#modal-global-body").html(data);    	
+		}
+	);
+	$('#modal-global-label').html('Edition CA');
+    $('#modal-global').modal('show')
 }

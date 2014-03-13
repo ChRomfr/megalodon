@@ -36,6 +36,13 @@ define('MEG_VERSION', '1.0.20140130');
 define('SHARK_VERSION', '1.0.0-beta');
 
 define('LDAP_IGNORE', false);
+define('IN_MAINTENANCE',false);
+
+
+if(IN_MAINTENANCE){
+	echo "En cour de maintenance ...";
+	exit;
+}
 
 $ajax_query = false;
 
@@ -43,9 +50,11 @@ $ajax_query = false;
 if(isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) == 'xmlhttprequest') $ajax_query = true;
 
 // System de notification pour le bootstrap
+$registry->load_web_lib('scrollup/css/themes/image.css','css');
 $registry->load_web_lib('notifications/notifications.css','css');
 $registry->load_web_lib('notifications/notifications.js','js','footer');
 $registry->load_web_lib('pnotify/jquery.pnotify.min.js','js','footer');
+$registry->load_web_lib('scrollup/jquery.scrollUp.min.js','js','footer');
 $registry->load_web_lib('pnotify/jquery.pnotify.default.css','css');
 $registry->load_web_lib('shark_tasks/shark_tasks.css','css');
 /**
@@ -69,6 +78,7 @@ function AppAutoload(){
 		// Manager
 
 		// Model
+		'ca'				=>	ROOT_PATH.'app'.DS.'model'.DS.'ca.php',
 		'categorie'			=>	ROOT_PATH.'app'.DS.'model'.DS.'categorie.php',
 		'campaign'			=>	ROOT_PATH.'app'.DS.'model'.DS.'campaign.php',
 		'clog'				=>	ROOT_PATH.'app'.DS.'model'.DS.'contacts_log.php',
@@ -98,6 +108,7 @@ function AppAutoload(){
 spl_autoload_register('AppAutoload');
 
 getGlobalDatas();
+$registry->smarty->assign('modal_search', $registry->smarty->fetch(VIEW_PATH.'global'.DS.'modal_search.shark'));
 
 
 /**
@@ -287,7 +298,6 @@ function getGlobalDatas(){
 			'categories'	=>	$registry->db->get('categorie', null, 'libelle'),
 			'postes'		=>	$registry->db->get('poste', null, 'libelle'),
 			'services'		=>	$registry->db->get('service', null, 'libelle'),
-			'organismes'	=>	$registry->db->get('organismes',null,'libelle'),
 			'departements'	=>	$dpt,
 			'ape'			=>	$registry->db->get('ape',null, 'code'),
 		);
@@ -301,7 +311,7 @@ function getGlobalDatas(){
 		'global_categories'		=>	$global_data['categories'],
 		'global_postes'			=>	$global_data['postes'],
 		'global_services'		=>	$global_data['services'],
-		'global_organismes'		=>	$global_data['organismes'],
+		//'global_organismes'		=>	$global_data['organismes'],
 		'global_departements'	=>	$global_data['departements'],
 		'global_ape'			=>	$global_data['ape'],
 	));

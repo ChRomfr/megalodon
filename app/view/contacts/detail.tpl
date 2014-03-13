@@ -144,6 +144,13 @@
 				<td><a href="{$Helper->getLink("contacts/detail/{$siege.contacts_id}")}" title="">{$siege.raison_social}</a></td>
 			</tr>
 		{/if}
+
+		{if !empty($contact.collab_id)}
+			<tr>
+				<td>Contact de :</td>
+				<td><strong>{$contact.collab}</strong></td>
+			</tr>
+		{/if}
 		
 	</table>
 	<hr/>
@@ -151,13 +158,14 @@
 	<div class="tab-content">
 		
 		<ul id="tabContacts" class="nav nav-tabs">
-            {if !empty($contact.raison_social)}<li><a href="#tabContactsOfSociete" data-toggle="tab">Contacts</a></li>{/if}
+            {if !empty($contact.raison_social)}<li><a href="#tabContactsOfSociete" data-toggle="tab" id="atabcontactofsociete">Contacts</a></li>{/if}
 			{if !empty($contact.raison_social) && $contact.mother == 1}<li><a href="#tabAgences" data-toggle="tab">Agences</a></li>{/if}
             <li {if $smarty.session.utilisateur.historique_contact == 0}class="active"{/if}><a href="#tabSuivi" data-toggle="tab">Suivi</a></li>
-            <li><a href="#tab-rdv" data-toggle="tab">Rendez vous</a></li>
+            <li><a href="#tab-rdv" data-toggle="tab" id="atabmeeting">Rendez vous</a></li>
 			<li><a href="#tabContactsEmailSend" data-toggle="tab">Emails</a></li>
-			<li><a href="#tabMailingSend" data-toggle="tab">Mailings</a></li>
-			<li><a href="#tabContactsFiles" data-toggle="tab">Fichiers</a></li>
+			<li><a href="#tabMailingSend" data-toggle="tab" id="atabmailing">Mailings</a></li>
+			<li><a href="#tabContactsFiles" data-toggle="tab" id="atabfiles">Fichiers</a></li>
+			{if isset($modules['ca']) && $modules['ca']['actif'] == 1}<li><a id="atabca" href="#tabCA" data-toggle="tab">CA</a></li>{/if}
 			{if $smarty.session.utilisateur.historique_contact == 1}<li class="active"><a href="#tabContactsLogs" data-toggle="tab">Historique</a></li>{/if}
 			{if $smarty.session.utilisateur.isAdmin > 0}<li><a href="#tabDoublons" data-toggle="tab">Doublons</a></li>{/if}
         </ul>
@@ -180,6 +188,7 @@
         				<th>Suivi</th>
         				<th>Date</th>
         				<th>Auteur</th>
+        				<th>Source</th>
         				{if $smarty.session.utilisateur.isAdmin > 0}
         				<th>&nbsp;</th>
         				{/if}
@@ -191,6 +200,7 @@
         				<td>{$row.suivi|nl2br}</td>
         				<td>{$row.date_suivi}</td>
         				<td>{$row.identifiant}</td>
+        				<td>{$row.source}</td>
         				{if $smarty.session.utilisateur.isAdmin > 0}
         				<td><a href="javascript:deleteSuivi({$row.id});" title="Supprimer"><i class="fa fa-trash-o"></i></a></td>
         				{/if}
@@ -203,6 +213,11 @@
         <!-- END tab-suivis -->
 
         <div id="tab-rdv" class="tab-pane">
+        	<br/>
+        	<div class="pull-right">
+        		<a href="javascript:get_rdv_contacts({$contact.contact_id});" title="" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
+        	</div>
+        	<div class="clearfix"></div>
         	<br/>
 			<table class="table table-striped table-condensed" id="table-contacts-rdv">
 				<thead><tr><th>#</th><th>Date</th><th>Collorateur</th><th>Statut</th></tr></thead>
@@ -291,42 +306,7 @@
 		</div>
 		{/if}
 		
-		<!-- START TAB FICHIER -->
-		<div id="tabContactsFiles" class="tab-pane">
-			<br/>
-			<div class="pull-right">
-				<a href="javascript:get_form_add_file({$contact.contact_id});" title="" class="btn btn-default"><i class="fa fa-lg fa-cloud-upload"></i></a>
-			</div>
-			<div class="clearfix"></div>
-
-			{if count($contact.files)}
-			<table class="table table-condensed" id="table-contacts-files">
-				<thead>
-					<tr>
-						<th>Fichier</th>
-						<th>Utilisateur</th>
-						<th>Date d'ajout</th>
-						{if $smarty.session.utilisateur.isAdmin > 0}
-						<th></th>
-						{/if}
-					</tr>
-				</thead>
-				<tbody>
-					{foreach $contact.files as $file}
-					<tr>
-						<td><a href="{$config.url}web/upload/contacts/{$contact.contact_id}/{$file.disk_name}" title="Télécharger le fichier"><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{$file.name}</a></td>
-						<td>{$file.identifiant}</td>
-						<td>{$file.date_add}</td>
-						{if $smarty.session.utilisateur.isAdmin > 0}
-						<td><a href="javascript:deleteFile({$file.id});" title="Supprimer ce fichier"><i class="fa fa-trash-o"></i></a></td>
-						{/if}
-					</tr>
-					{/foreach}
-				</tbody>
-			</table>
-			{/if}			
-		</div>
-		<!-- END TAB FICHIER -->
+		{$tab_files}
 
 		{if $smarty.session.utilisateur.historique_contact == 1}
 		<div id="tabContactsLogs" class="tab-pane active">
@@ -387,10 +367,14 @@
 				<tbody></tbody>
 			</table>
 		</div>
-		{/if}		
+		{/if}
+
+		{* Contenu tab CA *}
+		{if isset($modules['ca']) && $modules['ca']['actif'] == 1}{$tab_ca}{/if}
+
 	</div>
 
-</div><!-- /well -->
+</div>{* /.well *}
 
 {* MODAL GENERIQUE *}
 <div id="modal-fiche-contacts"	class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

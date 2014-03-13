@@ -178,22 +178,84 @@ function gotofiche(cid){
 	window.location.href = base_url + 'index.php/contacts/detail/'+cid;
 }
 
-// Recuperation mailing du contacts
-(function($){
-    $.get(
-        base_url + 'index.php/contacts/get_mailings_of_contact/'+contact.contact_id,
-        {nohtml:'nohtml'},
-        function(data){ 
-            var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td><td>{{email}}</td><td>{{& open}}</tr>';
-            for( var i in data ){
-                $('#table-contacts-mailings').append( Mustache.render(tpl, data[i]) );
-            };
-        },'json');
-})(jQuery);
+/**
+ * Recupere les mailings au chagement de l'onglet
+ * @return {[type]} [description]
+ */
+$(document).on('click', '#atabmailing',function(){
+    // Purge du tableau
+    $('#table-contacts-mailings').find("tr:gt(0)").remove();
 
-// Historique du contacts
+    $.get(
+    base_url + 'index.php/contacts/get_mailings_of_contact/'+contact.contact_id,
+    {nohtml:'nohtml'},
+    function(data){ 
+        var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td><td>{{email}}</td><td>{{& open}}</tr>';
+        for( var i in data ){
+            $('#table-contacts-mailings').append( Mustache.render(tpl, data[i]) );
+        };
+    },'json');
+});
+
+/**
+ * Recuperation des rendez vous au click sur le tab
+ */
+$(document).on('click', '#atabmeeting', function(){
+    // Purge du tableau
+    $('#table-contacts-rdv').find("tr:gt(0)").remove();
+
+    // Requete AJAX
+    $.get(
+    base_url + 'index.php/contacts/get_meetings/'+contact.contact_id,
+    {nohtml:'nohtml'},
+    function(data){ 
+        var tpl = '<tr><td>{{id}}</td><td><a href="javascript:get_rdv_detail({{id}})" title="Detail rendez vous">{{date_rdv}}</a></td><td>{{collab}}</td><td>{{statut}}</td></tr>';
+        for( var i in data ){
+            $('#table-contacts-rdv').append( Mustache.render(tpl, data[i]) );
+        };
+    },'json');
+});
+
+$(document).on('click', '#atabcontactofsociete', function(){
+    // Purge du tableau
+    $('#table-contacts-societe').find("tr:gt(0)").remove();
+
+     $.get(
+    base_url + 'index.php/contacts/get_contacts_societe/'+contact.contact_id,
+    {nohtml:'nohtml'},
+    function(data){ 
+        var tpl = '<tr><td><a href="javascript:gotofiche({{contact_id}})" title="">{{prenom}} {{nom}}</a></td><td>{{email}}</td><td>{{service}}</td><td>{{poste}}</td></tr>';
+        for( var i in data ){
+            $('#table-contacts-societe').append( Mustache.render(tpl, data[i]) );
+        };
+    },'json');
+});
+
+$(document).on('click', '#atabfiles', function(){
+    // Purge du tableau
+    $('#table-contacts-files').find("tr:gt(0)").remove();
+
+     $.get(
+    base_url + 'index.php/files/get_by_contact_id/'+contact.contact_id,
+    {nohtml:'nohtml'},
+    function(data){ 
+        var tpl = '<tr><td><a href="'+base_url+'web/upload/contacts/'+contact.contact_id+'/{{disk_name}}" title="Telecharger le fichier"><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{name}}</a></td><td>{{identifiant}}</td><td>{{date_add}}</td><td>{{&delete_file}}</tr>';
+        for( var i in data ){
+            $('#table-contacts-files').append( Mustache.render(tpl, data[i]) );
+        };
+    },'json');
+});
+
+
+/**
+ * Charge l historique utilisateur
+ * @type {[type]}
+ */
 if(suser.historique_contact == 1){
-	(function($){
+    $(document).ready(function(){
+        // Purge du tableau
+        $('#table-contacts-logs').find("tr:gt(0)").remove();
+
 	    $.get(
 	        base_url + 'index.php/contacts/get_logs_of_contact/'+ contact.contact_id,
 	        {nohtml:'nohtml'},
@@ -205,30 +267,3 @@ if(suser.historique_contact == 1){
 	        },'json');
 	})(jQuery);
 }
-
-
-if(contact.raison_social != ''){
-(function($){
-    $.get(
-        base_url + 'index.php/contacts/get_contacts_societe/'+contact.contact_id,
-        {nohtml:'nohtml'},
-        function(data){ 
-            var tpl = '<tr><td><a href="javascript:gotofiche({{contact_id}})" title="">{{prenom}} {{nom}}</a></td><td>{{email}}</td><td>{{service}}</td><td>{{poste}}</td></tr>';
-            for( var i in data ){
-                $('#table-contacts-societe').append( Mustache.render(tpl, data[i]) );
-            };
-        },'json');
-	})(jQuery);
-}
-
-(function($){
-    $.get(
-        base_url + 'index.php/contacts/get_meetings/'+contact.contact_id,
-        {nohtml:'nohtml'},
-        function(data){ 
-            var tpl = '<tr><td>{{id}}</td><td><a href="javascript:get_rdv_detail({{id}})" title="Detail rendez vous">{{date_rdv}}</a></td><td>{{collab}}</td><td>{{statut}}</td></tr>';
-            for( var i in data ){
-                $('#table-contacts-rdv').append( Mustache.render(tpl, data[i]) );
-            };
-        },'json');
-    })(jQuery);

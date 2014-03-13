@@ -1,0 +1,72 @@
+<!-- START app/view/adm/rdv -->
+{strip}
+<ol class="breadcrumb">
+	<li><a href="{$config.url}" title="{$lang.Accueil}">{$lang.Accueil}</a></li>
+	<li><a href="{$config.url}index.php/adm" title="{$lang.Administration}">{$lang.Administration}</a></li>
+	<li><a href="{$config.url}index.php/adm/rdv" title="{$lang.Rendez_vous}">{$lang.Rendez_vous}</a></li>
+	<li class="active">{$lang.Categories}</li>
+</ol>
+
+<div class="well">
+	<div class="pull-right">
+		<a href="javascript:get_form_rdv_categorie_add();" title="Ajouter une categorie"><i class="fa fa-plus fa-lg"></i></a>
+	</div>
+	<div class="clearfix"></div>
+	<table class="table table-striped table-condensed">
+		<thead>
+			<tr>
+				<th>#</th>
+				<th>Catégorie</th>
+				<th>Actions</th>
+			</tr>
+		</thead>
+		<tbody>
+			{foreach $categories as $row}
+			<tr>
+				<td>{$row.id}</td>
+				<td>{$row.libelle}</td>
+				<td>
+					<a href="javascript:get_form_rdv_categorie_edit({$row.id});" class="help-text" title="Modifier cette categorie"><i class="fa fa-edit"></i></a>
+					&nbsp;&nbsp;
+					<a href="javascript:delete_rdv_categorie({$row.id});" class="help-text" title="Supprimer cette categorie"><i class="fa fa-trash-o"></i></a>		
+				</td>
+			</tr>
+			{/foreach}
+		</tbody>
+	</table>
+</div>
+{literal}
+<script type="text/javascript">
+function get_form_rdv_categorie_add(){
+	$.get(
+        base_url + 'index.php/adm/rdv_categories_getform',
+        {},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-sitemap"></i>&nbsp;&nbsp;Nouvelle catégorie');
+    $('#modal-global').modal('show');
+}
+
+function get_form_rdv_categorie_edit(cid){
+	$.get(
+        base_url + 'index.php/adm/rdv_categories_getform/'+cid,
+        {},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('<i class="fa fa-sitemap"></i>&nbsp;&nbsp;Edition catégorie');
+    $('#modal-global').modal('show');
+}
+
+function delete_rdv_categorie(cid){
+	if(confirm('Etes vous sur de vouloir supprimer cette categorie ?')){
+		window.location.href=base_url+'index.php/adm/rdv_categories_delete/'+cid;
+	}
+}
+</script>
+{/literal}
+{/strip}
+<!-- END app/view/adm/rdv -->

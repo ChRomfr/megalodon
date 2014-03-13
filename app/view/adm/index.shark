@@ -50,6 +50,15 @@
 				<span class="glyphicon-class">Préferences</span>
 			</a>
 		</li>
+
+		{if isset($modules['rdv']) && $modules['rdv']['actif'] == 1}
+		<li>
+			<a href="{$Helper->getLink("adm/rdv")}" title="">
+				<span class="fa fa-clock-o fa-3x"></span>
+				<span class="glyphicon-class">Rendez-vous</span>
+			</a>
+		</li>
+		{/if}
 		
 		{if isset($modules['tiers']) && $modules['tiers']['actif'] == 1}
 		<li>

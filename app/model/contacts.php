@@ -78,6 +78,12 @@ class contacts extends Record{
 	*	@Db: {"name":"type", "type":"INT", "length":"1" ,"default":1}
 	*/
 	public $actif;
+
+	/**
+	 * collab_id : lie un contact à un utilisateur
+	 * @Db: {"name":"collab_id", "type":"INT", "length":"11"}
+	 */
+	public $collab_id;
 	
 	public function isValid(){
 		if(empty($this->client) ){
@@ -112,6 +118,8 @@ class contacts extends Record{
 		if(empty($this->adress)){
 			$this->adress = NULL;
 		}
+
+		if(empty($this->collab_id)) $this->collab_id = 0;
 
 		return parent::save();
 	}

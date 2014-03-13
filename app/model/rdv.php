@@ -42,6 +42,8 @@ class rdv extends Record{
 
 	public $rapport;
 
+	public $categorie_id;
+
 	public function setStatut($value){
 		$this->statut = $value;
 	}

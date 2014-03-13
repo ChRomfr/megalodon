@@ -76,6 +76,20 @@
 		</fieldset>
 		
 		<fieldset>
+			<legend>Depuis un mailing</legend>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label" for="mailing_id_target">Mailing :</label>
+				<div class="col-sm-5">
+					<select name="mailing_id" id="mailing_id_target">
+						<option value=""></option>
+						{foreach $mailings as $row}
+						<option value="{$row.id}">{$row.libelle}</option>
+						{/foreach}
+					</select>
+				</div>
+			</div>
+
 			<legend>Cible</legend>
 			{* START CRITERES RECHERCHE *}
 					
@@ -172,21 +186,28 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Societe :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="campaign[target][ctype][]" value="societes" />
+					<input type="checkbox" name="campaign[target][ctype][]" value="societes" class="ctype"/>
 				</div>
 			</div>
 
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Contact societe :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="campaign[target][ctype][]" value="societe_contact" />
+					<input type="checkbox" name="campaign[target][ctype][]" value="societe_contact" class="ctype"/>
 				</div>
 			</div>
 			
 			<div class="form-group">
 				<label class="col-sm-2 control-label">Particulier :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="campaign[target][ctype][]" value="particulier" />
+					<input type="checkbox" name="campaign[target][ctype][]" value="particulier" class="ctype"/>
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="col-sm-2 control-label">Avec email :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="campaign[target][email_is_valid]" value="1" />
 				</div>
 			</div>
 
@@ -209,7 +230,6 @@
 </div>{* /well *}
 
 <script type="text/javascript">
-<!--
 $(document).ready(function() {
 	$('#campaing-date-start').mask("99/99/9999");
 	$('#campaing-date-end').mask("99/99/9999");
@@ -242,6 +262,7 @@ $(document).ready(function() {
 				required:true,
 			},
 			"campaign[target][ctype][]":{
+			//".ctype":{
 				required:true,
 				minlength:1,
 			}
@@ -271,7 +292,14 @@ $(document).ready(function() {
             $(element).parents('.form-group').addClass('text-success');
         }
 	});
-	
+	{literal}
+	$(document).on('change', '#mailing_id_target', function(){
+		if($('#mailing_id_target').val() != ''){
+			$("input[name='campaign[target][ctype][]']").rules('remove');
+		}else{
+			$("input[name='campaign[target][ctype][]']").rules('add',{required:true, minlength:1});
+		}
+	});
+	{/literal}
 });
--->
 </script>

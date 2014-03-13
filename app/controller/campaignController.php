@@ -52,6 +52,16 @@ class campaignController extends Controller{
 				$this->registry->smarty->assign('Errors', $result);
 				goto printform;
 			}
+
+			if(!empty($_POST['mailing_id'])){
+				// Recuperation target du mailing
+				$mailing = new mailing();
+				$mailing->get($_POST['mailing_id']);
+				$campaign->target = $mailing->cible;
+
+				// Recuperation des contacts dans le mailings et generation de la cible
+				$cibles = $this->registry->db->select('contact_id')->from('contacts_mailing')->where(array('mailing_id =' => $mailing->id))->get();
+			}
 			
 			$campaign->target = serialize($campaign->target);
 			
@@ -66,14 +76,29 @@ class campaignController extends Controller{
 				'user_id'	=>	$_SESSION['utilisateur']['id'],
 			));
 			$log->save();
+
+			// Enregistrement des cibles
+			if(isset($cibles)){
+				foreach ($cibles as $row) {
+					$campaign_contacts = array('campaign_id'=>$cid, 'contact_id'=>$row['contact_id'], 'statut'=>0);
+					$this->registry->db->insert('campaign_contacts', $campaign_contacts);
+				}
+				$this->registry->db->update('campaign', array('id' => $cid, 'generated' => 1));
+			}
 			
 			return $this->indexAction();
 		}
 		
 		printform:
+
+		// Recuperation des mailings
+		$mailings = $this->registry->db->select('id, libelle')->from('mailings m')->where(array('valid =' => 1))->order('id DESC')->get();
+
 		$this->getFormValidatorJs();
 		$this->registry->smarty->assign('users', $this->registry->db->get('user'));
+		$this->registry->smarty->assign('mailings', $mailings);
 		$this->registry->smarty->assign('campaign_type', $this->registry->db->get('campaign_type'));
+
 		
 		return $this->registry->smarty->fetch(VIEW_PATH . 'campaign' . DS . 'add.shark');
 	
@@ -160,18 +185,14 @@ class campaignController extends Controller{
 
 		// Recuperation des données dans la base
 		$data = $this->registry->db->get_one('campaign_contacts', array('id =' => $cc_id));
-
-		// Traitement suivi
-		if( !empty($suivi['suivi'])){
-			
-			$suivi['campaign_id'] = $data['campaign_id'];
-			$suivi['contact_id'] = $data['contact_id'];
-			$suivi['cam_con_id'] = $cc_id;
-			$suivi['add_by'] = $_SESSION['utilisateur']['id'];
-			$suivi['add_on'] = date("Y-m-d H:i:s");
-
-			$this->registry->db->insert('campaign_contacts_suivi', $suivi);
-		}
+	
+		$suivi = new contacts_suivi($this->registry->Http->post('suivi'));
+		$suivi->cid = $data['contact_id'];
+		$suivi->uid = $_SESSION['utilisateur']['id'];
+		$suivi->date_suivi = date("Y-m-d H:i:s");
+		$suivi->source = 'Campagne';
+		$suivi->source_id = $data['campaign_id'];
+		$suivi->save();
 
 		// Traitement informations
 		$data['statut'] = $cc_data['statut'];
@@ -323,9 +344,17 @@ class campaignController extends Controller{
 	public function ajax_get_detailAction($id){
 
 		$this->load_manager('campaign_contacts_suivi');
+
 		// Recuperation des infos (campaign_id et contact_id)
 		$data = $this->registry->db->get_one('campaign_contacts', array('id =' => $id));
-		$suivis = $this->manager->campaign_contacts_suivi->getByCCID($id);
+		
+		$suivis = $this->registry->db->select('cs.*, u.identifiant as auteur')
+					->from('contacts_suivi cs')
+					->left_join('user u','cs.uid = u.id')
+					->where(array('cid =' => $data['contact_id'], 'source =' => 'campagne', 'source_id =' => $data['campaign_id']))
+					->order('date_suivi DESC')
+					->get();
+		
 		$campaign = $this->registry->db->get_one('campaign', array('id =' => $data['campaign_id']));
 
 		$this->load_manager('contacts');
@@ -366,16 +395,17 @@ class campaignController extends Controller{
 				$cc_data = $this->registry->db->get_one('campaign_contacts', array('campaign_id =' => $rdv->source_id, 'contact_id =' => $rdv->tier_id));
 
 				// Ajout d un suivi a la campagne
-				$campaign_suivi = array(
-					'campaign_id'	=>	$rdv->source_id,
-					'contact_id'	=>	$rdv->tier_id,
-					'cam_con_id'	=>	$cc_data['id'],
-					'suivi'			=>	'Nouveau rendez vous pris',
-					'add_by'		=>	$_SESSION['utilisateur']['id'],
-					'add_on'		=>	date('Y-m-d H:i:s'),
+				$suivi = array(
+					'source'		=>	'campagne',
+					'source_id'		=>	$rdv->source_id,
+					'cid'			=>	$rdv->tier_id,
+					'suivi'			=>	'Nouveau <a href="javascript:get_rdv_detail('.$rid.');" title="">rdv - #'. $rid . '</a> - Date : '. $rdv->date_rdv,
+					'uid'			=>	$_SESSION['utilisateur']['id'],
+					'date_suivi'	=>	date('Y-m-d H:i:s'),
 				);
 
-				$this->registry->db->insert('campaign_contacts_suivi', $campaign_suivi);
+				$suivi = new contacts_suivi($suivi);
+				$suivi->save();
 
 				// Recuperation info tier
 				$this->load_manager('contacts');
@@ -437,6 +467,7 @@ class campaignController extends Controller{
 	   	$row->get($_GET['tier_id']);
 	   	$this->registry->smarty->assign('tier', $row);
 		$this->registry->smarty->assign('submit_url', 'index.php/campaign/take_rdv');
+		$this->registry->smarty->assign('rdv_cats', $this->registry->db->get('rdv_categories', null, 'libelle'));
 		return $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'form.meg');
 	}
 

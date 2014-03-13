@@ -1,7 +1,7 @@
 <ol class="breadcrumb">
-	<li><a href="{$Helper->getLink("Accueil")}" title="Accueil">Accueil</a></li>
-	<li><a href="{$Helper->getLink("utilisateur")}" title="Utilisateur">Utilisateur</a></li>
-	<li class="active">Edition</li>
+	<li><a href="{$Helper->getLink("Accueil")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
+	<li><a href="{$Helper->getLink("utilisateur")}" title="Utilisateur"><i class="fa fa-user"></i>&nbsp;&nbsp;Mon compte</a></li>
+	<li class="active"><i class="fa fa-edit"></i>&nbsp;&nbsp;Edition</li>
 </ol>
 
 <div class="well">
@@ -57,7 +57,14 @@
 			<div class="form-group">
 				<label class="control-label col-sm-2">Historique du contact sur la fiche :</label>
 				<div class="col-sm-5">
-					<input type="checkbox" name="user[historique_contact]" id="historique-contact}" {if $user->historique_contact == 1}checked="checked"{/if} />
+					<input type="checkbox" name="user[historique_contact]" id="historique-contact" {if $user->historique_contact == 1}checked="checked"{/if} />
+				</div>
+			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Suivre mes contacts :</label>
+				<div class="col-sm-5">
+					<input type="checkbox" name="user[follow_my_contact]" id="follow-my-contacts" {if $user->follow_my_contact == 1}checked="checked"{/if} />
 				</div>
 			</div>
 		</fieldset>

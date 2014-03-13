@@ -1,4 +1,43 @@
 --
+DROP TABLE `campaign_contacts_suivi`;
+
+ALTER TABLE `contacts_suivi` 
+ADD COLUMN `source` VARCHAR(50) NULL COMMENT 'Source du suivi (campagne, fiche ...)' AFTER `suivi`,
+ADD COLUMN `source_id` INT NULL COMMENT 'Id de la source du suivi (campaign_id, ...)' AFTER `source`;
+
+
+--
+CREATE TABLE `ca` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `contact_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  `statut` INT(1) NOT NULL,
+  `date_ca` DATE NULL,
+  `ref_bdc` VARCHAR(30) NULL,
+  `ref_facture` VARCHAR(30) NULL,
+  `date_add` DATETIME NOT NULL,
+  `montant` FLOAT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Contient le CA realise par les utilisateurs sur les contacts';
+
+CREATE TABLE `rdv_categorie` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `libelle` VARCHAR(150) NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Contient les catégories pour les rendez vous';
+
+ALTER TABLE `rdv_categorie` RENAME TO  `rdv_categories` ;
+
+ALTER TABLE `rdv` ADD COLUMN `categorie_id` INT NULL AFTER `result`;
+
+--
+ALTER TABLE `contacts` ADD COLUMN `collab_id` INT(11) NULL AFTER `actif`;
+ALTER TABLE `user` ADD COLUMN `follow_my_contact` INT(1) NULL DEFAULT 0 AFTER `sso_link`;
+
+
+-- 20130302
 DROP TABLE `contacts_organisme`;
 DROP TABLE `organismes`;
 

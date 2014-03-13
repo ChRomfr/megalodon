@@ -1,5 +1,8 @@
 <?php
-
+/**
+ * Contient toute les actions accessible dans l'administration
+ * @last_update : 20140305
+ */
 class admController extends Controller{
 	
 	/**
@@ -1257,5 +1260,66 @@ class admController extends Controller{
 			$log->save();
 			$this->registry->db->delete('contacts_log', $row['id']);
 		}
+	}
+
+	public function rdvAction(){
+		return $this->rdv_categoriesAction();
+	}
+
+	/**
+	 * Affiche la liste des categories
+	 * @return string HTML
+	 */
+	public function rdv_categoriesAction(){
+		$categories = $this->registry->db->get('rdv_categories', null, 'libelle');
+		$this->registry->smarty->assign('categories', $categories);
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'rdv_categories.meg');
+
+	}
+
+	/**
+	 * Affiche le formulaire pour l edition d'une categorie
+	 * @param  [type] $cid [description]
+	 * @return [type]      [description]
+	 */
+	public function rdv_categories_getformAction($cid = null){
+		if(!empty($cid)){
+			$this->registry->smarty->assign('categorie', $this->registry->db->get_one('rdv_categories', array('id =' => $cid)));
+		}
+		return $this->registry->smarty->fetch(VIEW_PATH.'adm'.DS.'rdv_categories_form.meg');
+	}
+
+	/**
+	 * Traite le formulaire d ajout de categorie
+	 * @return [type] [description]
+	 */
+	public function rdv_categories_addAction(){
+		if(!is_null($this->registry->Http->post('categorie'))){
+			$categorie = $this->registry->Http->post('categorie');
+			$this->registry->db->insert('rdv_categories', $categorie);
+			$this->registry->Helper->pnotify('Rendez vous','Catégorie ajoutée','success');
+		}
+		return $this->rdv_categoriesAction();
+	}
+
+	/**
+	 * Traite le formulaire d editon des categories
+	 * @param  [type] $cid [description]
+	 * @return [type]      [description]
+	 */
+	public function rdv_categories_editAction($cid){
+		if(!is_null($this->registry->Http->post('categorie'))){
+			$categorie = $this->registry->Http->post('categorie');
+			$this->registry->db->update('rdv_categories', $categorie);
+			$this->registry->Helper->pnotify('Rendez vous','Catégorie modifiée','success');
+		}
+		return $this->rdv_categoriesAction();
+	}
+
+	public function rdv_categories_deleteAction($cid){
+		$this->registry->db->delete('rdv_categories', $cid);
+		$this->registry->db->update('rdv', array('categorie_id' => null), array('categorie_id =' => $cid));
+		$this->registry->Helper->pnotify('Rendez vous','Catégorie supprimée','success');
+		return $this->rdv_categoriesAction();
 	}
 }

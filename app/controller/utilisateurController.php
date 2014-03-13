@@ -1,7 +1,16 @@
 <?php
-
+/**
+ * @MEG CRM
+ * @file: utilisateurController.php
+ * @last-edit : 20140303
+ * @author Drouche Romain <roumain18@gmail.com>
+ */
 class utilisateurController extends BaseutilisateurController{
 	
+	/**
+	 * Affiche et traite le formulaire de profil coté utilisateur
+	 * @return [type] [description]
+	 */
 	public function editAction(){
 	
 		if(  $this->app->HTTPRequest->postExists('user') ){
@@ -18,15 +27,23 @@ class utilisateurController extends BaseutilisateurController{
 			}else{
 				$User->index_map_contacts = 1;
 			}
-			
-			$this->app->db->update(PREFIX . 'user', $User, array('id =' => $_SESSION['utilisateur']['id']));
 
-			# Mise a jour des var de sessions
-			$User = $this->app->db->get_one(PREFIX . 'user', array('id =' => $_SESSION['utilisateur']['id']));
+			if( !isset($User->follow_my_contact) ){
+				$User->follow_my_contact = 0;
+			}else{
+				$User->follow_my_contact = 1;
+			}
+
+			if(empty($User->contacts_per_page)) $User->contacts_per_page = 30;
+			
+			$this->app->db->update('user', $User, array('id =' => $_SESSION['utilisateur']['id']));
+
+			// Mise a jour des var de sessions
+			$User = $this->app->db->get_one('user', array('id =' => $_SESSION['utilisateur']['id']));
 			$this->app->session->create($User);
 
-			# Redirection utilisateur
-			$this->registry->smarty->assign('FlashMessage','Modifications sauvegardées');
+			// Redirection utilisateur
+			$this->registry->Helper->pnotify('Profil','Modifications sauvegardées !','success');
 			return $this->indexAction();
 		}
 		

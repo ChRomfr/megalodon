@@ -181,6 +181,10 @@ class contactsController extends Controller{
 
 			$contact = new contacts($data);
 			$contact->id = $id;
+
+			if(empty($contact->email)) $contact->email = NULL;
+			if(empty($contact->collab_id)) $contact->collab_id = NULL;
+						
 			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
 
 			if( isset($data['per']) ){
@@ -203,9 +207,11 @@ class contactsController extends Controller{
 			$this->registry->db->delete('contacts_categorie', null, array('contact_id =' => $id));
 			
 			// Boucle sur les categories soumises
-			foreach($categories as $k => $v){
-				$this->registry->db->insert('contacts_categorie', array('contact_id' => $id, 'categorie_id' => $v));
-			}
+			if(!empty($categories)){
+				foreach($categories as $k => $v){
+					$this->registry->db->insert('contacts_categorie', array('contact_id' => $id, 'categorie_id' => $v));
+				}	
+			}			
 			
 			// Ajout des log utilisateur
 			$log = new log(array(
@@ -239,11 +245,21 @@ class contactsController extends Controller{
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'edit.shark');
 	}
 	
+	/**
+	 * Affiche le detail d un contact
+	 * @param  [type] $id [description]
+	 * @return [type]     [description]
+	 */
 	public function detailAction($id){
+		// Chargement des blibliotheque JS et CSS
 		$this->registry->load_web_lib('gmap3/gmap3.js','js','footer');
 		$this->registry->load_web_lib('gmap3/gmap3.css','css');
 		$this->registry->load_web_lib('meg/contacts_fiche.js','js','footer');
+		$this->registry->load_web_lib('moment-2.4.0.js','js','footer');
+		$this->registry->load_web_lib('bt3_datapicker/css/bootstrap-datetimepicker.min.css','css');
+		$this->registry->load_web_lib('bt3_datapicker/js/bootstrap-datetimepicker.min.js','js','footer');
 
+		// Chargement du manager
 		$this->load_manager('contacts');
 		
 		$contact = $this->manager->contacts->getById($id, $_SESSION['utilisateur']['historique_contact']);
@@ -268,9 +284,21 @@ class contactsController extends Controller{
 			
 			$this->registry->smarty->assign('siege', $siege);
 		}
-		
+
 		$this->registry->smarty->assign('contact', $contact);
+
+		// Traitement du module CA si actif
+		if(isset($this->registry->modules['ca']) && $this->registry->modules['ca']['actif'] == 1){
+			$ca = new ca();
+			$cas = $ca->get_by_contact_id($contact['contact_id']);
+
+			$this->registry->smarty->assign('cas', $cas);
+			$this->registry->smarty->assign('tab_ca', $this->registry->smarty->fetch(VIEW_PATH.'ca'.DS.'tab_contacts_detail.tpl'));
+		}
 		
+		$this->registry->smarty->assign('tab_files', $this->registry->smarty->fetch(VIEW_PATH.'files'.DS.'tab_contacts_detail.tpl'));
+
+		// Generation de la page
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'detail.tpl');
 	}
 	
@@ -960,6 +988,7 @@ class contactsController extends Controller{
 			$suivi->cid = $cid;
 			$suivi->uid = $_SESSION['utilisateur']['id'];
 			$suivi->date_suivi = TimeToDATETIME();
+			$suivi->source = 'fiche';
 			$suivi->save();
 
 			$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $suivi->cid, 'user_id' => $suivi->uid, 'log' => 'Suivi - Nouveau suivi ajoute'));
@@ -1327,7 +1356,7 @@ class contactsController extends Controller{
 	 * @return [type]             [description]
 	 */
 	public function get_logs_of_contactAction($contact_id){
-		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id));
+		$logs =	$this->registry->db->get('logs', array('module =' => 'contacts', 'link_id =' => $contact_id), 'date_log DESC', 50);
 
 		return json_encode($logs);
 	}
@@ -1364,6 +1393,82 @@ class contactsController extends Controller{
 					->order('r.date_rdv DESC')
 					->get();
 
+		// Parcour des contacts pour statut
+		$i=0;
+		foreach($result as $row){
+			switch ($row['statut']) {
+				case 1:
+					$result[$i]['statut'] = 'A valider';
+					break;
+
+				case 2:
+					$result[$i]['statut'] = 'A confirmer';
+					break;
+
+				case 3:
+					$result[$i]['statut'] = 'Reporter';
+					break;
+
+				case 4:
+					$result[$i]['statut'] = 'Traiter';
+					break;
+
+				case 5:
+					$result[$i]['statut'] = 'Annuler';
+					break;
+				
+				default:
+					$result[$i]['statut'] = 'A valider';
+					break;
+
+			}
+
+			$i++;
+		}
+
 		return json_encode($result);
+	}
+
+	/**
+	 * Affiche et traite le formulaire de prise de rendez vous
+	 * @param  int $cid id du contact
+	 * @return string      code HTML
+	 */
+	public function take_rdvAction($cid){
+
+		if(!is_null($this->registry->Http->post('rdv'))){
+			$rdv = new rdv($this->registry->Http->post('rdv'));
+			$rdv->add_by = $_SESSION['utilisateur']['id'];
+			$rdv->add_on = date('Y-m-d H:i:s');
+			$rdv->statut = 1;
+			$rid = $rdv->save();
+
+			// Ajout des log utilisateur
+			$log = new log(array(
+				'log' 		=> 	'Prise d un rendez vous depuis la fiche contact pour l utilisateur : #'. $rdv->user_id .' rdv #'. $rid ,
+				'module'	=>	'rdv',
+				'link_id'	=>	$rid,
+			));
+			$log->save();
+
+			$log = new log(array(
+				'log' 		=> 	'Prise d un rendez vous depuis la fiche contact pour l utilisateur : #'. $rdv->user_id .' rdv #'. $rid ,
+				'module'	=>	'contacts',
+				'link_id'	=>	$rdv->tier_id,
+			));
+			$log->save();
+
+			$this->registry->Helper->pnotify('Rendez vous','Rendez vous enregistré','success');
+
+			return $this->detailAction($cid);
+		}
+		
+		showform:
+		$row = new contacts();
+	   	$row->get($cid);
+	   	$this->registry->smarty->assign('tier', $row);
+		$this->registry->smarty->assign('submit_url', 'index.php/contacts/take_rdv/'.$cid);
+		$this->registry->smarty->assign('rdv_cats', $this->registry->db->get('rdv_categories', null, 'libelle'));
+		return $this->registry->smarty->fetch(VIEW_PATH.'rdv'.DS.'form.meg');
 	}
 }

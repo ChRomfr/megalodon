@@ -51,8 +51,8 @@
 			<tr>
 				<td>{$row.id}</td>
 				<td>{$row.suivi|nl2br}</td>
-				<td>{$row.add_on}</td>
-				<td>{$row.author}</td>
+				<td>{$row.date_suivi}</td>
+				<td>{$row.auteur}</td>
 			{/foreach}
 		</tbody>
 	</table>
