@@ -71,25 +71,6 @@ class indexController extends Controller{
 		if( !$Markers = $this->registry->cache->get('markers_index') ){
 			$Markers = array();
 
-			// Recuperation des entreprises deja geolocalisees
-			/*$entreprises =	$this->registry->db
-							->select('id,raison_social,adresse1, ville, code_postal,lat,lng, client, date_last_geoloc')
-							->from('entreprises')
-							->where_free('lat != "" AND lng != ""')
-							->get();
-
-			foreach($entreprises as $entreprise){
-				$Markers[] = array('lat' => $entreprise['lat'], 'lng' => $entreprise['lng'], 'data' => array(
-						'rs'				=>	$entreprise['raison_social'],
-						'adresse'			=>	$entreprise['adresse1'],
-						'code_postal'		=>	$entreprise['code_postal'],
-						'ville'				=>	$entreprise['ville']
-						),
-						'options'	=> array(
-							'icon'	=>	!empty($entreprise['client']) ? $this->registry->config['url'] . 'web/images/markers/pin1.png' : 	$this->registry->config['url'] . 'web/images/markers/pin2.png'
-						),
-				);
-			}	*/
 			$contacts =	$this->registry->db->select('DISTINCT(c.lat), c.*, s.raison_social, p.nom, p.prenom, date_last_geoloc, p.societe_id')
 						->from('contacts c')
 						->left_join('personne p','c.id = p.contact_id')
