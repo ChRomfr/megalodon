@@ -61,10 +61,6 @@ class indexController extends Controller{
 		// Generationde la page
 		return $this->registry->smarty->fetch(VIEW_PATH.'index'.DS.'index.tpl'); 
 	}
-
-	public function getcoordmapajax(){
-	
-	}
 	
 	private function getcurrentcoordmap(){
 
@@ -120,8 +116,5 @@ class indexController extends Controller{
 				$this->registry->db->insert('ape', $naf);
 			}
 		}
-	}
-  
+	} 
 }
-
-
