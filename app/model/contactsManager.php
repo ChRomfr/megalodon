@@ -145,13 +145,16 @@ class contactsManager extends BaseModel{
 	public function getById($id, $history = 1){
 		
 		// Recuperation du contact
-		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id, collab.identifiant as collab')
+		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id, group_concat(u2.identifiant) as users, group_concat(u2.id) as users_id, group_concat(gr.name) as groups, group_concat(gr.id) as groups_id')
 			->from('contacts c')
 			->left_join('societe s','c.id = s.contact_id')
 			->left_join('personne p','c.id = p.contact_id')
 			->left_join('poste po','p.poste_id = po.id')
 			->left_join('service se','p.service_id = se.id')
-			->left_join('user collab','c.collab_id = collab.id')
+			->left_join('contacts_users cu','c.id = cu.contact_id')
+			->left_join('user u2','cu.user_id = u2.id')
+			->left_join('contacts_groups cg','c.id = cg.contact_id')
+			->left_join('groupe gr','cg.group_id = gr.id')
 			->where(array('c.id =' => $id));
 			
 		$result = $this->db->get_one();
@@ -193,7 +196,29 @@ class contactsManager extends BaseModel{
 								->where(array('s.cid =' => $id))
 								->order('s.date_suivi DESC')
 								->get();
-			
+								
+		// Formatage des données
+		if(!empty($result['users'])){
+			$data = explode(',',$result['users']);
+			$data2 = explode(',',$result['users_id']);
+			$result['users'] = array();
+			$i=0;
+			foreach($data as $k => $v){
+				$result['users'][$data2[$i]] = $v;
+				$i++;
+			}
+		}
+		
+		if(!empty($result['groups'])){
+			$data = explode(',',$result['groups']);
+			$data2 = explode(',',$result['groups_id']);
+			$result['groups'] = array();
+			$i=0;
+			foreach($data as $k => $v){
+				$result['groups'][$data2[$i]] = $v;
+				$i++;
+			}
+		}			
 		return $result;
 	}
 

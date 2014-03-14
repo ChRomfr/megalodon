@@ -181,10 +181,12 @@ class contactsController extends Controller{
 
 			$contact = new contacts($data);
 			$contact->id = $id;
-
+	
+			// Preparation des données
 			if(empty($contact->email)) $contact->email = NULL;
 			if(empty($contact->collab_id)) $contact->collab_id = NULL;
-						
+			
+			// Enregistrements des données
 			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
 
 			if( isset($data['per']) ){
@@ -202,15 +204,28 @@ class contactsController extends Controller{
 			
 			// Traitements catégories
 			$categories = $this->registry->Http->post('categories');
-			
-			// Suppression de tout les liens avec les catégories pour ce contact
 			$this->registry->db->delete('contacts_categorie', null, array('contact_id =' => $id));
-			
-			// Boucle sur les categories soumises
 			if(!empty($categories)){
 				foreach($categories as $k => $v){
 					$this->registry->db->insert('contacts_categorie', array('contact_id' => $id, 'categorie_id' => $v));
 				}	
+			}	
+
+			// Traitements des liaisons utilisateurs
+			$users = $this->registry->Http->post('lusers');
+			$this->registry->db->delete('contacts_users', null, array('contact_id =' => $id));
+			if(!empty($users)){
+				foreach($users as $k => $v){
+					$this->registry->db->insert('contacts_users', array('contact_id' => $id, 'user_id' => $v));
+				}
+			}	
+
+			$groups = $this->registry->Http->post('lgroups');
+			$this->registry->db->delete('contacts_groups', null, array('contact_id =' => $id));
+			if(!empty($groups)){
+				foreach($groups as $k => $v){
+					$this->registry->db->insert('contacts_groups', array('contact_id' => $id, 'group_id' => $v));
+				}
 			}			
 			
 			// Ajout des log utilisateur
@@ -240,6 +255,8 @@ class contactsController extends Controller{
 			'ctitre'		=>	'Editon contact',
 			'contact'		=>	$contact,
 			'apes'			=>	$this->registry->db->get('ape',null,'code'),
+			'users'			=>	$this->registry->db->get('user',null,'identifiant'),
+			'groups'		=>	$this->registry->db->get('groupe',null,'name'),
 		));
 		
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'edit.shark');

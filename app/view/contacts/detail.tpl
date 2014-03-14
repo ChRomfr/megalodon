@@ -145,14 +145,30 @@
 			</tr>
 		{/if}
 
-		{if !empty($contact.collab_id)}
-			<tr>
-				<td>Contact de :</td>
-				<td><strong>{$contact.collab}</strong></td>
-			</tr>
+		{if !empty($contact.users)}
+		<tr>
+			<td>Lié à :</td>
+			<td>
+				{foreach $contact.users as $k => $v}
+				<span class="badge">{$v}</span>
+				{/foreach}
+			</td>
+		</tr>	
+		{/if}
+		
+		{if !empty($contact.groups)}
+		<tr>
+			<td>Lié au groupe :</td>
+			<td>
+				{foreach $contact.groups as $k => $v}
+				<span class="badge">{$v}</span>
+				{/foreach}
+			</td>
+		</tr>	
 		{/if}
 		
 	</table>
+	
 	<hr/>
 	
 	<div class="tab-content">

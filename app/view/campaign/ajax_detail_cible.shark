@@ -61,8 +61,7 @@
 	{/if}
 </div>
 
-<!-- edition data campaign -->
-{if $smarty.session.utilisateur.id == $campaign.assign}
+{if isset($campaign['assign_to'][$smarty.session.utilisateur.id])}
 <form class="well" method="post" action="{$Helper->getLink("campaign/suivi_add/{$campaign_data.id}")}">
 	<div class="form-group">
 		<label>Suivi :</label>

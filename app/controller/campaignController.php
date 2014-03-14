@@ -44,15 +44,10 @@ class campaignController extends Controller{
 	public function addAction(){
 		
 		if(!is_null($this->registry->Http->post('campaign'))){
+		
 			$data = $this->registry->Http->post('campaign');
 			$campaign = new campaign($data);
-			$result = $campaign->isValid();
 			
-			if($result !== true ){
-				$this->registry->smarty->assign('Errors', $result);
-				goto printform;
-			}
-
 			if(!empty($_POST['mailing_id'])){
 				// Recuperation target du mailing
 				$mailing = new mailing();
@@ -61,11 +56,26 @@ class campaignController extends Controller{
 
 				// Recuperation des contacts dans le mailings et generation de la cible
 				$cibles = $this->registry->db->select('contact_id')->from('contacts_mailing')->where(array('mailing_id =' => $mailing->id))->get();
+			}else{
+				$campaign->target = serialize($campaign->target);
+			}	
+			
+			// Verification validé de la campagn
+			$result = $campaign->isValid();			
+			if($result !== true ){
+				$this->registry->smarty->assign('Errors', $result);
+				goto printform;
 			}
 			
-			$campaign->target = serialize($campaign->target);
-			
+			// Sauvegarde de la campagne
 			$cid = $campaign->save();
+			
+			// Traite des utilisateur
+			$assign_to = $this->registry->Http->post('assign_to');
+			
+			foreach($assign_to as $k => $v){
+				$this->registry->db->insert('campaign_assign_to', array('campaign_id' => $cid, 'assign_to'	=> $v));
+			}
 			
 			$this->registry->smarty->assign('FlashMessage','Campagne enregistrée');
 
@@ -344,6 +354,7 @@ class campaignController extends Controller{
 	public function ajax_get_detailAction($id){
 
 		$this->load_manager('campaign_contacts_suivi');
+		$this->load_manager('campaign');
 
 		// Recuperation des infos (campaign_id et contact_id)
 		$data = $this->registry->db->get_one('campaign_contacts', array('id =' => $id));
@@ -355,8 +366,18 @@ class campaignController extends Controller{
 					->order('date_suivi DESC')
 					->get();
 		
-		$campaign = $this->registry->db->get_one('campaign', array('id =' => $data['campaign_id']));
-
+		$campaign = $this->manager->campaign->getById($data['campaign_id']);
+		
+		// Traitements des utilisateur 
+		$u1 = explode(',',$campaign['assign_to']);
+		$u2 = explode(',',$campaign['assign_to_id']);
+		$campaign['assign_to'] = array();
+		$i=0;
+		foreach($u1 as $k => $v){
+			$campaign['assign_to'][$u2[$i]] = $v;
+			$i++;
+		}
+	
 		$this->load_manager('contacts');
 		$contact = $this->manager->contacts->getById($data['contact_id']);
 

@@ -57,6 +57,7 @@ $registry->load_web_lib('pnotify/jquery.pnotify.min.js','js','footer');
 $registry->load_web_lib('scrollup/jquery.scrollUp.min.js','js','footer');
 $registry->load_web_lib('pnotify/jquery.pnotify.default.css','css');
 $registry->load_web_lib('shark_tasks/shark_tasks.css','css');
+
 /**
 *	Traitement des parametres particulier de config
 */

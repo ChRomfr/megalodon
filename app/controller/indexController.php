@@ -26,7 +26,7 @@ class indexController extends Controller{
 		);
 
 		// Recuperation des campagnes
-		$campaigns = $this->registry->db->get('campaign', array('assign =' => $_SESSION['utilisateur']['id'], 'date_start <=' => date('Y-m-d'), 'date_end >=' => date('Y-m-d')));
+		$campaigns = $this->registry->db->select('cp.*')->from('campaign cp')->left_join('campaign_assign_to cat','cp.id = cat.campaign_id')->where(array('cat.assign_to =' => $_SESSION['utilisateur']['id'], 'cp.date_start <=' => date('Y-m-d'), 'cp.date_end >=' => date('Y-m-d')))->group_by('cat.campaign_id')->get();
 		if(!empty($campaigns)) $this->registry->smarty->assign('current_campaigns', json_encode($campaigns));
 
 		// Recuperation des rdv à venir

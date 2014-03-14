@@ -24,8 +24,6 @@ class campaign extends Record{
 	
 	public $caller;
 	
-	public $assign;
-	
 	public $target;
 	
 	public $generated;
@@ -60,14 +58,9 @@ class campaign extends Record{
 			$nb_errors++;
 			$errors .= '<li>Date de fin invalide</li>';
 		}
-		
-		if(empty($this->assign)){
+				
+		if(empty($this->target)){
 			$nb_errors++;
-			$errors .= '<li>La campagne doit etre assigner à un utilisateur</li>';
-		}
-		
-		if(empty($this->target['ctype'])){
-			$nb_error++;
 			$errors .= '<li>Selectionner un type de contact</li>';
 		}
 		

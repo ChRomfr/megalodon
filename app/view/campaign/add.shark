@@ -1,3 +1,5 @@
+{* Affiche le formulaire permettant l'ajout d'une campagne *}
+{strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
 	<li><a href="{$Helper->getLink("campaign")}" title="Campagne">Campagne</a></li>
@@ -62,10 +64,10 @@
 			</div>
 			
 			<div class="form-group">
-				<label class="control-label col-sm-2">Assigné à :</label>
+				<label class="control-label col-sm-2" for="assign-to">Assigné à :</label>
 				<div class="col-sm-5">
-					<select name="campaign[assign]" id="campaign-assign" required class="chozen form-control">
-						<option value=""></option>
+					<select name="assign_to[]" id="assign-to" required class="chozen form-control" multiple>
+						<option></option>
 						{foreach $users as $row}
 						<option value="{$row.id}">{$row.identifiant}</option>
 						{/foreach}
@@ -81,7 +83,7 @@
 			<div class="form-group">
 				<label class="col-sm-2 control-label" for="mailing_id_target">Mailing :</label>
 				<div class="col-sm-5">
-					<select name="mailing_id" id="mailing_id_target">
+					<select name="mailing_id" id="mailing_id_target" class="form-control">
 						<option value=""></option>
 						{foreach $mailings as $row}
 						<option value="{$row.id}">{$row.libelle}</option>
@@ -89,7 +91,9 @@
 					</select>
 				</div>
 			</div>
-
+			
+			<div id="container-target">
+			
 			<legend>Cible</legend>
 			{* START CRITERES RECHERCHE *}
 					
@@ -220,6 +224,7 @@
 
 			{* END CRITERES RECHERCHE *}
 		</fieldset>
+		</div>
 		
 		<hr/>
 		<div class="text-center">
@@ -227,8 +232,8 @@
 		</div>
 		
 	</form>
-</div>{* /well *}
-
+</div>{* /.well *}
+{/strip}
 <script type="text/javascript">
 $(document).ready(function() {
 	$('#campaing-date-start').mask("99/99/9999");

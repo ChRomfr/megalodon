@@ -1,10 +1,37 @@
+CREATE TABLE `campaign_assign_to` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `campaign_id` INT NOT NULL COMMENT 'ID de la campagne',
+  `assign_to` INT NOT NULL COMMENT 'ID de l utilisateur',
+  PRIMARY KEY (`id`),
+  UNIQUE INDEX `cat` (`assign_to` ASC, `campaign_id` ASC))
+ENGINE = MyISAM
+COMMENT = 'Liaison campgne <-> user';
+
+ALTER TABLE `campaign` DROP COLUMN `assign`;
+
+
+CREATE TABLE `contacts_users` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `contact_id` INT NOT NULL,
+  `user_id` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Contient la liaison contacs <-> utilisateur';
+
+CREATE TABLE `contacts_groups` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `contact_id` INT NOT NULL,
+  `group_id` INT NOT NULL,
+  PRIMARY KEY (`id`))
+ENGINE = MyISAM
+COMMENT = 'Contient la liaison contacs <-> groupe utilisateur';
+
 --
 DROP TABLE `campaign_contacts_suivi`;
 
 ALTER TABLE `contacts_suivi` 
 ADD COLUMN `source` VARCHAR(50) NULL COMMENT 'Source du suivi (campagne, fiche ...)' AFTER `suivi`,
 ADD COLUMN `source_id` INT NULL COMMENT 'Id de la source du suivi (campaign_id, ...)' AFTER `source`;
-
 
 --
 CREATE TABLE `ca` (
