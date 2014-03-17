@@ -22,6 +22,7 @@
 				<th>Demandeur</th>
 				<th>Date de demande</th>
 				<th>Date d'envoie</th>
+				<th>Stats</td>
 			</tr>
 		</thead>
 		<tbody>
@@ -41,6 +42,9 @@
 				<td>{$mailing.demandeur}</td>
 				<td>{$mailing.date_wish}</td>
 				<td>{$mailing.date_send}</td>
+				<td>
+					{if !empty($mailing.stats)}<span class="label label-success">Oui</span>{else}<span class="label label-warning">Non</span>{/if}
+				</td>
 			</tr>
 		{/foreach}
 		</tbody>

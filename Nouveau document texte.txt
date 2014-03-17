@@ -9,7 +9,6 @@ COMMENT = 'Liaison campgne <-> user';
 
 ALTER TABLE `campaign` DROP COLUMN `assign`;
 
-
 CREATE TABLE `contacts_users` (
   `id` INT NOT NULL AUTO_INCREMENT,
   `contact_id` INT NOT NULL,
