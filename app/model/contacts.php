@@ -85,6 +85,10 @@ class contacts extends Record{
 	 */
 	public $collab_id;
 	
+	public $pasdecontact;
+	
+	public $date_pasdecontact;
+	
 	public function isValid(){
 		if(empty($this->client) ){
 			$this->client = 0;

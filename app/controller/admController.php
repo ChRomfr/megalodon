@@ -1019,9 +1019,23 @@ class admController extends Controller{
 		$mail_sujet = "Recap hebdomadaire des mailings";
 		$mail_body =  $this->registry->smarty->fetch(VIEW_PATH . 'adm' . DS . 'mailings_mail_body_resume.meg');
 
-		sendEmail(array('romain.drouche@afpi-centre-valdeloire.com', 'elise.bordier@afpi-centre-valdeloire.com', 'pierre.szwiec@afpi-centre-valdeloire.com'), 'nepasrepondre@afpi-centre-valdeloire', $mail_sujet, '', $mail_body);
+		// Recuperation des utilisateur
+		$users = $this->registry->db->select('u.*')
+				->from('groupe g')
+				->left_join('user_groupe ug','g.id = ug.groupe_id')
+				->left_join('user u','ug.user_id = u.id')
+				->where(array('ug.groupe_id =' => $this->registry->config['mailing_group_receive_resume']))
+				->get();
+		var_dump($users);
+		$i=0;
+		foreach($users as $row){
+			if(!empty($row['email'])){
+				$i++;
+				sendEmail($row['email'], 'nepasrepondre@afpi-centre-valdeloire', $mail_sujet, '', $mail_body);
+			}
+		}		
 
-		return 'ok';
+		return 'ok - email envoyé '. $i .' fois';
 	}
 
 	public function modulesAction(){

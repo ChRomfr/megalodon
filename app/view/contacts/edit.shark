@@ -154,6 +154,16 @@
 			<input type="text" name="contact[code_interne]" id="code_interne" value="{$contact.code_interne}" class="form-control"/>
 		</div>
 	</div>
+	
+	<div class="form-group">
+		<label class="control-label col-sm-2">Ne souhaite pas être contacté :</label>
+		<div class="col-sm-5">
+			<select name="contact[pasdecontact]" id="client" class="form-control">
+				<option value="0" {if $contact.pasdecontact == 0}selected="selected"{/if}>Non</option>
+				<option value="1" {if $contact.pasdecontact == 1}selected="selected"{/if}>Oui</option>
+			</select>
+		</div>
+	</div>
 
 	<div class="form-group">
 		<label class="control-label col-sm-2">Client :</label>
@@ -261,6 +271,7 @@
 		<input type="hidden" name="contact[lat]" value="{$contact.lat}" />
 		<input type="hidden" name="contact[lng]" value="{$contact.lng}" />
 		{/if}
+		<input type="hidden" name="pasdecontact_old" value="{$contact.pasdecontact}" />
 		<input type="hidden" name="contact[isDelete]" value="{$contact.isDelete}" />
 		<input type="hidden" name="contact[valid]" value="{$contact.valid}" />
 		<input type="hidden" name="contact[ctype]" value="{$contact.ctype}" />

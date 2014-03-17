@@ -235,6 +235,48 @@ class contactsController extends Controller{
 				'link_id'	=>	$id,
 			));
 			$log->save();
+			
+			// Traitement du champ pas de contact
+			$pasdecontact_old = $this->registry->Http->post('pasdecontact_old');
+			if($pasdecontact_old == 0 && $contact->pasdecontact == 1){
+				// Ajout de la date de la modification
+				$contact->date_pasdecontact = date('Y-m-d');
+				
+				// On sauvegarde
+				$contact->save();
+				
+				// Ajout d un log 
+				$log = new log();
+				$log->log = 'Le contact a ete marqué comme : ne pas contacte le ' . date('Y-m-d') . ' pas l utilisateur '. $_SESSION['utilisateur']['identifiant'] . '(#'.$_SESSION['utilisateur']['id'] .')';
+				$log->module = 'contacts';
+				$log->link_id = $id;
+				$log->save();
+				
+				// On passe le contact en ECHEC sur les campagnes en cours ...
+				// Recuperation des campagnes en cours
+				$campaigns = $this->registry->db->select('cp.*')
+								->from('campaign cp')
+								->where(array('cp.date_start <=' => date('Y-m-d'), 'cp.date_end >=' => date('Y-m-d')))
+								->get();
+				
+				// Boucle sur les campagnes pour passe le contact en echec
+				foreach($campaigns as $row){
+					// Test su le contact est dans la cible
+					$in_campaign = $this->registry->db->count('campaign_contacts', array('campaign_id =' => $row['id'], 'contact_id =' => $id));
+					if($in_campaign == 1){
+						$this->registry->db->update('campaign_contacts', array('statut' => 3), array('campaign_id =' => $row['id'], 'contact_id =' => $id));
+						// Ajout d'un suivi
+						$suivi = new contacts_suivi();
+						$suivi->suivi = 'Contact passé automatiquement en ECHEC, ne soit plus être démarché';
+						$suivi->cid = $id;
+						$suivi->uid = $_SESSION['utilisateur']['id'];
+						$suivi->date_suivi = date("Y-m-d H:i:s");
+						$suivi->source = 'Campagne';
+						$suivi->source_id = $row['id'];
+						$suivi->save();
+					}					
+				}
+			}
 		
 			return $this->detailAction($id);
 		}

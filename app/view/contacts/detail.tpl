@@ -1,4 +1,4 @@
-<!-- app/view/contacts/detail.tpl -->
+{* app/view/contacts/detail.tpl *}
 {strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
@@ -11,6 +11,12 @@
 	{if $contact.actif == 0}
 	<div class="bs-callout bs-callout-warning">
 		<p class="text-center"><strong>Contact désactivé</strong></p>
+	</div>
+	{/if}
+	
+	{if $contact.pasdecontact == 1}
+	<div class="bs-callout bs-callout-danger">
+		<p class="text-center"><strong>Ce contact ne souhaite pas être démarché depuis le {$contact.date_pasdecontact}</strong></p>
 	</div>
 	{/if}
 
