@@ -21,7 +21,7 @@
 	<div class="form-group">
 		<label for="date-ca" class="col-sm-3">Date :</label>
 		<div class="col-sm-6">
-			<input type="text" name="ca[date_ca]" required id="date-ca" class="form-control" placeholder="{date('Y-m-d')}" data-format="YYYY-MM-DD" {if isset($ca)}value="{$ca.date_ca}"{/if}/>
+			<input type="text" name="ca[date_ca]" required id="date-ca" class="form-control" placeholder="{date('Y-m-d')}" data-date-format="YYYY-MM-DD" {if isset($ca)}value="{$ca.date_ca}"{/if}/>
 		</div>
 	</div>
 	<hr/>
