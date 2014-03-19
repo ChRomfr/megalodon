@@ -280,3 +280,18 @@ function get_form_edit_ca(contact_id, ca_id){
 	$('#modal-global-label').html('Edition CA');
     $('#modal-global').modal('show')
 }
+
+/**
+* Affiche la modal permettant l ajout d un telephoneà une fiche
+*/
+function GetFormAddPhone(cid){
+	$.get(
+        base_url + 'index.php/contacts/AjaxAddPhone/'+cid,
+        {nohtml:'nohtml'},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('Nouveau telephone');
+    $('#modal-global').modal('show');
+}

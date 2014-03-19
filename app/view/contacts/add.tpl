@@ -132,8 +132,8 @@
 					<label class="control-label col-sm-2">Client :</label>
 					<div class="col-xs-1">
 						<select name="contact[client]" id="contact-client" class="form-control">
-							<option value="0">Non</option>
-							<option value="1">Oui</option>
+							<option value="0" {if isset($ets) && $ets.client == 0}selected="selected"{/if}>Non</option>
+							<option value="1" {if isset($ets) && $ets.client == 1}selected="selected"{/if}>Oui</option>
 						</select>
 					</div>
 				</div>

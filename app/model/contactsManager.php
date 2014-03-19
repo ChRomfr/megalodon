@@ -10,8 +10,8 @@ class contactsManager extends BaseModel{
 	public function count($_where = null){
 		$this->db->select(' COUNT(DISTINCT(c.id)) as nb')
 			->from('contacts c')
-			->left_join('personne p','c.id = p.contact_id')
-			->left_join('societe s','c.id = s.contact_id')
+			//->left_join('personne p','c.id = p.contact_id')
+			//->left_join('societe s','c.id = s.contact_id')
 			->left_join('telephones t','c.id = t.contact_id');
 			
 		// Traitement des filtres des categories et jointure
@@ -72,10 +72,10 @@ class contactsManager extends BaseModel{
 	public function get($_where = null, $limit = null, $offset = null, $fields = 'c.*'){
 
 		
-		$this->db->select(' DISTINCT(c.id), '. $fields .', concat_ws("",s.raison_social, p.nom) as nom, p.prenom')
+		$this->db->select(' DISTINCT(c.id), '. $fields .', c.nom , c.prenom, (SELECT COUNT(tel.id) FROM telephones tel WHERE c.id = tel.contact_id AND tel.type != 5) as has_tel')
 			->from('contacts c')
-			->left_join('personne p','c.id = p.contact_id')
-			->left_join('societe s','c.id = s.contact_id')
+			//->left_join('personne p','c.id = p.contact_id')
+			//->left_join('societe s','c.id = s.contact_id')
 			->left_join('telephones t','c.id = t.contact_id');
 			
 			
@@ -145,12 +145,13 @@ class contactsManager extends BaseModel{
 	public function getById($id, $history = 1){
 		
 		// Recuperation du contact
-		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id, group_concat(u2.identifiant) as users, group_concat(u2.id) as users_id, group_concat(gr.name) as groups, group_concat(gr.id) as groups_id')
+		$this->db->select('c.*, po.libelle as poste, se.libelle as service, group_concat(u2.identifiant) as users, group_concat(u2.id) as users_id, group_concat(gr.name) as groups, group_concat(gr.id) as groups_id, (SELECT COUNT(tel.id) FROM telephones tel WHERE c.id = tel.contact_id AND tel.type != 5) as has_tel, pc.nom as parent_nom')
 			->from('contacts c')
-			->left_join('societe s','c.id = s.contact_id')
-			->left_join('personne p','c.id = p.contact_id')
-			->left_join('poste po','p.poste_id = po.id')
-			->left_join('service se','p.service_id = se.id')
+			//->left_join('societe s','c.id = s.contact_id')
+			//->left_join('personne p','c.id = p.contact_id')
+			->left_join('contacts pc','c.parent_id = pc.id')
+			->left_join('poste po','c.poste_id = po.id')
+			->left_join('service se','c.service_id = se.id')
 			->left_join('contacts_users cu','c.id = cu.contact_id')
 			->left_join('user u2','cu.user_id = u2.id')
 			->left_join('contacts_groups cg','c.id = cg.contact_id')
@@ -176,9 +177,8 @@ class contactsManager extends BaseModel{
 		$result['telephones'] = $this->db->get();
 		
 		// Recuperation societe si personne / pro
-		if(!empty($result['societe_id'])){
-			//$result['societe'] = $this->db->get_one('societe', array('id =' => $result['societe_id']));
-			$result['societe'] = $this->db->get_one('societe', array('contact_id =' => $result['societe_id']));
+		if(!empty($result['parent_id'])){
+			$result['societe'] = $this->db->get_one('contacts', array('id =' => $result['parent_id']));
 		}
 								
 		// Recuperation des emails

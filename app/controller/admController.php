@@ -772,7 +772,100 @@ class admController extends Controller{
         // envoie du resultat au format JSON
         return json_encode($data, JSON_NUMERIC_CHECK);
 	}
+	
+	/**
+	*	Verifie les societes cliente et passe les contact societe en client
+	*/
+	public function contacts_synchro_clt_societe_proAction(){
+		$in_error = 0;
+		$societes = $this->registry->db->get('contacts', array('client =' => 1, 'ctype =' => 'societe'));
+		
+		foreach($societes as $societe){
+			// Recuperation des contacts
+			$personnes = $this->registry->db->get('personne', array('societe_id =' => $societe['id']));
+			
+			if(!empty($personnes)){
+				foreach($personnes as $personne){
+					$data = $this->registry->db->get_one('contacts', array('id =' => $personne['contact_id']));
+					if($data['client'] == 0){
+						$this->registry->db->update('contacts', array('client' => 1), array('id =' => $data['id']));
+						$in_error++;
+					}
+				}
+			}
+		}
+		
+		return $in_error .' personnes ont été modifiés';
+	}
 
+	public function contacts_migAction(){
+		set_time_limit(0);
+		
+		// On commence par les societes
+		$societes = $this->registry->db->get('societe');
+		$html = null;
+		foreach($societes as $row){
+			// Recuperation du contact
+			$contact = new myObject($this->registry->db->get_one('contacts', array('id =' => $row['contact_id'])));
+			$contact->nom = $row['raison_social'];
+			$contact->siret = $row['siret'];
+			$contact->effectif = $row['effectif'];
+			$contact->ape_id = $row['ape_id'];
+			$contact->mother = $row['mother'];
+			$contact->parent_id = $row['parent_id'];
+			$contact->type = 1;
+			$html.='<pre>'. print_r($contact, true) .'</pre>';
+			// Sauvegarde de l'objet
+			$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
+			
+		}
+		
+		// Personnes
+		$personnes = $this->registry->db->get('personne');
+		
+		foreach($personnes as $row){
+			if(empty($row['nom']) && empty($row['prenom'])) goto nextboucle;
+			// Recuperation du contact
+			$contact = new myObject($this->registry->db->get_one('contacts', array('id =' => $row['contact_id'])));
+			$contact->nom = $row['nom'];
+			$contact->prenom = $row['prenom'];
+			$contact->poste_id = $row['poste_id'];
+			$contact->service_id = $row['service_id'];
+			
+			if(!empty($row['societe_id'])){
+				$contact->parent_id = $row['societe_id'];
+				$contact->ctype = 'societe_contact';
+				$contact->type = 2;
+			}else{
+				$contact->type = 3;
+				$contact->parent_id = null;
+			}
+			
+			// Sauvegarde de l'objet
+			$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
+			nextboucle:
+		}
+		
+		return $html;
+	}
+	
+	public function contacts_check_liaisonAction($delete = null){
+		$sct_in_error = 0;
+		// Test avec les societes
+		$societes = $this->registry->db->get('societe');
+		
+		// Boucle sur le societe
+		foreach($societes as $row){
+			$result = $this->registry->db->count('contacts', array('id =' => $row['contact_id']));
+			if($result == 0){
+				$sct_in_error++;
+				if(!empty($delete)) $this->registry->db->delete('societe', $row['id']);
+			}
+		}
+		
+		return 'Il y a '. $sct_in_error .' societe(s) en erreur !';
+	}
+	
 	public function contacts_delete_by_email_step1Action(){
 
 		if(!is_null($this->registry->Http->post('dc'))){

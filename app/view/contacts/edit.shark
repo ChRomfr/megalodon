@@ -3,20 +3,30 @@
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil">Accueil</a></li>
 	<li><a href="{$Helper->getLink("contacts")}" title"Contacts">Contacts</a></li>
-	<li><a href="{$Helper->getLink("contacts/detail/{$contact.contact_id}")}" title="Detail">{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</a></li>
+	<li><a href="{$Helper->getLink("contacts/detail/{$contact.id}")}" title="Detail">{$contact.nom} {if !empty($contact.prenom)}{$contact.prenom}{/if}</a></li>
 	<li class="active">Edition</li>
 </ol>
 
 <form method="post" action="" class="form-horizontal well" id="form-edit-contact">
 
-{if !empty($contact.raison_social)}
+
 	<div class="form-group">
-		<label class="control-label col-sm-2">Raison social</label>
+		<label class="control-label col-sm-2">{if $contact.type == 1}Raison social{else}Nom{/if}</label>
 		<div class="col-sm-5">
-			<input type="text" name="contact[ets][raison_social]" id="raison_social" value="{$contact.raison_social}" required class="form-control"/>
+			<input type="text" name="contact[nom]" id="nom" value="{$contact.nom}" required class="form-control"/>
 		</div>
 	</div>
-
+	
+	{if $contact.type == 2 OR $contact.type == 3}
+	<div class="form-group">
+		<label class="control-label col-sm-2">Prenom :</label>
+		<div class="col-sm-5">
+			<input type="text" name="contact[prenom]" id="contact-prenom" value="{$contact.prenom}" required class="form-control"/>
+		</div>
+	</div>
+	{/if}
+	
+	{if $contact.type == 1}
 	<div class="form-group">
 		<label class="control-label col-sm-2">SIRET</label>
 		<div class="col-sm-5">
@@ -44,44 +54,32 @@
 	</div>
 	
 	<div class="form-group">
-	<label class="control-label col-sm-2">Siège social :</label>
-	<div class="col-sm-5">
-		<select name="contact[ets][mother]" id="siege-social" class="form-control">
-			<option value="0" {if $contact.mother == 0}selected="selected"{/if}>Non</option>
-			<option value="1" {if $contact.mother == 1}selected="selected"{/if}>Oui</option>
-		</select>
-	</div>
-</div>
-{else}
-	<div class="form-group">
-		<label class="control-label col-sm-2">Nom :</label>
+		<label class="control-label col-sm-2">Siège social :</label>
 		<div class="col-sm-5">
-			<input type="text" name="contact[per][nom]" id="contact-par-nom" value="{$contact.nom}" required class="form-control"/>
+			<select name="contact[ets][mother]" id="siege-social" class="form-control">
+				<option value="0" {if $contact.mother == 0}selected="selected"{/if}>Non</option>
+				<option value="1" {if $contact.mother == 1}selected="selected"{/if}>Oui</option>
+			</select>
 		</div>
 	</div>
+	{/if}
 
-	<div class="form-group">
-		<label class="control-label col-sm-2">Prenom :</label>
-		<div class="col-sm-5">
-			<input type="text" name="contact[per][prenom]" id="contact-par-prenom" value="{$contact.prenom}" required class="form-control"/>
-		</div>
-	</div>
-
-	{* Information si contact lié a une societe *}
-		{if !empty($contact.societe)}
-		
+	{* Contact type 2 contact lie a une societe *}
+	{if $contact.type == 2}
+		{*
 		<div class="form-group">
 			<label class="control-label col-sm-2">Societe :</label>
 			<div class="col-sm-5">
 				<input type="text" value="{$contact.societe.raison_social}" disabled class="form-control"/>
-				<input type="hidden" name="contact[per][societe_id]" value="{$contact.societe_id}" />
+				<input type="hidden" name="contact[per][societe_id]" value="{$contact.parent_id}" />
 			</div>
 		</div>
-
+		*}
+		
 		<div class="form-group">
 			<label class="control-label col-sm-2">Poste :</label>
 			<div class="col-sm-5">
-				<select name="contact[per][poste_id]" id="contact-per-poste" class="chzn-select">
+				<select name="contact[poste_id]" id="contact-poste" class="chzn-select">
 					<option value=""></option>
 					{foreach $global_postes as $row}
 					<option value="{$row.id}">{$row.libelle}</option>
@@ -93,7 +91,7 @@
 		<div class="form-group">
 			<label class="control-label col-sm-2">Service :</label>
 			<div class="col-sm-5">
-				<select name="contact[per][service_id]" id="contact-per-service" class="chzn-select">
+				<select name="contact[service_id]" id="contact-service" class="chzn-select">
 					<option value=""></option>
 					{foreach $global_services as $row}
 					<option value="{$row.id}">{$row.libelle}</option>
@@ -101,9 +99,8 @@
 				</select>
 			</div>
 		</div>
-		{/if}
 	{/if}
-
+	
 	{* CHAMPS COMMUN *}
 	<div class="form-group">
 		<label class="control-label col-sm-2">Adresse :</label>
@@ -252,20 +249,10 @@
 
 	<div class="text-center">
 		<hr/>
-		<input type="hidden" name="contact[id]" value="{$contact.contact_id}" />
-		{if !empty($contact.societe_id)}
-		<input type="hidden" name="societe_id" value="{$contact.societe_id}" />
-		{else}
-		<input type="hidden" name="contact[per][id]" value="{$contact.personne_id}" />
-		{/if}
-		
-		{if !empty($contact.raison_social)}
-		<input type="hidden" name="contact[ets][id]" value="{$contact.sid}" />
-		{/if}
-
-		{if !empty($contact.personne_id)}
-		<input type="hidden" name="contact[per][id]" value="{$contact.personne_id}" />
-		{/if}
+		<input type="hidden" name="contact[id]" value="{$contact.id}" />
+		{if !empty($contact.parent_id)}
+		<input type="hidden" name="parent_id" value="{$contact.parent_id}" />
+		{/if}	
 		
 		{if isAdmin() < 1}
 		<input type="hidden" name="contact[lat]" value="{$contact.lat}" />

@@ -97,17 +97,7 @@ function endUpload(result){
 	}
 }
 
-function GetFormAddPhone(cid){
-	$.get(
-        base_url + 'index.php/contacts/AjaxAddPhone/'+cid,
-        {nohtml:'nohtml'},
-        function(data){
-            $("#modal-fiche-contacts-body").html(data);
-        }        
-    );
-    $('#modal-fiche-contact-label').html('Nouveau telephone');
-    $('#modal-fiche-contacts').modal('show');
-}
+
 
 function ReloadFiles(cid){
 	$('#table-contacts-files').find("tr:gt(0)").remove();

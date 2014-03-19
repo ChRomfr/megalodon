@@ -1,6 +1,17 @@
+ALTER TABLE `contacts` ADD COLUMN `pasdecontact` INT(1) NULL DEFAULT 0 COMMENT 'Marque le contact comme souhaitant de pas etre appel' AFTER `collab_id`, ADD COLUMN `date_pasdecontact` DATE NULL AFTER `pasdecontact`;
+
+ALTER TABLE `megalodon`.`societe` ADD COLUMN `mig` INT(1) NULL DEFAULT 0 AFTER `parent_id`;
+ALTER TABLE `megalodon`.`personne` ADD COLUMN `mig` INT(1) NULL DEFAULT 0 AFTER `societe_id`;
+
 ALTER TABLE `megalodon`.`contacts` 
-ADD COLUMN `pasdecontact` INT(1) NULL DEFAULT 0 COMMENT 'Marque le contact comme souhaitant de pas etre appel' AFTER `collab_id`,
-ADD COLUMN `date_pasdecontact` DATE NULL AFTER `pasdecontact`;
+ADD COLUMN `nom` VARCHAR(150) NULL COMMENT 'Contient la raison social ou le nom du contact' AFTER `date_pasdecontact`,
+ADD COLUMN `prenom` VARCHAR(150) NULL AFTER `nom`,
+ADD COLUMN `effectif` INT NULL AFTER `prenom`,
+ADD COLUMN `ape_id` INT NULL AFTER `effectif`,
+ADD COLUMN `mother` INT(1) NULL COMMENT 'Si contacts de type societe ont le marque comme siege social' AFTER `ape_id`,
+ADD COLUMN `parent_id` INT NULL COMMENT 'Possiiblite de lie un contacts avec un contact dans le cas d un site dsitant ou d une personne lie a une societe' AFTER `mother`,
+ADD COLUMN `poste_id` INT NULL AFTER `parent_id`,
+ADD COLUMN `service_id` INT NULL AFTER `poste_id`;
 
 --
 CREATE TABLE `campaign_assign_to` (

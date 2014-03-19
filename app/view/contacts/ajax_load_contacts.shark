@@ -11,8 +11,9 @@
 		<tr>
 			<th>Contact</th>
 			<th>Ville</th>
-			<th>Email</th>
-			<th>Type</th>
+			<!-- <th>Email</th>
+			<th>Type</th> -->
+			<th>Action</th>
 			{if $smarty.session.utilisateur.isAdmin > 0}
 			<th></th>
 			{/if}
@@ -21,13 +22,31 @@
 	<tbody>
 		{foreach $contacts as $row}
 		<tr>
-			<td><a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Detail">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a></td>
+			<td>
+				<div class="pull-left">
+					<a rel="popover" data-html=true data-poload="{$Helper->getLink("contacts/resume_popover/{$row.id}?nohtml")}" href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a>
+				</div>
+				<div class="pull-right">					
+					{if $row.pasdecontact == 1}<span class="help-text text-warning" title="Ce contact ne souhaite plus être contacté"><i class="fa fa-exclamation-triangle"></i></span>{/if}
+					
+					{if $row.has_tel == 0}&nbsp;&nbsp;<span class="help-text" title="Aucun numéro de téléhone renseigné" onclick="GetFormAddPhone({$row.id})"><i class="fa fa-phone-square text-danger"></i></span>{/if}
+					{if $row.client == 1}&nbsp;&nbsp;<span class="help-text" title="Ce contact est client"><i class="fa fa-smile-o"></i></span>{/if}
+					</div>
+				<div class="clearfix"></div>
+			</td>
 			<td>{$row.city}</td>
-			<td>{$row.email}</td>
+			<!-- <td>{$row.email}</td> 
 			<td>
 				{if $row.ctype == 'societe'}Societe
 				{elseif $row.ctype == 'societe_contact'}Pro
 				{else}Par
+				{/if}
+			</td> -->
+			<td>
+				<a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Voir la fiche" class="help-text"><i class="fa fa-eye"></i></a>
+				{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
+				&nbsp;&nbsp;&nbsp;&nbsp;
+				<a href="{$Helper->getLink("contacts/edit/{$row.id}")}" title="Editer la fiche" class="help-text"><i class="fa fa-edit"></i></a>
 				{/if}
 			</td>
 			{if $smarty.session.utilisateur.isAdmin > 0}
@@ -61,4 +80,22 @@
 
 <div class="clearfix"></div>
 </form>
+{literal}
+<script type="text/javascript">$('.help-text').tooltip();</script>
+<script type="text/javascript">
+$(document).ready(function(){
+	$(document).on('hover', '*[data-poload]',function(event){
+		if(event.type == 'mouseenter'){
+			var e=$(this);
+			e.unbind('hover');
+			$.get(e.data('poload'),function(d) {
+				e.popover({content: d}).popover('show');
+			});
+		}else{
+			$(this).popover('hide');
+		}			
+	});
+});
+</script>
+{/literal}
 {/strip}

@@ -3,7 +3,7 @@
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
 	<li><a href="{$Helper->getLink("contacts")}" title="Contacts"><i class="fa fa-users"></i>&nbsp;&nbsp;Contacts</a></li>
-	<li class="active">{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</li>
+	<li class="active">{$contact.nom} {if !empty($contact.prenom)}{$contact.prenom}{/if}</li>
 </ol>
 
 <div class="well">
@@ -21,17 +21,17 @@
 	{/if}
 
 	<div class="pull-right">
-		<a href="javascript:get_form_add_file({$contact.contact_id});" title="{$lang.Ajouter_un_document}"><i class="fa fa-lg fa-cloud-upload"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:get_form_add_file({$contact.id});" title="{$lang.Ajouter_un_document}"><i class="fa fa-lg fa-cloud-upload"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if !empty($contact.email)}
-		<a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:get_form_send_email({$contact.id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{/if}
-		<a href="javascript:GetFormAddPhone({$contact.contact_id})" title="Ajouter un telephone"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
+		<a href="javascript:GetFormAddPhone({$contact.id})" title="Ajouter un telephone"><i class="fa fa-phone fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
-		<a href="{$Helper->getLink("contacts/edit/{$contact.contact_id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
+		<a href="{$Helper->getLink("contacts/edit/{$contact.id}")}" title="Modifier ce contact"><i class="fa fa-edit fa-lg"></i></a>
 		&nbsp;&nbsp;&nbsp;&nbsp;
 		{/if}
 		{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_delete)}
-		<a href="javascript:deleteContact({$contact.contact_id})" title="Supprimer ce contact"><i class="fa fa-trash-o fa-lg"></i></a>
+		<a href="javascript:deleteContact({$contact.id})" title="Supprimer ce contact"><i class="fa fa-trash-o fa-lg"></i></a>
 		{/if}
 	</div>
 	
@@ -73,7 +73,7 @@
 		{if !empty($contact.email)}
 		<tr>
 			<td>Email :</td>
-			<td><a href="javascript:get_form_send_email({$contact.contact_id})" title="Envoyer un email"><button class="btn"><i class="glyphicon glyphicon-envelope"></i></button></a>&nbsp;{$contact.email}</td>
+			<td><a href="javascript:get_form_send_email({$contact.id})" title="Envoyer un email"><button class="btn"><i class="glyphicon glyphicon-envelope"></i></button></a>&nbsp;{$contact.email}</td>
 		</tr>
 		{/if}
 		
@@ -96,10 +96,10 @@
 		{/if}
 		
 		{* Traitement pro lie a une entreprise*}
-		{if isset($contact.societe)}
+		{if !empty($contact.parent_id) && $contact.type == 2}
 		<tr>
 			<td>Societe :</td>
-			<td><a href="{$Helper->getLink("contacts/detail/{$contact.societe.contact_id}")}" title="Detail {$contact.societe.raison_social}">{$contact.societe.raison_social}</td>
+			<td><a href="{$Helper->getLink("contacts/detail/{$contact.parent_id}")}" title="Detail {$contact.parent_nom}">{$contact.parent_nom}</td>
 		</tr>
 		{/if}
 		
@@ -144,10 +144,10 @@
 		</tr>
 		{/if}
 		
-		{if !empty($siege)}
+		{if !empty($contact.parent_id) && $contact.type == 1}
 			<tr>
 				<td>Siege social :</td>
-				<td><a href="{$Helper->getLink("contacts/detail/{$siege.contacts_id}")}" title="">{$siege.raison_social}</a></td>
+				<td><a href="{$Helper->getLink("contacts/detail/{$contact.parent_id}")}" title="">{$contact.parent_nom}</a></td>
 			</tr>
 		{/if}
 
@@ -196,7 +196,7 @@
         <div id="tabSuivi" class="tab-pane {if $smarty.session.utilisateur.historique_contact == 0}active{/if}">
         	<br/>
         	<div class="pull-right">
-        		<a href="javascript:get_form_suivi({$contact.contact_id});" title="" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a> 
+        		<a href="javascript:get_form_suivi({$contact.id});" title="" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a> 
         	</div>
         	<div class="clearfix"></div>
         	{if count($contact.suivis) == 0}
@@ -237,7 +237,7 @@
         <div id="tab-rdv" class="tab-pane">
         	<br/>
         	<div class="pull-right">
-        		<a href="javascript:get_rdv_contacts({$contact.contact_id});" title="" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
+        		<a href="javascript:get_rdv_contacts({$contact.id});" title="" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
         	</div>
         	<div class="clearfix"></div>
         	<br/>
@@ -269,7 +269,7 @@
 					<input type="text" name="c2" required class="form-control" placeholder="ID du doublon"/>
 				</div>
 				<button class="btn btn-primary" type="submit">Fusionner</button>
-				<input type="hidden" name="c1" value="{$contact.contact_id}" />				
+				<input type="hidden" name="c1" value="{$contact.id}" />				
 			</form>
 			{/if}
 
@@ -302,7 +302,7 @@
 		<div id="tabAgences" class="tab-pane">
 			<br/>
 			<div class="pull-right">
-				<a href="javascript:get_form_add_agence({$contact.sid}, {$contact.contact_id})" title=""><i class="fa fa-plus fa-lg"></i></a>
+				<a href="javascript:get_form_add_agence({$contact.sid}, {$contact.id})" title=""><i class="fa fa-plus fa-lg"></i></a>
 			</div>
 			<div class="clearix"></div>
 			<table class="table table-striped table-consended">
@@ -320,7 +320,7 @@
 						<td><a href="{$Helper->getLink("contacts/detail/{$row.contacts_id}")}" title="Detail">{$row.contacts_id}</a></td>
 						<td>{$row.raison_social}</td>
 						<td>{$row.ville}</td>
-						<td><a href="javascript:agenceRemove({$row.contacts_id}, {$contact.contact_id})" title=""><i class="fa fa-trash-o"></i></td>
+						<td><a href="javascript:agenceRemove({$row.contacts_id}, {$contact.id})" title=""><i class="fa fa-trash-o"></i></td>
 					</tr>
 				{/foreach}
 				</tbody>
@@ -374,7 +374,7 @@
 		{if !empty($contact.raison_social)}
 		<div id="tabContactsOfSociete" class="tab-pane">
 			<div class="pull-right">
-				<a href="{$Helper->getLink("contacts/add?societe={$contact.contact_id}")}" title="Ajouter un contact" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
+				<a href="{$Helper->getLink("contacts/add?societe={$contact.id}")}" title="Ajouter un contact" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>
 			</div>
 			<div class="clearfix"></div>
 			<table class="table" id="table-contacts-societe">
@@ -417,3 +417,5 @@
 
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> 
 <script type="text/javascript">var contact = {$contact|json_encode};</script>
+
+{$contact|var_dump}

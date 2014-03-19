@@ -25,7 +25,7 @@ class contactsController extends Controller{
 		
 		$nb_contact = $this->manager->contacts->count($this->getWhere());
 
-		$contacts = $this->manager->contacts->get($this->getWhere(),$per_page, getOffset($per_page), 'c.ctype, c.city, c.email');
+		$contacts = $this->manager->contacts->get($this->getWhere(),$per_page, getOffset($per_page), 'c.ctype, c.city, c.email, c.pasdecontact, c.client');
 
 		// Recuperation des entreprises avec paginations
 		$base_url = $_SERVER['REQUEST_URI'];		
@@ -188,19 +188,6 @@ class contactsController extends Controller{
 			
 			// Enregistrements des données
 			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
-
-			if( isset($data['per']) ){
-				// Personne physique
-				$personne = new personne($data['per']);
-				$personne->contact_id = $contact->id;
-				$personne->save();
-			}
-			if(isset($data['ets'])){
-				// Entreprise
-				$societe = new societe($data['ets']);
-				$societe->contact_id = $contact->id;
-				$societe->save();
-			}
 			
 			// Traitements catégories
 			$categories = $this->registry->Http->post('categories');
@@ -267,7 +254,7 @@ class contactsController extends Controller{
 						$this->registry->db->update('campaign_contacts', array('statut' => 3), array('campaign_id =' => $row['id'], 'contact_id =' => $id));
 						// Ajout d'un suivi
 						$suivi = new contacts_suivi();
-						$suivi->suivi = 'Contact passé automatiquement en ECHEC, ne soit plus être démarché';
+						$suivi->suivi = 'Contact passé automatiquement en ECHEC, ne souhaite plus être démarché';
 						$suivi->cid = $id;
 						$suivi->uid = $_SESSION['utilisateur']['id'];
 						$suivi->date_suivi = date("Y-m-d H:i:s");
@@ -349,7 +336,7 @@ class contactsController extends Controller{
 		// Traitement du module CA si actif
 		if(isset($this->registry->modules['ca']) && $this->registry->modules['ca']['actif'] == 1){
 			$ca = new ca();
-			$cas = $ca->get_by_contact_id($contact['contact_id']);
+			$cas = $ca->get_by_contact_id($contact['id']);
 
 			$this->registry->smarty->assign('cas', $cas);
 			$this->registry->smarty->assign('tab_ca', $this->registry->smarty->fetch(VIEW_PATH.'ca'.DS.'tab_contacts_detail.tpl'));
@@ -359,6 +346,18 @@ class contactsController extends Controller{
 
 		// Generation de la page
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'detail.tpl');
+	}
+	
+	/**
+	*	Genere un resume de la fiche
+	*	@param int $cid id du contact dans la base
+	*	@return string html
+	*/
+	public function resume_popoverAction($cid){
+		$this->load_manager('contacts');		
+		$contact = $this->manager->contacts->getById($cid, 0);
+		$this->registry->smarty->assign('contact',$contact);
+		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'popover_resume.tpl');
 	}
 	
 	/**
@@ -596,7 +595,7 @@ class contactsController extends Controller{
 			
 			// APE
 			if( isset($filtres['ape_id']) && !empty($filtres['ape_id']) ){
-				$param .= " AND s.ape_id =  '". $filtres['ape_id'] ."'";
+				$param .= " AND c.ape_id =  '". $filtres['ape_id'] ."'";
 			}elseif(isset($filtres['ape']) && !empty($filtres['ape']) ){
 				$ape = $filtres['ape'];
 				
@@ -606,9 +605,9 @@ class contactsController extends Controller{
 					$i=0;
 					foreach($ape as $k => $v){
 						if($i!=0){
-							$param .= " OR s.ape_id = ". $v ." ";
+							$param .= " OR c.ape_id = ". $v ." ";
 						}else{
-							$param .= " s.ape_id = ". $v ." ";
+							$param .= " c.ape_id = ". $v ." ";
 						}
 						$i++;
 					}
@@ -618,7 +617,7 @@ class contactsController extends Controller{
 
 			// Effectif
 			if( isset($filtres['effectif_mini']) && !empty($filtres['effectif_mini']) && isset($filtres['effectif_max']) && !empty($filtres['effectif_max']) ){
-				$param .= " AND s.effectif >= ". $filtres['effectif_mini'] ." AND s.effectif <= ". $filtres['effectif_max'] ." ";
+				$param .= " AND c.effectif >= ". $filtres['effectif_mini'] ." AND c.effectif <= ". $filtres['effectif_max'] ." ";
 			}
 			
 			// Client
@@ -631,21 +630,21 @@ class contactsController extends Controller{
 				$s = trim($filtres['query']);
 				if( is_numeric($s) ){
 					// Recherche sur siret
-					$param .= " AND ( s.siret = '". $s ."' OR t.telephone = '". $s ."' ) ";
+					$param .= " AND ( c.siret = '". $s ."' OR t.telephone = '". $s ."' ) ";
 				}elseif(VerifieAdresseMail($s) == true){
 					$param .= " AND c.email = '". $s ."' ";
 				}else{
 					// Recherche sur la raison social
-					$param .= " AND (s.raison_social LIKE '%".$s."%' OR p.nom LIKE '%".$s."%' ) ";
+					$param .= " AND (c.nom LIKE '%".$s."%' ) ";
 				}
 			}
 
 			if( isset($filtres['poste']) && !empty($filtres['poste'])){
-				$param .= ' AND p.poste_id = '. $filtres['poste'] .' ';
+				$param .= ' AND c.poste_id = '. $filtres['poste'] .' ';
 			}
 
 			if( isset($filtres['service']) && !empty($filtres['service'])){
-				$param .= ' AND p.service_id = '. $filtres['service'] .' ';
+				$param .= ' AND c.service_id = '. $filtres['service'] .' ';
 			}
 
 			// Traitement du ctype
