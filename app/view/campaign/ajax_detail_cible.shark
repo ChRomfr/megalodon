@@ -1,8 +1,14 @@
-<!-- START app/view/campaign/ajax_detai_cible.shark -->
+{* START app/view/campaign/ajax_detai_cible.shark *}
 {strip}
 <div class="well">
-	<!-- Resume contacts -->
 	<h4>{if !empty($contact.raison_social)}{$contact.raison_social}{else}{$contact.prenom}&nbsp;{$contact.nom}{/if}</h4>
+	
+	{if $contact.pasdecontact == 1}
+	<div class="bs-callout bs-callout-danger">
+		<p class="text-center"><strong>Ce contact ne souhaite pas être démarché depuis le {$contact.date_pasdecontact}</strong></p>
+	</div>
+	{/if}
+	
 	<table class="table table-condensed">
 		{foreach $contact.telephones as $row}
 		<tr>
@@ -25,17 +31,17 @@
 		</tr>
 		{/if}
 	</table>
-	<!-- link take rdv -->
+	
 	<div class="pull-right">
-		<button class="btn btn-default" onclick="go_to_contacts_new_page({$contact.contact_id});"><i class="fa fa-user"></i>&nbsp;Fiche</button>
+		<button class="btn btn-default help-infos" title="Voir la fiche du contact" onclick="go_to_contacts_new_page({$contact.contact_id});"><i class="fa fa-user"></i>&nbsp;Fiche</button>
 		&nbsp;&nbsp;
-		<button class="btn btn-default" onclick="get_rdv_campaign({$contact.contact_id},{$campaign.id});"><i class="fa fa-clock-o"></i>&nbsp;Rendez-vous</button>
+		<button class="btn btn-default" title="Prendre un rendez vous" onclick="get_rdv_campaign({$contact.contact_id},{$campaign.id});"><i class="fa fa-clock-o"></i>&nbsp;Rendez-vous</button>
 	</div>
 	<div class="clearfix"></div>
 </div>
 
+{* AFFICHAGE DU SUIVI *}
 <div class="well">
-	<!-- Suivi campagne -->
 	{if count($suivis) > 0}	
 	<table class="table table-condensed">
 		<thead>
@@ -59,8 +65,9 @@
 	{else}
 	<div class="alert alert-info">Aucun suivi !</div>
 	{/if}
-</div>
+</div>{* /.well *}
 
+{* FORMULAIRE PERMETTANT L AJOUT D UNS SUIVI *}
 {if isset($campaign['assign_to'][$smarty.session.utilisateur.id])}
 <form class="well" method="post" action="{$Helper->getLink("campaign/suivi_add/{$campaign_data.id}")}">
 	<div class="form-group">

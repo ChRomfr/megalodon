@@ -105,6 +105,10 @@ class campaignController extends Controller{
 		$mailings = $this->registry->db->select('id, libelle')->from('mailings m')->where(array('valid =' => 1))->order('id DESC')->get();
 
 		$this->getFormValidatorJs();
+		$this->registry->load_web_lib('moment-2.4.0.js','js','footer');
+		$this->registry->load_web_lib('bt3_datapicker/css/bootstrap-datetimepicker.min.css','css');
+		$this->registry->load_web_lib('bt3_datapicker/js/bootstrap-datetimepicker.min.js','js','footer');
+		$this->registry->load_web_lib('bt3_datapicker/js/bootstrap-datetimepicker.fr.js','js','footer');
 		$this->registry->smarty->assign('users', $this->registry->db->get('user'));
 		$this->registry->smarty->assign('mailings', $mailings);
 		$this->registry->smarty->assign('campaign_type', $this->registry->db->get('campaign_type'));
@@ -141,20 +145,34 @@ class campaignController extends Controller{
 		$contacts = $this->manager->contacts->get($where);
 
 		foreach($contacts as $row){
-
+		
+			// Si tel valid est demande 
 			if($tel_valid == 1){
 				$result = $this->registry->db->count('telephones', array('contact_id =' => $row['id']));
 				if($result == 0){
 					goto nextboucle;
 				}
 			}
-
+			
+			
 			$campaign_contacts = array('campaign_id'=>$id, 'contact_id'=>$row['id'], 'statut'=>0);
+			
+			// Verification si contact est en mod "ne pas etre contacte"
+			if($row['pasdecontact'] == 1){
+				$campaign_contacts['statut'] = 3;
+			}
+			
+			// Enregistrement dans la base
 			$this->registry->db->insert('campaign_contacts', $campaign_contacts);
 			$cpt++;
+			
+			// Enregistrement du log
+			$log = new log();
+			$log->log = 'Enregistrement dans la campagne #'. $id;
+			$log->module = 'contacts';
+			$log->link_id = $row['id'];
+			$log->save();
 
-			$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $row['id'], 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Enregistrement dans la campagne #'. $id));
-			$clog->save();
 
 			nextboucle:
 		}
@@ -162,12 +180,12 @@ class campaignController extends Controller{
 		$this->registry->db->update('campaign', array('id' => $id, 'generated' => 1));
 
 		$log = new log(array(
-				'log' 		=> 	'Generation de la liste des cibles',
-				'module'	=>	'campaign',
-				'link_id'	=>	$id,
-				'user_id'	=>	$_SESSION['utilisateur']['id'],
-			));
-			$log->save();
+			'log' 		=> 	'Generation de la liste des cibles',
+			'module'	=>	'campaign',
+			'link_id'	=>	$id,
+			'user_id'	=>	$_SESSION['utilisateur']['id'],
+		));
+		$log->save();
 
 		return 'Campagne genere. Au total : '. $cpt;
 	}

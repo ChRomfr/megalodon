@@ -154,11 +154,11 @@ var suser = {$smarty.session.utilisateur|json_encode};
 {* APPEL JS EN FOOTER *}
 {if isset($FlashMessage) && !empty($FlashMessage)}<script type="text/javascript">var flash_message = '{$FlashMessage}'</script>{/if}
 {if isset($pnotify) && !empty($pnotify)}<script type="text/javascript">var notify =  {$pnotify|json_encode}</script>{/if}
-<script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="{$config.url}web/lib/meg/app.js"></script>
 {foreach registry::$js_lib_footer as $k => $v}
 <script type="text/javascript" src="{$config.url}web/lib/{$v}"></script>
 {/foreach}
+<script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="{$config.url}web/lib/meg/app.js"></script>
 
 {if $smarty.const.IN_PRODUCTION === false}
 <div class="container-fluid">

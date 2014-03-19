@@ -69,8 +69,6 @@ class campaign extends Record{
 			if( empty($this->id) ){
 				$this->creat_by = $_SESSION['utilisateur']['id'];
 				$this->creat_on = date("Y-m-d H:i:s");
-				$this->date_start = FormatDateToMySql($this->date_start);
-				$this->date_end = FormatDateToMySql($this->date_end);
 				$this->generated = 0;
 				$this->canceled = 0;
 				
