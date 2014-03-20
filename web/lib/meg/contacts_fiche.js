@@ -176,7 +176,7 @@ $(document).on('click', '#atabmailing',function(){
     $('#table-contacts-mailings').find("tr:gt(0)").remove();
 
     $.get(
-    base_url + 'index.php/contacts/get_mailings_of_contact/'+contact.contact_id,
+    base_url + 'index.php/contacts/get_mailings_of_contact/'+contact.id,
     {nohtml:'nohtml'},
     function(data){ 
         var tpl = '<tr><td>{{id}}</td><td>{{libelle}}</td><td>{{email}}</td><td>{{& open}}</tr>';
@@ -195,7 +195,7 @@ $(document).on('click', '#atabmeeting', function(){
 
     // Requete AJAX
     $.get(
-    base_url + 'index.php/contacts/get_meetings/'+contact.contact_id,
+    base_url + 'index.php/contacts/get_meetings/'+contact.id,
     {nohtml:'nohtml'},
     function(data){ 
         var tpl = '<tr><td>{{id}}</td><td><a href="javascript:get_rdv_detail({{id}})" title="Detail rendez vous">{{date_rdv}}</a></td><td>{{collab}}</td><td>{{statut}}</td></tr>';

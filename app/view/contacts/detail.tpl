@@ -417,5 +417,3 @@
 
 <script src="http://maps.googleapis.com/maps/api/js?sensor=false" type="text/javascript"></script> 
 <script type="text/javascript">var contact = {$contact|json_encode};</script>
-
-{$contact|var_dump}
