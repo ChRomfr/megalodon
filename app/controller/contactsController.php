@@ -54,8 +54,8 @@ class contactsController extends Controller{
 		$Csv = '';
 		$Csv = "Contact;Email\n";
 		foreach ($contacts as $row) {
-			if( !empty($row['raison_social']) ){
-				$Csv .= $row['raison_social'] . ";" . $row['email'] ."\n";
+			if( empty($row['prenom']) ){
+				$Csv .= $row['nom'] . ";" . $row['email'] ."\n";
 			}else{
 				$Csv .= $row['nom'] . " " . $row['prenom'] . ";" . $row['email'] ."\n";
 			}			
@@ -82,9 +82,9 @@ class contactsController extends Controller{
 			if($contact->type == 2 && empty($contact->parent_id)){
 				$contact->ctype = 'particulier';
 				$contact->type = 3;
-			}elseif($contact->type == 2 && !empty($contact->parent_id)){
+			}elseif($contact->type == 1 && !empty($contact->parent_id) && isset($contact->prenom)){
 				$contact->ctype = 'societe_contact';
-				$contact->type = 3;
+				$contact->type = 2;
 			}else{
 				$contact->ctype = 'societe';
 			}
@@ -172,7 +172,7 @@ class contactsController extends Controller{
 			if(empty($contact->collab_id)) $contact->collab_id = NULL;
 			
 			// Enregistrements des données
-			$this->registry->db->update('contacts', $contact, array('id =' => $contact->id));
+			$contact->save();
 			
 			// Traitements catégories
 			$categories = $this->registry->Http->post('categories');
@@ -304,13 +304,13 @@ class contactsController extends Controller{
 		
 		// Recuperation des agences
 		if( $contact['mother'] == 1 ){
-			$agences = $this->manager->contacts->getAgences($contact['sid']);
+			$agences = $this->manager->contacts->getAgences($contact['id']);
 			
 			$this->registry->smarty->assign('agences', $agences);
 		}
 		
 		// Recuperation siege social
-		if( !empty($contact['parent_id']) ){
+		if( $contact['type'] == 1 && !empty($contact['parent_id']) ){
 			$siege = $this->manager->contacts->getSiegeSocial($contact['parent_id']);
 			
 			$this->registry->smarty->assign('siege', $siege);
@@ -1308,15 +1308,24 @@ class contactsController extends Controller{
 	
 	/**
 	*	Ajout une agence à un siege social
-	*
+	* 	@return string code html du detail du parent
 	*/
 	public function agence_addAction(){
+		// Recuperation des informations
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
-		$contact = $this->registry->Http->get('contact');
-		$this->registry->db->update('societe', array('parent_id' => $mother), array('id =' => $agence_id));
+
+		// Enregistrement dans la base
+		$this->registry->db->update('contacts', array('parent_id' => $mother), array('id =' => $agence_id));
+
+		// Ajout d un log
+		$log = new log();
+		$log->log = 'Liaison entre #'. $mother . ' <-> #'. $agence_id;
+		$log->module = 'contacts';
+		$log->link_id = $mother;
+		$log->save();
 		
-		return $this->detailAction($contact);
+		return $this->detailAction($mother);
 	}
 	
 	/**
@@ -1326,7 +1335,7 @@ class contactsController extends Controller{
 	public function agence_removeAction(){
 		$agence_id = $this->registry->Http->get('agence_id');
 		$mother = $this->registry->Http->get('mother');
-		$this->registry->db->update('societe', array('parent_id' => '0'), array('id =' => $agence_id));
+		$this->registry->db->update('contacts', array('parent_id' => null), array('id =' => $agence_id));
 			
 		return $this->detailAction($mother);
 	}

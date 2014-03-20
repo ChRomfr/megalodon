@@ -22,10 +22,9 @@ function get_form_add_file(cid){
     $('#modal-global').modal('show');
 }
 
-function get_form_add_agence(mother_id, contact_id){
+function get_form_add_agence(parent_id){
 	$.get(
-        base_url + 'index.php/contacts/ajax_form_add_agence/'+mother_id,
-        {nohtml:'nohtml', contact:contact_id},
+        base_url + 'index.php/contacts/ajax_form_add_agence/'+parent_id,{},
         function(data){
             $("#modal-global-body").html('<div class="well">'+data+'</div>');
         }        
@@ -211,10 +210,10 @@ $(document).on('click', '#atabcontactofsociete', function(){
     $('#table-contacts-societe').find("tr:gt(0)").remove();
 
      $.get(
-    base_url + 'index.php/contacts/get_contacts_societe/'+contact.contact_id,
+    base_url + 'index.php/contacts/get_contacts_societe/'+contact.id,
     {nohtml:'nohtml'},
     function(data){ 
-        var tpl = '<tr><td><a href="javascript:gotofiche({{contact_id}})" title="">{{prenom}} {{nom}}</a></td><td>{{email}}</td><td>{{service}}</td><td>{{poste}}</td></tr>';
+        var tpl = '<tr><td><a href="javascript:gotofiche({{id}})" title="">{{prenom}} {{nom}}</a></td><td>{{email}}</td><td>{{service}}</td><td>{{poste}}</td></tr>';
         for( var i in data ){
             $('#table-contacts-societe').append( Mustache.render(tpl, data[i]) );
         };

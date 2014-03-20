@@ -180,8 +180,8 @@
 	<div class="tab-content">
 		
 		<ul id="tabContacts" class="nav nav-tabs">
-            {if !empty($contact.raison_social)}<li><a href="#tabContactsOfSociete" data-toggle="tab" id="atabcontactofsociete">Contacts</a></li>{/if}
-			{if !empty($contact.raison_social) && $contact.mother == 1}<li><a href="#tabAgences" data-toggle="tab">Agences</a></li>{/if}
+            {if $contact.type == 1}<li><a href="#tabContactsOfSociete" data-toggle="tab" id="atabcontactofsociete">Contacts</a></li>{/if}
+			{if $contact.type == 1 && $contact.mother == 1}<li><a href="#tabAgences" data-toggle="tab">Agences</a></li>{/if}
             <li {if $smarty.session.utilisateur.historique_contact == 0}class="active"{/if}><a href="#tabSuivi" data-toggle="tab">Suivi</a></li>
             <li><a href="#tab-rdv" data-toggle="tab" id="atabmeeting">Rendez vous</a></li>
 			<li><a href="#tabContactsEmailSend" data-toggle="tab">Emails</a></li>
@@ -298,11 +298,11 @@
 		{/if}
 		<!-- END tab Doublons -->
 
-		{if !empty($contact.raison_social) && $contact.mother == 1}
+		{if $contact.type == 1 && $contact.mother == 1}
 		<div id="tabAgences" class="tab-pane">
 			<br/>
 			<div class="pull-right">
-				<a href="javascript:get_form_add_agence({$contact.sid}, {$contact.id})" title=""><i class="fa fa-plus fa-lg"></i></a>
+				<a href="javascript:get_form_add_agence({$contact.id})" title=""><i class="fa fa-plus fa-lg"></i></a>
 			</div>
 			<div class="clearix"></div>
 			<table class="table table-striped table-consended">
@@ -317,10 +317,10 @@
 				<tbody>
 				{foreach $agences as $row}
 					<tr>
-						<td><a href="{$Helper->getLink("contacts/detail/{$row.contacts_id}")}" title="Detail">{$row.contacts_id}</a></td>
-						<td>{$row.raison_social}</td>
-						<td>{$row.ville}</td>
-						<td><a href="javascript:agenceRemove({$row.contacts_id}, {$contact.id})" title=""><i class="fa fa-trash-o"></i></td>
+						<td><a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Detail">#{$row.id}</a></td>
+						<td>{$row.nom}</td>
+						<td>{$row.city}</td>
+						<td><a href="javascript:agenceRemove({$row.id}, {$contact.id})" title=""><i class="fa fa-trash-o"></i></td>
 					</tr>
 				{/foreach}
 				</tbody>
@@ -371,7 +371,7 @@
 			</table>
 		</div>
 				
-		{if !empty($contact.raison_social)}
+		{if $contact.type == 1}
 		<div id="tabContactsOfSociete" class="tab-pane">
 			<div class="pull-right">
 				<a href="{$Helper->getLink("contacts/add?societe={$contact.id}")}" title="Ajouter un contact" class="btn btn-default"><i class="fa fa-plus fa-lg"></i></a>

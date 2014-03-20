@@ -11,7 +11,7 @@
 	</tr>
 	<tr>
 		<td>Tier :</td>
-		<td>{if isset($tier.raison_social) && !empty($tier.raison_social)}{$tier.raison_social}{else}{$tier.prenom} {$tier.nom}{/if}</td>
+		<td>{$tier.nom}{if !empty($tier.prenom)}&nbsp;{$tier.prenom}{/if}</td>
 	</tr>
 	<tr>
 		<td>Source :</td>

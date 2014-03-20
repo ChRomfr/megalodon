@@ -224,25 +224,27 @@ class contactsManager extends BaseModel{
 
 	public function getResumeById($id){
 		// Recuperation du contact
-		$this->db->select('c.*, s.*, p.*, po.libelle as poste, se.libelle as service, s.id as sid, c.id as contact_id, s.id as societe_id, p.id as personne_id, p.societe_id as societe_id')
+		$this->db->select('c.*, po.libelle as poste, se.libelle as service')
 			->from('contacts c')
-			->left_join('societe s','c.id = s.contact_id')
-			->left_join('personne p','c.id = p.contact_id')
-			->left_join('poste po','p.poste_id = po.id')
-			->left_join('service se','p.service_id = se.id')
+			->left_join('poste po','c.poste_id = po.id')
+			->left_join('service se','c.service_id = se.id')
 			->where(array('c.id =' => $id));
 			
 		return $this->db->get_one();
 	}
-
+	
+	/**
+	*	Retourne les contacts de type 2 relié à une societe
+	*	@param int $contact_id
+	*	@return array Information du contact
+	*/
 	public function getContactsOfSociete($contact_id){
-		return 	$this->db->select('c.*, p.*, po.libelle as poste, se.libelle as service, c.id as cid')
+		return 	$this->db->select('c.*, po.libelle as poste, se.libelle as service')
 					->from('contacts c')
 					->left_join('personne p','c.id = p.contact_id')
 					->left_join('poste po','p.poste_id = po.id')
 					->left_join('service se','p.service_id = se.id')
-					//->where(array('p.societe_id =' => $result['sid'], 'c.isDelete !=' => 1))
-					->where(array('p.societe_id =' => $contact_id, 'c.isDelete !=' => 1))
+					->where(array('c.parent_id =' => $contact_id, 'c.isDelete !=' => 1, 'c.type =' => 2))
 					->get();
 	}
 
@@ -393,14 +395,14 @@ class contactsManager extends BaseModel{
 		print_r($this->db->queries);
 	}
 	
+	/**
+	*	Recupere les agences par rapport à l ID du parent
+	*/
 	public function getAgences($parent_id){
-		$this->db
-			->select('s.raison_social, c.city, c.id as contacts_id')
-			->from('societe s')
-			->left_join('contacts c','s.contact_id = c.id')
-			->where(array('s.parent_id =' => $parent_id, 'c.isDelete =' => 0));
-			
-		return $this->db->get();
+		return 	$this->db->select('c.nom, c.city, c.id')
+					->from('contacts c')
+					->where(array('c.type =' => 1, 'c.parent_id =' => $parent_id, 'c.isDelete =' => 0))
+					->get();			
 	}
 	
 	public function getSiegeSocial($id){

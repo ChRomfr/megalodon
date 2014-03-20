@@ -20,8 +20,8 @@ class indexController extends Controller{
 
 		$stats = array(
 			'nb_ctcs'		=>	$this->registry->db->count('contacts', array('isDelete =' => 0)),
-			'nb_sct'		=>	$this->registry->db->count('societe'),
-			'nb_per'		=>	$this->registry->db->count('personne'),
+			'nb_sct'		=>	$this->registry->db->count('contacts', array('type =' => 1)),
+			'nb_per'		=>	$this->registry->db->count('contacts', array('type !=' => 1)),
 			'nb_email'		=>	$this->registry->db->count('contacts', array('email != ' => '')),
 		);
 
@@ -38,8 +38,8 @@ class indexController extends Controller{
 			foreach($meets as $row){
 				if($row['tier_type'] == 'contacts'){
 					$tier = $this->manager->contacts->getResumeById($row['tier_id']);
-					if(!empty($tier['raison_social'])){
-						$meets[$i]['participant'] = $tier['raison_social'];
+					if(empty($tier['prenom'])){
+						$meets[$i]['participant'] = $tier['nom'];
 					}else{
 						$meets[$i]['participant'] = $tier['prenom'] . ' ' . $tier['nom'];
 					}
@@ -67,10 +67,8 @@ class indexController extends Controller{
 		if( !$Markers = $this->registry->cache->get('markers_index') ){
 			$Markers = array();
 
-			$contacts =	$this->registry->db->select('DISTINCT(c.lat), c.*, s.raison_social, p.nom, p.prenom, date_last_geoloc, p.societe_id')
+			$contacts =	$this->registry->db->select('DISTINCT(c.lat), c.*, date_last_geoloc, p.societe_id')
 						->from('contacts c')
-						->left_join('personne p','c.id = p.contact_id')
-						->left_join('societe s','c.id = s.contact_id')
 						->where_free('c.lng != "" AND c.lat != "" AND c.isDelete = 0')
 						->get();
 

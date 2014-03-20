@@ -249,10 +249,9 @@
 
 	<div class="text-center">
 		<hr/>
-		<input type="hidden" name="contact[id]" value="{$contact.id}" />
-		{if !empty($contact.parent_id)}
-		<input type="hidden" name="parent_id" value="{$contact.parent_id}" />
-		{/if}	
+		<input type="hidden" name="contact[id]" value="{$contact.id}" />		
+		<input type="hidden" name="contact[parent_id]" value="{$contact.parent_id}" />
+		<input type="hidden" name="contact[type]" value="{$contact.type}" />
 		
 		{if isAdmin() < 1}
 		<input type="hidden" name="contact[lat]" value="{$contact.lat}" />

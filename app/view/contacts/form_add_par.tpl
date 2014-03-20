@@ -19,7 +19,7 @@
 <div class="form-group">
 	<label class="control-label col-sm-2">Societe :</label>
 	<div class="col-sm-5">
-		<input type="text" id="search_societe" class="form-control" {if isset($smarty.get.societe) && isset($ets)}value="{$ets.raison_social}"{/if} required/>
+		<input type="text" id="search_societe" class="form-control" {if isset($smarty.get.societe) && isset($ets)}value="{$ets.nom}"{/if} required/>
 		<input type="hidden" name="contact[parent_id]" id="societe-id" {if isset($smarty.get.societe)}value="{$smarty.get.societe}"{/if}/>
 	</div>
 </div>
