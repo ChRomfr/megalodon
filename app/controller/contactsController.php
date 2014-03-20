@@ -308,14 +308,7 @@ class contactsController extends Controller{
 			
 			$this->registry->smarty->assign('agences', $agences);
 		}
-		
-		// Recuperation siege social
-		if( $contact['type'] == 1 && !empty($contact['parent_id']) ){
-			$siege = $this->manager->contacts->getSiegeSocial($contact['parent_id']);
-			
-			$this->registry->smarty->assign('siege', $siege);
-		}
-
+	
 		$this->registry->smarty->assign('contact', $contact);
 
 		// Traitement du module CA si actif

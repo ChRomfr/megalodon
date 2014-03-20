@@ -3,7 +3,7 @@
 <div id="tabContactsFiles" class="tab-pane">
 	<br/>
 	<div class="pull-right">
-		<a href="javascript:get_form_add_file({$contact.contact_id});" title="" class="btn btn-default"><i class="fa fa-lg fa-cloud-upload"></i></a>
+		<a href="javascript:get_form_add_file({$contact.id});" title="" class="btn btn-default"><i class="fa fa-lg fa-cloud-upload"></i></a>
 	</div>
 	<div class="clearfix"></div>
 

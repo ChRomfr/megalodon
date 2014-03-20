@@ -338,8 +338,6 @@ class campaignController extends Controller{
 		}
 
 		return json_encode($targets);
-		//var_dump($targets);
-
 	}
 
 	/**

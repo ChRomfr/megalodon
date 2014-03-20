@@ -225,10 +225,9 @@ $(document).on('click', '#atabfiles', function(){
     $('#table-contacts-files').find("tr:gt(0)").remove();
 
      $.get(
-    base_url + 'index.php/files/get_by_contact_id/'+contact.contact_id,
-    {nohtml:'nohtml'},
+    base_url + 'index.php/files/get_by_contact_id/'+contact.id,{},
     function(data){ 
-        var tpl = '<tr><td><a href="'+base_url+'web/upload/contacts/'+contact.contact_id+'/{{disk_name}}" title="Telecharger le fichier"><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{name}}</a></td><td>{{identifiant}}</td><td>{{date_add}}</td><td>{{&delete_file}}</tr>';
+        var tpl = '<tr><td><a href="'+base_url+'web/upload/contacts/'+contact.id+'/{{disk_name}}" title="Telecharger le fichier"><i class="fa fa-cloud-download"></i>&nbsp;&nbsp;{{name}}</a></td><td>{{identifiant}}</td><td>{{date_add}}</td><td>{{&delete_file}}</tr>';
         for( var i in data ){
             $('#table-contacts-files').append( Mustache.render(tpl, data[i]) );
         };
