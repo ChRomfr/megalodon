@@ -2,7 +2,7 @@
 {strip}
 <div id="tabCA" class="tab-pane">
 	<div class="pull-right">
-		<a href="javascript:get_form_ca({$contact.contact_id})" title=""><i class="fa fa-plus fa-lg"></i></a>
+		<a href="javascript:get_form_ca({$contact.id})" title=""><i class="fa fa-plus fa-lg"></i></a>
 	</div>
 	<div class="clearfix"></div>
 	<table class="table table-striped table-condensed" id="table-contacts-ca">
@@ -24,7 +24,7 @@
 				<td>{$row.date_ca}</td>
 				<td>
 					{if $smarty.session.utilisateur.id == $row.user_id}
-					<a href="javascript:get_form_edit_ca({$contact.contact_id}, {$row.id});" title="Modifier"><i class="fa fa-edit"></i></a>
+					<a href="javascript:get_form_edit_ca({$contact.id}, {$row.id});" title="Modifier"><i class="fa fa-edit"></i></a>
 					{/if}
 				</td>
 			</tr>
@@ -35,7 +35,7 @@
 </div>
 {/strip}
 <script type="text/javascript">
-var cid = {$contact.contact_id};
+var cid = {$contact.id};
 $(document).on('click', "#atabca", function () {
 	$.get(
 		base_url + 'index.php/ca/stats_contacts/'+cid,{},

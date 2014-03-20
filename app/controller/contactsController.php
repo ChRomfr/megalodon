@@ -656,7 +656,7 @@ class contactsController extends Controller{
 		
 		return $param;
 	}
-
+/*
 	public function updaterowsAction(){
 			$entreprises = $this->registry->db->get('entreprises', array('migration =' => 0, 'new_id !=' => ''));
 
@@ -778,7 +778,7 @@ class contactsController extends Controller{
 			$this->registry->db->update('contact', $row);
 		}
 	}
-
+	*/
 	
 	public function maintenanceAction(){		
 		$adm = $this->load_controller('adm');
@@ -1144,10 +1144,11 @@ class contactsController extends Controller{
 		}
 	}
 
-	public function ajaxmaintenanceoptdbAction(){		
-
-		return "go";
-	}
+	/**
+	 * Lance l optimisation
+	 * @return [type] [description]
+	 */
+	public function ajaxmaintenanceoptdbAction(){ return "go"; }
 
 	public function ajaxoptcontactsAction(){
 		// On supprime la limite de temps
@@ -1165,44 +1166,12 @@ class contactsController extends Controller{
 			$contact->pays = trim($contact->pays);
 			$contact->email = trim($contact->email);
 			$contact->code_interne = trim($contact->code_interne);
+			$contact->nom = trim($contact->nom);
+			$contact->prenom = trim($contact->prenom);
 			$contact->save();
 		}
 
 		return "contacts_ok";
-	}
-
-	public function ajaxoptsocietesAction(){
-		// On supprime la limite de temps
-		set_time_limit(0);
-
-		// Traitement des societes
-		$societes = $this->registry->db->get('societe');
-
-		foreach ($societes as $row) {
-			$societe = new societe($row);
-			$societe->raison_social = trim($societe->raison_social);
-			$societe->siret = trim($societe->siret);
-			$societe->save();
-		}
-
-		return "societes_ok";
-	}
-
-	public function ajaxoptpersonnesAction(){
-		// On supprime la limite de temps
-		set_time_limit(0);
-
-		// Traitement des personnes
-		$personnes = $this->registry->db->get('personne');
-
-		foreach($personnes as $row){
-			$personne = new personne($row);
-			$personne->nom = trim($personne->nom);
-			$personne->prenom = trim($personne->prenom);
-			$personne->save();
-		}
-
-		return "personnes_ok";
 	}
 
 	public function ajaxcheckemailcontactsAction(){

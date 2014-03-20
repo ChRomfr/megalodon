@@ -68,27 +68,9 @@
 
 <script type="text/javascript">
 <!--
-function getCorbeille(){
-	$.get(
-        '{$Helper->getLink("contacts/maintenancegetcorbeille")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $("#maintenace-ctcs-corbeille").html(data);
-        }
-    );    
-}
 
-function cleantrash(){
-	if(confirm('Etes vous sur de vouloir vider la corbeille ?')){
-		$.get(
-	        '{$Helper->getLink("contacts/maitenancecleantrash")}',{literal}
-	        {nohtml:'nohtml'},{/literal}
-	        function(data){
-	            $("#maintenace-ctcs-corbeille").html(data + ' contact(s) ont ete supprime de la base');
-	        }
-	    );
-	}
-}
+
+
 
 function startgeoloc(){
 	$('#result-geoloc').html('<i class="icon-spinner icon-spin icon-large"></i>Traitement ...');
@@ -139,34 +121,10 @@ function startOptimisation(){
 function optcontact(){
 	$('#result-opt').html('<div class="progress progress-striped active"><div class="bar" style="width: 25%;"></div></div><div>Optimisation de la table <strong>contacts</strong></div>');
 	$.get(
-        '{$Helper->getLink("contacts/ajaxoptcontacts")}',{literal}
-        {nohtml:'nohtml'},
+        base_url + 'index.php/contacts/ajaxoptcontacts',{literal}
+        {},
         function(data){
-            optsocietes();
-        }
-    );
-    {/literal}
-}
-
-function optsocietes(){
-	$('#result-opt').html('<div class="progress progress-striped active"><div class="bar" style="width: 50%;"></div></div><div>Optimisation de la table <strong>societe</strong></div>');
-	$.get(
-        '{$Helper->getLink("contacts/ajaxoptsocietes")}',{literal}
-        {nohtml:'nohtml'},
-        function(data){
-            optpersonnes();
-        }
-    );
-    {/literal}
-}
-
-function optpersonnes(){
-	$('#result-opt').html('<div class="progress progress-striped active"><div class="bar" style="width: 75%;"></div></div><div>Optimisation de la table <strong>personne</strong></div>');
-	$.get(
-        '{$Helper->getLink("contacts/ajaxoptpersonnes")}',{literal}
-        {nohtml:'nohtml'},
-        function(data){
-            $('#result-opt').html('<div class="progress progress-striped active"><div class="bar" style="width: 100%;"></div></div><div>Finie</div>');
+           $('#result-opt').html( "Optimisation termine" );
         }
     );
     {/literal}

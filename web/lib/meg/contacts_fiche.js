@@ -245,8 +245,7 @@ if(suser.historique_contact == 1){
         $('#table-contacts-logs').find("tr:gt(0)").remove();
 
 	    $.get(
-	        base_url + 'index.php/contacts/get_logs_of_contact/'+ contact.contact_id,
-	        {nohtml:'nohtml'},
+	        base_url + 'index.php/contacts/get_logs_of_contact/'+ contact.id,{},
 	        function(data){ 
 	            var tpl = '<tr><td>{{date_log}}</td><td>{{user}}</td><td>{{& log}}</td></tr>';
 	            for( var i in data ){

@@ -67,7 +67,7 @@ class indexController extends Controller{
 		if( !$Markers = $this->registry->cache->get('markers_index') ){
 			$Markers = array();
 
-			$contacts =	$this->registry->db->select('DISTINCT(c.lat), c.*, date_last_geoloc, p.societe_id')
+			$contacts =	$this->registry->db->select('DISTINCT(c.lat), c.*, date_last_geoloc')
 						->from('contacts c')
 						->where_free('c.lng != "" AND c.lat != "" AND c.isDelete = 0')
 						->get();

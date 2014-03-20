@@ -110,3 +110,31 @@ function get_form_edit_poste(pid){
     $('#modal-global-label').html('<i class="fa fa-suitcase"></i>&nbsp;&nbsp;Modification poste');
     $('#modal-global').modal('show');
 }
+
+/**
+ * Affiche les contacts dans la corbeille
+ * @return {[type]} [description]
+ */
+function getCorbeille(){
+    $.get(
+        base_url + 'index.php/contacts/maintenancegetcorbeille',{},
+        function(data){
+            $("#maintenace-ctcs-corbeille").html(data);
+        }
+    );    
+}
+
+/**
+ * Supprime les contacts a la corbeille
+ * @return {[type]} [description]
+ */
+function cleantrash(){
+    if(confirm('Etes vous sur de vouloir vider la corbeille ?')){
+        $.get(
+            base_url + 'index.php/contacts/maitenancecleantrash',{},
+            function(data){
+                $("#maintenace-ctcs-corbeille").html(data + ' contact(s) ont ete supprime de la base');
+            }
+        );
+    }
+}

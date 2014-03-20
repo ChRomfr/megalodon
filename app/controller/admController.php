@@ -239,18 +239,10 @@ class admController extends Controller{
 
 		// Mise a la corbeille des contacts directements
 		if( !is_null($this->registry->Http->get('go_to_trash')) ){
-			$query = "UPDATE contacts SET isDelete = '1' WHERE ctype = 'societe_contact' AND (email IS NULL OR email = '') ";
+			$query = "UPDATE contacts SET isDelete = '1' WHERE type = '3' AND (email IS NULL OR email = '') ";
 			$result = $this->registry->db->query($query);
 			return 'Contacts supprimés ('. $result .')';
 		}
-
-		/*$this->load_manager('contacts');
-
-		$contacts = $this->manager->contacts->get_no_email();
-		var_dump($this->registry->db->queries);
-		var_dump($contacts);*/
-
-
 	}
 
 	/**
@@ -800,70 +792,76 @@ class admController extends Controller{
 
 	public function contacts_migAction(){
 		set_time_limit(0);
-		
+		$tot_societe = 0;
+		$tot_personne = 0;
+		$mig_societe = 0;
+		$mig_personne = 0;
+
 		// On commence par les societes
 		$societes = $this->registry->db->get('societe');
+		$tot_societe = count($societes);
 		$html = null;
 		foreach($societes as $row){
 			// Recuperation du contact
-			$contact = new myObject($this->registry->db->get_one('contacts', array('id =' => $row['contact_id'])));
-			$contact->nom = $row['raison_social'];
-			$contact->siret = $row['siret'];
-			$contact->effectif = $row['effectif'];
-			$contact->ape_id = $row['ape_id'];
-			$contact->mother = $row['mother'];
-			$contact->parent_id = $row['parent_id'];
-			$contact->type = 1;
-			$html.='<pre>'. print_r($contact, true) .'</pre>';
-			// Sauvegarde de l'objet
-			$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
-			
+			$data = $this->registry->db->get_one('contacts', array('id =' => $row['contact_id']));
+			if(is_array($data)){
+				$contact = new myObject($data);
+				$contact->nom = $row['raison_social'];
+				$contact->siret = $row['siret'];
+				$contact->effectif = $row['effectif'];
+				$contact->ape_id = $row['ape_id'];
+				$contact->mother = $row['mother'];
+				$contact->parent_id = $row['parent_id'];
+				$contact->type = 1;
+				
+				// Sauvegarde de l'objet
+				$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
+
+				// Enregistrement de la date de migration
+				$this->registry->db->update('personne', array('date_mig' => date('Y-m-d H:i:s')), array('id =' => $row['id']));
+
+				$mig_societe++;
+			}			
 		}
 		
 		// Personnes
 		$personnes = $this->registry->db->get('personne');
-		
+		$tot_personne = count($personnes);
+
 		foreach($personnes as $row){
 			if(empty($row['nom']) && empty($row['prenom'])) goto nextboucle;
+
 			// Recuperation du contact
-			$contact = new myObject($this->registry->db->get_one('contacts', array('id =' => $row['contact_id'])));
-			$contact->nom = $row['nom'];
-			$contact->prenom = $row['prenom'];
-			$contact->poste_id = $row['poste_id'];
-			$contact->service_id = $row['service_id'];
-			
-			if(!empty($row['societe_id'])){
-				$contact->parent_id = $row['societe_id'];
-				$contact->ctype = 'societe_contact';
-				$contact->type = 2;
-			}else{
-				$contact->type = 3;
-				$contact->parent_id = null;
+			$data = $this->registry->db->get_one('contacts', array('id =' => $row['contact_id']));
+			if(is_array($data)){
+				$data = $this->registry->db->get_one('contacts', array('id =' => $row['contact_id']));
+				$contact = new myObject($data);
+				$contact->nom = $row['nom'];
+				$contact->prenom = $row['prenom'];
+				$contact->poste_id = $row['poste_id'];
+				$contact->service_id = $row['service_id'];
+				
+				if(!empty($row['societe_id'])){
+					$contact->parent_id = $row['societe_id'];
+					$contact->ctype = 'societe_contact';
+					$contact->type = 2;
+				}else{
+					$contact->type = 3;
+					$contact->parent_id = null;
+				}
+
+				// Sauvegarde de l'objet
+				$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
+
+				// Enregistrement de la date de migration
+				$this->registry->db->update('personne', array('date_mig' => date('Y-m-d H:i:s')), array('id =' => $row['id']));
+
+				$mig_personne++;
 			}
-			
-			// Sauvegarde de l'objet
-			$this->registry->db->update('contacts', $contact, array('id =' => $row['contact_id']));
 			nextboucle:
 		}
 		
-		return $html;
-	}
-	
-	public function contacts_check_liaisonAction($delete = null){
-		$sct_in_error = 0;
-		// Test avec les societes
-		$societes = $this->registry->db->get('societe');
-		
-		// Boucle sur le societe
-		foreach($societes as $row){
-			$result = $this->registry->db->count('contacts', array('id =' => $row['contact_id']));
-			if($result == 0){
-				$sct_in_error++;
-				if(!empty($delete)) $this->registry->db->delete('societe', $row['id']);
-			}
-		}
-		
-		return 'Il y a '. $sct_in_error .' societe(s) en erreur !';
+		return 'Total societe :'. $tot_societe .'<br/> Societe migree :'. $mig_societe .'<br/>Total personne :'. $tot_personne .'<br/>Personne migree :'. $mig_personne;
 	}
 	
 	public function contacts_delete_by_email_step1Action(){
@@ -922,18 +920,6 @@ class admController extends Controller{
 
 	public function contacts_delete_by_email_step2Action(){
 
-		// Verification droit utilisateur
-		if( $_SESSION['utilisateur']['isAdmin'] == 0){
-			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas les droits pour effectuer cette action !');
-			return $this->indexAction();
-		}
-
-		// Verification que le formulaire est appellé de la bonne page avec un contenu
-		if(is_null($this->registry->Http->post('contacts'))){
-			$this->registry->smarty->assign('FlashMessage','Vous n\'avez pas selectionner de contact !');
-			return $this->indexAction();
-		}
-
 		// Recuperation des contacts dans une variable
 		$datas = $this->registry->Http->post('contacts');
 		
@@ -948,9 +934,7 @@ class admController extends Controller{
 
 				$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $k, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Suppression email par fichier. Ancien adresse email : '. $old_email));
 				$clog->save();
-				echo "<pre>"; print_r($contact); echo "</pre>";
-			}
-			
+			}			
 		}
 
 		// Message a l utilisateur

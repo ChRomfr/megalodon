@@ -147,8 +147,6 @@ class contactsManager extends BaseModel{
 		// Recuperation du contact
 		$this->db->select('c.*, po.libelle as poste, se.libelle as service, group_concat(u2.identifiant) as users, group_concat(u2.id) as users_id, group_concat(gr.name) as groups, group_concat(gr.id) as groups_id, (SELECT COUNT(tel.id) FROM telephones tel WHERE c.id = tel.contact_id AND tel.type != 5) as has_tel, pc.nom as parent_nom')
 			->from('contacts c')
-			//->left_join('societe s','c.id = s.contact_id')
-			//->left_join('personne p','c.id = p.contact_id')
 			->left_join('contacts pc','c.parent_id = pc.id')
 			->left_join('poste po','c.poste_id = po.id')
 			->left_join('service se','c.service_id = se.id')
@@ -349,13 +347,11 @@ class contactsManager extends BaseModel{
 
 	public function getInCorbeille(){
 
-		return 	$this->db->select(' DISTINCT(c.id), c.*, s.raison_social, p.nom, p.prenom, p.societe_id')
+		return 	$this->db->select(' DISTINCT(c.id), c.*')
 				->from('contacts c')
-				->left_join('personne p','c.id = p.contact_id')
-				->left_join('societe s','c.id = s.contact_id')
 				->left_join('telephones t','c.id = t.contact_id')
 				->where(array('isDelete =' => 1))
-				->order('s.raison_social, p.nom')
+				->order('c.nom')
 				->get();
 
 	}
@@ -365,14 +361,11 @@ class contactsManager extends BaseModel{
 
 		foreach($contacts as $row){
 			$this->db->delete('contacts',$row['id']);
-			$this->db->delete('personne', null, array('contact_id =' => $row['id']));
-			$this->db->delete('societe', null, array('contact_id =' => $row['id']));
 			$this->db->delete('contacts_categorie', null, array('contact_id =' => $row['id']));
 			$this->db->delete('contacts_email', null, array('entreprise_id =' => $row['id']));
 			$this->db->delete('contacts_log', null, array('contact_id =' => $row['id']));
 			$this->db->delete('telephones', null, array('contact_id =' => $row['id']));
 			$this->db->delete('campaign_contacts', null, array('contact_id =' => $row['id']));
-			$this->db->delete('campaign_contacts_suivi', null, array('contact_id =' => $row['id']));
 		}
 
 		return count($contacts);
@@ -420,10 +413,9 @@ class contactsManager extends BaseModel{
 	 * @return [type] [description]
 	 */
 	public function get_no_email(){
-		$this->db->select('c.*, p.nom, p.prenom')
+		$this->db->select('c.*')
 			->from('contacts c')
-			->left_join('personne p', 'p.contact_id = c.id')
-			->where_free('c.ctype = "societe_contact" AND (c.email IS NULL OR c.email = "")');
+			->where_free('c.type = 2 AND (c.email IS NULL OR c.email = "")');
 
 		return $this->db->get();
 	}
