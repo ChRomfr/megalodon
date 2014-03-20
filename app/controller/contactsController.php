@@ -996,11 +996,17 @@ class contactsController extends Controller{
 		return $this->detailAction($c1->id);
 	}
 
+	/**
+	 * Permet de geolocaliser un contact
+	 * @param  array $entreprise [description]
+	 * @return array             [description]
+	 */
 	private function getCoord($entreprise){
+		
 		require_once ROOT_PATH . 'kernel' . DS . 'lib' . DS . 'GoogleMapAPIv3.class.php';
 		$gmap = new GoogleMapApi();
 
-		$coord = $gmap->geocoding($entreprise['adresse1'] .' '. $entreprise['code_postal'] . ' '. $entreprise['ville'] . ' FRANCE');
+		$coord = $gmap->geocoding($entreprise['adress'] .' '. $entreprise['zip_code'] . ' '. $entreprise['city'] . ' FRANCE');
 
 		if(is_numeric($coord[2])){
 			// Geoloc OK

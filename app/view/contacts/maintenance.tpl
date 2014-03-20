@@ -1,3 +1,4 @@
+{strip}
 {* app/view/contacts/maintenance.tpl *}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;&nbsp;Accueil</a></li>
@@ -48,30 +49,8 @@
 	<div id="result-geoloc"></div>
 </div>
 
-{* MODAL GENERIQUE MAINTENANCE*}
-<div id="modal-maintenance-contacts" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-        	<div class="modal-header">
-        		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-        		<h3 id="modal-maintenance-contact-label"></h3>
-        	</div>
-        	<div class="modal-body" id="modal-maintenance-contacts-body">
-        		
-        	</div>
-        	<div class="modal-footer">
-        		<button class="btn btn-default" data-dismiss="modal" aria-hidden="true">Fermer</button>
-        	</div>
-        </div>
-    </div>
-</div>
-
+{/strip}
 <script type="text/javascript">
-<!--
-
-
-
-
 function startgeoloc(){
 	$('#result-geoloc').html('<i class="icon-spinner icon-spin icon-large"></i>Traitement ...');
 
@@ -130,21 +109,6 @@ function optcontact(){
     {/literal}
 }
 
-function getemailerror(){
-	$.get(
-        '{$Helper->getLink("contacts/ajaxcheckemailcontacts")}',{literal}
-        {nohtml:'nohtml'},        
-        function(data){
-        	$('#result-opt').html('<table id="table-result-email" class="table table-condensed table-striped"><thead><tr><th>#</th><th>Email</th><th></th></thead><tbody></tbody></table>');
-        	var tpl = '<tr><td>{{id}}</td><td><a href="javascript:gotocontact({{id}});">{{email}}</a></td><td><a href="javascript:getformeditemail({{id}});" title=""><i class="icon icon-edit"></i></a></td></tr>';
-        	for( var i in data ){      
-            	$('#table-result-email').append( Mustache.render(tpl, data[i]) );
-        	}
-        },'json'
-    );
-	{/literal}
-}
-
 function deletenoname(){
     getsavoirinutile('result-opt');
 	$.get(
@@ -167,32 +131,7 @@ function get_contacts_no_email(){
     );
 }
 
-function getsavoirinutile(elem){
-    $.get(
-        '{$Helper->getLink("ajax/getSavoirInutile")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $('#'+elem).html(data);
-        }
-    );
-}
-
-function getformeditemail(cid){
-	$.get(
-        '{$Helper->getLink("contacts/ajaxgetformeditemailmaintenance/'+cid+'")}',{literal}
-        {nohtml:'nohtml'},{/literal}
-        function(data){
-            $("#modal-maintenance-contacts-body").html(data);
-        }
-        
-    );
-
-    $('#modal-maintenance-contact-label').html('Modification email');
-    $('#modal-maintenance-contacts').modal('show');
-}
-
 function gotocontact(id){
 	window.location.href = '{$Helper->getLink("contacts/detail/'+id+'")}';
 }
-//-->
 </script>

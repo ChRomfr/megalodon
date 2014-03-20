@@ -138,3 +138,53 @@ function cleantrash(){
         );
     }
 }
+
+/**
+ * Affiche le formulaire permettant de modifier l adresse email
+ * depuis la liste affiche dans la maintenance des contacts
+ * @param  {[type]} cid [description]
+ * @return {[type]}     [description]
+ */
+function getformeditemail(cid){
+    $.get(
+        base_url + 'index.php/contacts/ajaxgetformeditemailmaintenance/'+cid,{},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+
+    $('#modal-global-label').html('Modification email');
+    $('#modal-global').modal('show');
+}
+
+/**
+ * Affiche la liste des email erronés dans la contact (maintenance)
+ * @return {[type]} [description]
+ */
+function getemailerror(){
+    $.get(
+        base_url + 'index.php/contacts/ajaxcheckemailcontact',{},        
+        function(data){
+            $('#result-opt').html('<table id="table-result-email" class="table table-condensed table-striped"><thead><tr><th>#</th><th>Email</th><th></th></thead><tbody></tbody></table>');
+            var tpl = '<tr><td>{{id}}</td><td><a href="javascript:gotocontact({{id}});">{{email}}</a></td><td><a href="javascript:getformeditemail({{id}});" title=""><i class="fa fa-edit"></i></a></td></tr>';
+            for( var i in data ){      
+                $('#table-result-email').append( Mustache.render(tpl, data[i]) );
+            }
+        },'json'
+    );
+}
+
+/**
+ * Affiche un savoir inutile le temps de faire patient l utilisateur
+ * @param  {[type]} elem [description]
+ * @return {[type]}      [description]
+ */
+function getsavoirinutile(elem){
+    $.get(
+        base_url + 'index.php/ajax/getSavoirInutile',
+        {},
+        function(data){
+            $('#'+elem).html(data);
+        }
+    );
+}

@@ -252,5 +252,5 @@ if(suser.historique_contact == 1){
 	                $('#table-contacts-logs').append( Mustache.render(tpl, data[i]) );
 	            };
 	        },'json');
-	})(jQuery);
+	});
 }
