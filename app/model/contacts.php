@@ -108,9 +108,29 @@ class contacts extends Record{
 	public $effectif;
 	
 	public function isValid(){
-		if(empty($this->client) ){
-			$this->client = 0;
+		$error = 0;
+		$text_error = null;
+		
+		if(empty($this->nom)){
+			$error++;
+			if($this->type == 1) $text_error = '<li>Veuillez indiquer la raison social</li>';
+			else $text_error = '<li>Veuillez indiquer le nom</li>';
 		}
+		
+		if($this->type == 1 && empty($this->siret)){
+			$error++;
+			$text_error .= '<li>Veuillez indiquer le numero de siret</li>';
+		}
+
+		if(($this->type == 2 || $this->type == 3) && empty($this->prenom)){
+			$error++;
+			$text_error .= '<lI>Veuillez indiquer le prénom</li>';
+		}
+		
+		if(empty($this->client) ) $this->client = 0;
+				
+		if($error == 0) return true;
+		else return $text_error;
 	}
 	
 	public function setDelete($value = 1){

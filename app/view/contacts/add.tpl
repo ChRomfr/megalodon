@@ -1,4 +1,4 @@
-<!-- START app/view/contact/add.tpl -->
+{* START app/view/contact/add.tpl *}
 {strip}
 <ol class="breadcrumb">
 	<li><a href="{$Helper->getLink("index")}" title="Accueil"><i class="fa fa-home"></i>&nbsp;Accueil</a></li>
@@ -7,6 +7,12 @@
 </ol>
 
 <div class="well">
+	{if isset($errors)}
+	<div class="alert alert-warning">
+		{$errors}
+	</div>
+	{/if}
+	
 	<form method="post" action="#" id="form-add-contacts" class="form-horizontal" role="form">
 		<fieldset>
 			<legend>Nouveau contact</legend>

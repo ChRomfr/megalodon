@@ -73,34 +73,65 @@ class contactsController extends Controller{
 		if( !is_null($this->registry->Http->post('contact'))){
 			
 			// Recuperation indormations formulaire
-			$Data = $this->registry->Http->post('contact');
-
-			// Enregistrement du contacts dans la base
-			$contact = $this->contact_add($Data);
-
-			if( isset($Data['per']) )
-				$this->personne_add($Data['per'], $contact->id);
-			elseif(isset($Data['ets']))
-				$this->societe_add($Data['ets'], $contact->id);			
+			$contact = $this->registry->Http->post('contact');
+			$data = $this->registry->Http->post('contact');
+			
+			$contact = new contacts($contact);
+			
+			// Difinition du type et ctype
+			if($contact->type == 2 && empty($contact->parent_id)){
+				$contact->ctype = 'particulier';
+				$contact->type = 3;
+			}elseif($contact->type == 2 && !empty($contact->parent_id)){
+				$contact->ctype = 'societe_contact';
+				$contact->type = 3;
+			}else{
+				$contact->ctype = 'societe';
+			}
+			
+			$result = $contact->isValid();
+			
+			if($result !== true){ 
+				$this->registry->smarty->assign('errors', $result);
+				goto showform;
+			}
+			
+			$contact->nom = htmlentities($contact->nom);
+			$contact->prenom = htmlentities($contact->prenom);
+			$contact->adress = htmlentities($contact->adress);
+			$contact->zip_code = $contact->zip_code;
+			$contact->city = htmlentities($contact->city);
+			$contact->isDelete = 0;
+			$contact->valid = 1;
+			
+			$cid = $contact->save();
 									
 			// On traite les telephones
-			foreach($Data['telephones'] as $row){
-				$this->telephone_add($row, $contact->id);				
+			foreach($data['telephones'] as $row){
+				$this->telephone_add($row, $cid);				
 			}
 			
 			// Traitement des categories
 			$categories = $this->registry->Http->post('categorie');
 			if(is_array($categories) && !empty($categories)){
 				foreach ($categories as $key => $value) {
-					$this->registry->db->insert('contacts_categorie',array('contact_id' => $contact->id, 'categorie_id' => $value));
+					$this->registry->db->insert('contacts_categorie',array('contact_id' => $cid, 'categorie_id' => $value));
 				}
 			}
+			
+			// Log
+			$log = new log();
+			$log->log = 'Ajout du contact dans la base';
+			$log->module = 'contacts';
+			$log->link_id = $cid;
+			$log->save();
 						
 			$this->registry->Helper->pnotify('Contact', 'Contact enregistré');
 
-			return $this->detailAction($contact->id);
+			return $this->detailAction($cid);
 		}
-
+		
+		showform: 
 		if(!is_null($this->registry->Http->get('societe'))){
 			$this->load_manager('contacts');
 			$this->registry->smarty->assign('ets',$this->manager->contacts->getById($this->registry->Http->get('societe')));
@@ -112,52 +143,6 @@ class contactsController extends Controller{
 		//$this->registry->load_web_lib('meg/contacts_add.js','js','footer');
 
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'add.tpl');
-	}
-
-	/**
-	 * Traite l enregistrement dans la base d un nouveau contact
-	 * @param  [type] $data [description]
-	 * @return [type]       [description]
-	 */
-	private function contact_add($data){
-		$contact = new contacts($data);
-		$contact->isValid();
-		$contact->isDelete = 0;
-		
-		// Determination du ctype
-		if(isset($data['ets'])){
-			$contact->ctype = 'societe';
-		}elseif(isset($data['per']['societe_id'])){
-			$contact->ctype = 'societe_contact';
-		}else{
-			$contact->ctype = 'particulier';
-		}
-
-		$contact->id = $contact->save();
-
-		// Enregistrement du log
-		$clog =  new clog(array('date_log' => date("Y-m-d H:i:s"), 'contact_id' => $contact->id, 'user_id' => $_SESSION['utilisateur']['id'], 'log' => 'Ajout du contact dans la base'));
-		$clog->save();
-
-		return $contact;
-	}
-
-	private function personne_add($data, $cid){
-		// Personne physique
-		$personne = new personne($data);
-		$personne->contact_id = $cid;
-		$personne->save();
-
-		return $personne;
-	}
-
-	private function societe_add($data, $cid){
-		// Entreprise
-		$societe = new societe($data);
-		$societe->contact_id = $cid;
-		$societe->save();
-
-		return $societe;
 	}
 
 	private function telephone_add($data, $cid){
@@ -1264,7 +1249,8 @@ class contactsController extends Controller{
 
 	public function ajax_search_societeAction(){
 		$search = $this->registry->HTTPRequest->getData('term');
-		$results = $this->registry->db->select('s.raison_social as label, s.contact_id as value')->from('societe s')->where_free('s.raison_social LIKE "%'. $search .'%"')->limit(10)->get();
+		$search = htmlentities($search);
+		$results = $this->registry->db->select('c.nom as label, c.id as value')->from('contacts c')->where_free('c.nom LIKE "%'. $search .'%" AND c.type = 1')->limit(10)->get();
 		return json_encode($results);
 	}
 
@@ -1275,11 +1261,10 @@ class contactsController extends Controller{
 	 */
 	public function ajax_search_globalAction(){
 		$search = $this->registry->HTTPRequest->getData('term');
-		$results =	$this->registry->db->select('concat_ws(" ",s.raison_social, p.prenom, p.nom)as label, c.id as value')
+		$search = htmlentities($search);
+		$results =	$this->registry->db->select('concat_ws(" ",c.prenom, c.nom)as label, c.id as value')
 					->from('contacts c')
-					->left_join('societe s', 's.contact_id = c.id')
-					->left_join('personne p', 'p.contact_id = c.id')
-					->where_free('s.raison_social LIKE "%'. $search .'%" OR p.nom LIKE "%'.$search.'%" OR c.email LIKE "%'.$search.'%"')
+					->where_free('c.nom LIKE "%'.$search.'%" OR c.email LIKE "%'.$search.'%"')
 					->limit(10)
 					->get();
 		return json_encode($results);
