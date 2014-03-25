@@ -41,12 +41,12 @@
 				<td>{if $user.actif == 1}<span class="label label-success">Oui</span>{else}<span class="label label-danger">Non</span>{/if}</td>
 				<td>{if !empty($user.last_connexion)}{date('Y-m-d H:i:s',$user.last_connexion)}{/if}</td>
 				<td>
-					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="fa fa-edit"></i></a>
+					<a href="{$Helper->getLink("adm/users_edit/{$user.id}")}" title="Modifier l utilisateur"><i class="fa fa-edit fa-lg"></i></a>
 					&nbsp;&nbsp;
-					<a href="javascript:get_logs({$user.id});" title=""><i class="fa fa-info"></i></a>
+					<a href="javascript:get_logs_by_user({$user.id});" title=""><i class="fa fa-info fa-lg"></i></a>
 					&nbsp;&nbsp;
 					{if $user.identifiant != 'admin'}
-					<a href="javascript:user_delete({$user.id});" title="{$lang.Supprimer}"><i class="fa fa-trash-o"></i></a>
+					<a href="javascript:user_delete({$user.id});" title="{$lang.Supprimer}"><i class="fa fa-trash-o fa-lg"></i></a>
 					{/if}
 				</tr>
 			</tr>

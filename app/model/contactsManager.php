@@ -12,7 +12,7 @@ class contactsManager extends BaseModel{
 			->from('contacts c')
 			//->left_join('personne p','c.id = p.contact_id')
 			//->left_join('societe s','c.id = s.contact_id')
-			->left_join('telephones t','c.id = t.contact_id');
+			//->left_join('telephones t','c.id = t.contact_id');
 			
 		// Traitement des filtres des categories et jointure
 		if( isset($_GET['filtre']['categorie']) && isset($_GET['filtre']['categorie_condition']) && $_GET['filtre']['categorie_condition'] == 'AND' && count($_GET['filtre']['categorie']) > 0){
@@ -76,7 +76,7 @@ class contactsManager extends BaseModel{
 			->from('contacts c')
 			//->left_join('personne p','c.id = p.contact_id')
 			//->left_join('societe s','c.id = s.contact_id')
-			->left_join('telephones t','c.id = t.contact_id');
+			//->left_join('telephones t','c.id = t.contact_id');
 			
 			
 		// Traitement des filtres des categories et jointure

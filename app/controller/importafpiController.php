@@ -109,6 +109,8 @@ class importafpiController extends Controller{
 	*	
 	*/
 	public function step3Action($file){
+	
+		exit('FONCTION INOP');
 
 		// Verification si fichier deja importer
 		$result = $this->dejaimporter($file);

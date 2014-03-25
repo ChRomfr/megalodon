@@ -255,7 +255,7 @@ class admController extends Controller{
 		$this->registry->db->delete('poste', $pid);
 
 		// Mise a jour des contacts
-		$this->registry->db->update('personne', array('poste_id' => NULL), array('poste_id =' => $pid));
+		$this->registry->db->update('contacts', array('poste_id' => NULL), array('poste_id =' => $pid));
 
 		// Notification
 		$this->registry->Helper->pnotify('Poste','Poste supprimé. Les contacts ont été mise a jour.');
@@ -322,7 +322,7 @@ class admController extends Controller{
 		$this->registry->db->delete('service', $sid);
 
 		// Mise a jour des contacts
-		$this->registry->db->update('personne', array('service_id' => NULL), array('service_id =' => $sid));
+		$this->registry->db->update('contacts', array('service_id' => NULL), array('service_id =' => $sid));
 
 		// Notification
 		$this->registry->Helper->pnotify('Services','Service supprimé.<br/>Les contacts ont été mise a jour.');
@@ -765,31 +765,6 @@ class admController extends Controller{
         return json_encode($data, JSON_NUMERIC_CHECK);
 	}
 	
-	/**
-	*	Verifie les societes cliente et passe les contact societe en client
-	*/
-	public function contacts_synchro_clt_societe_proAction(){
-		$in_error = 0;
-		$societes = $this->registry->db->get('contacts', array('client =' => 1, 'ctype =' => 'societe'));
-		
-		foreach($societes as $societe){
-			// Recuperation des contacts
-			$personnes = $this->registry->db->get('personne', array('societe_id =' => $societe['id']));
-			
-			if(!empty($personnes)){
-				foreach($personnes as $personne){
-					$data = $this->registry->db->get_one('contacts', array('id =' => $personne['contact_id']));
-					if($data['client'] == 0){
-						$this->registry->db->update('contacts', array('client' => 1), array('id =' => $data['id']));
-						$in_error++;
-					}
-				}
-			}
-		}
-		
-		return $in_error .' personnes ont été modifiés';
-	}
-
 	public function contacts_migAction(){
 		set_time_limit(0);
 		$tot_societe = 0;

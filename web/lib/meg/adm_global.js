@@ -6,7 +6,7 @@ function user_delete(uid){
 }
 
 /* Recupere les logs utilisateurs */
-function get_logs(uid){
+function get_logs_by_user(uid){
 	$.get(
         base_url + 'index.php/adm/users_view_log_contacts/'+uid,
         {nohtml:'nohtml'},

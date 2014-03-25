@@ -260,11 +260,6 @@ class contactsController extends Controller{
 		
 		$contact = $this->manager->contacts->getById($id);
 
-		if(!empty($contact->societe_id)){
-			$societe = $this->registry->db->get_one('societe', array('id =' => $contact->societe_id));
-			$this->registry->smarty->assign('societe', $societe);
-		}
-
 		$this->registry->smarty->assign(array(
 			'ctitre'		=>	'Editon contact',
 			'contact'		=>	$contact,
@@ -955,46 +950,7 @@ class contactsController extends Controller{
 	*	Permet de fusionner deux contacts
 	*
 	*/
-	public function fusion_contactAction(){
-	
-		$contact_1 = $this->registry->Http->get('c1');
-		$contact_2 = $this->registry->Http->get('c2');
-		
-		$c1 = new contacts();
-		$c2 = new contacts();
-		
-		$c1->get($contact_1);
-		$c2->get($contact_2);
-		
-		$c1->update_fields($c2);
-		var_dump($c1);
-		
-		$s1 = new societe($this->registry->db->get_one('societe',array('contact_id =' => $c1->id)));
-		$s2 = new societe($this->registry->db->get_one('societe',array('contact_id =' => $c2->id)));
-		
-		$s1->update_fields($s2);
-		
-		var_dump($s1);
-		
-		// Migration de tous les anciens contacts
-		$this->registry->db->update('personne', array('societe_id' => $s1->id), array('societe_id =' => $s2->id) );
-		$this->registry->db->update('telephones', array('contact_id' => $c1->id), array('contact_id =' => $c2->id) );
-		
-		// Suppression du doublons.
-		$c2->delete($c2->id);
-		$s2->delete($s2->id);
-		$this->registry->db->delete('contacts_log', null, array('contact_id =' => $c2->id));
-		$this->registry->db->delete('contacts_mailing', null, array('contact_id =' => $c2->id));
-		$this->registry->db->delete('contacts_suivi', null, array('cid =' => $c2->id));
-		$this->registry->db->delete('contacts_files', null, array('contact_id =' => $c2->id));
-		$this->registry->db->delete('contacts_email', null, array('entreprise_id =' => $c2->id));
-		
-		// Sauvegarde des nouveaux object
-		$c1->save();
-		$s1->save();
-		
-		return $this->detailAction($c1->id);
-	}
+	public function fusion_contactAction(){ exit('INOP'); }
 
 	/**
 	 * Permet de geolocaliser un contact

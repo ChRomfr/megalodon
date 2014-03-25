@@ -68,17 +68,27 @@ class Router{
  
  function getRoute(){
 	
-	if( !isset($_SERVER['REDIRECT_QUERY_STRING']) )
+	// Cas serveur IIS
+	if( isset($_SERVER['IIS_WasUrlRewritten']) && $_SERVER['IIS_WasUrlRewritten'] == 1){		
+		//  Url reecrite par IIS
+		$route = $_SERVER['REQUEST_URI'];
+		// On test si le 1caractere est /
+		if($route[0] == '/'){
+			// On supprime le premier /
+			$route = substr($route,1);
+		}
+	}elseif( !isset($_SERVER['REDIRECT_QUERY_STRING']) ){		
 		$route = str_replace($_SERVER['SCRIPT_NAME'] .'/','', $_SERVER['REQUEST_URI']);
-	else
+	}else{
 		$route = $_SERVER['REDIRECT_QUERY_STRING'];
+	}
 		
 	$this->route = $route;
 		
 	$route = explode('?', $route);
 	$route = explode('&', $route[0]);
 	$route = explode('/',$route[0]);
-	//var_dump($route);
+	
 	if( !empty($route[0]) )
 		$this->controller = $route[0];
 	else
