@@ -111,6 +111,14 @@ spl_autoload_register('AppAutoload');
 getGlobalDatas();
 $registry->smarty->assign('modal_search', $registry->smarty->fetch(VIEW_PATH.'global'.DS.'modal_search.shark'));
 
+// Envoie des preferences utilisateurs en config
+if( $_SESSION['utilisateur']['id'] != 'Visiteur'){
+	$registry->config['contacts_preview'] = $_SESSION['utilisateur']['contacts_preview'];
+}
+
+
+// Renvoie de la config a smarty avec les params utilisateur
+$registry->smarty->assign('config', $registry->config);
 
 /**
  * Traitement cas particulier ou TOKEN CRON EXISTE

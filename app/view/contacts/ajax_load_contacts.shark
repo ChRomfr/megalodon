@@ -11,8 +11,6 @@
 		<tr>
 			<th>Contact</th>
 			<th>Ville</th>
-			<!-- <th>Email</th>
-			<th>Type</th> -->
 			<th>Action</th>
 			{if $smarty.session.utilisateur.isAdmin > 0}
 			<th></th>
@@ -24,24 +22,22 @@
 		<tr>
 			<td>
 				<div class="pull-left">
+					{if $config['contacts_preview'] == 'popover'}
 					<a rel="popover" data-html=true data-poload="{$Helper->getLink("contacts/resume_popover/{$row.id}?nohtml")}" href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a>
+					{elseif $config['contacts_preview'] == 'modal'}
+					<a href="javascript:contacts_preview_modal({$row.id})" title="">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a>
+					{else}
+					<a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Voir la fiche complete">{$row.nom} {if !empty($row.prenom)}{$row.prenom}{/if}</a>
+					{/if}
 				</div>
 				<div class="pull-right">					
-					{if $row.pasdecontact == 1}<span class="help-text text-warning" title="Ce contact ne souhaite plus être contacté"><i class="fa fa-exclamation-triangle"></i></span>{/if}
-					
-					{if $row.has_tel == 0}&nbsp;&nbsp;<span class="help-text" title="Aucun numéro de téléhone renseigné" onclick="GetFormAddPhone({$row.id})"><i class="fa fa-phone-square text-danger"></i></span>{/if}
+					{if $row.pasdecontact == 1}<span class="help-text text-warning" title="Ce contact ne souhaite plus être contacté"><i class="fa fa-exclamation-triangle"></i></span>{/if}					
+					{if $row.has_tel == 0}&nbsp;&nbsp;<a href="javascript:GetFormAddPhone({$row.id});"><span class="help-text" title="Aucun numéro de téléhone renseigné"><i class="fa fa-phone-square text-danger"></i></span></a>{/if}
 					{if $row.client == 1}&nbsp;&nbsp;<span class="help-text" title="Ce contact est client"><i class="fa fa-smile-o"></i></span>{/if}
 					</div>
 				<div class="clearfix"></div>
 			</td>
-			<td>{$row.city}</td>
-			<!-- <td>{$row.email}</td> 
-			<td>
-				{if $row.ctype == 'societe'}Societe
-				{elseif $row.ctype == 'societe_contact'}Pro
-				{else}Par
-				{/if}
-			</td> -->
+			<td>{$row.city} {if !empty($row.dpt)}({$row.dpt}){/if}</td>
 			<td>
 				<a href="{$Helper->getLink("contacts/detail/{$row.id}")}" title="Voir la fiche" class="help-text"><i class="fa fa-eye"></i></a>
 				{if $smarty.session.utilisateur.isAdmin > 0 || isset($smarty.session.acl.contacts_edit)}
@@ -51,8 +47,6 @@
 			</td>
 			{if $smarty.session.utilisateur.isAdmin > 0}
 			<td>
-				<!--<a href="javascript:deleteContact({$row.id});" title="Supprimer"><i class="icon icon-trash"></i></a>
-				&nbsp;&nbsp;-->
 				<input type="checkbox" name="contacts[][{$row.id}]" />
 			</td>
 			{/if}

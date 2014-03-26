@@ -67,6 +67,18 @@
 					<input type="checkbox" name="user[follow_my_contact]" id="follow-my-contacts" {if $user->follow_my_contact == 1}checked="checked"{/if} />
 				</div>
 			</div>
+
+			<div class="form-group">
+				<label class="control-label col-sm-2">Aperçu des contacts :</label>
+				<div class="col-sm-5">
+					<select name="user[contacts_preview]" id="contacts-preview" class="form-control">
+						<option value="none" {if $user->contacts_preview == 'none'}selected="selected"{/if}>Aucun</option>
+						<option value="modal" {if $user->contacts_preview == 'modal'}selected="selected"{/if}>Boite de dialogue</option>
+						<option value="popover" {if $user->contacts_preview == 'popover'}selected="selected"{/if}>Info bulle</option>
+					</select>
+				</div>
+			</div>
+
 		</fieldset>
 		
 		<div class="text-center">

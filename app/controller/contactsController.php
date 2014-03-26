@@ -332,6 +332,13 @@ class contactsController extends Controller{
 		$this->registry->smarty->assign('contact',$contact);
 		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'popover_resume.tpl');
 	}
+
+	public function preview_modalAction($cid){
+		$this->load_manager('contacts');		
+		$contact = $this->manager->contacts->getById($cid, 0);
+		$this->registry->smarty->assign('contact',$contact);
+		return $this->registry->smarty->fetch(VIEW_PATH.'contacts'.DS.'preview_modal.tpl');
+	}
 	
 	/**
 	*	Marque comme supprime un contact, ce qui a pour effet de le masqué dans la liste

@@ -107,11 +107,9 @@ var suser = {$smarty.session.utilisateur|json_encode};
 			{/if}
           </ul>
           
-        </div><!--/.nav-collapse -->
+        </div>{* /.nav-collapse *}
       </div>
     </div>
-
-	<!-- <div style="padding-top:50px;"></div> -->
 
 	{* START conteneur central *}
 	<div class="container-fluid">
@@ -136,7 +134,7 @@ var suser = {$smarty.session.utilisateur|json_encode};
 				<div class="col-md-8 col-xs-8"></div>
 				<div class="col-md-4 col-xs-4"></div>
 			</div>			
-		</div><!-- /container -->
+		</div>
 		<hr/>
 		<div class="container">
 			<div class="pull-left"></div>
@@ -150,7 +148,7 @@ var suser = {$smarty.session.utilisateur|json_encode};
 
 {$modal_global}
 {$modal_search}
-{/strip}
+
 {* APPEL JS EN FOOTER *}
 {if isset($FlashMessage) && !empty($FlashMessage)}<script type="text/javascript">var flash_message = '{$FlashMessage}'</script>{/if}
 {if isset($pnotify) && !empty($pnotify)}<script type="text/javascript">var notify =  {$pnotify|json_encode}</script>{/if}
@@ -158,7 +156,7 @@ var suser = {$smarty.session.utilisateur|json_encode};
 <script type="text/javascript" src="{$config.url}web/lib/{$v}"></script>
 {/foreach}
 <script type="text/javascript" src="{$config.url}themes/bootstrap3/js/bootstrap.min.js"></script>
-<script type="text/javascript" src="{$config.url}web/lib/meg/app.js"></script>
+{if $smarty.const.IN_PRODUCTION == false}<script type="text/javascript" src="{$config.url}web/lib/meg/app.js"></script>{else}<script type="text/javascript" src="{$config.url}web/lib/meg/app.min.js"></script>{/if}
 
 {if $smarty.const.IN_PRODUCTION === false}
 <div class="container-fluid">
@@ -183,6 +181,7 @@ var suser = {$smarty.session.utilisateur|json_encode};
 {/if}
 </body>
 </html>
+{/strip}
 <!--
                                      _,,                                   ,dW 
                                    ,iSMP                                  JIl; 

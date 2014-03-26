@@ -23,6 +23,7 @@ define('ADM_MODEL_PATH',ROOT_PATH . 'app' . DS . 'model');
 session_save_path(ROOT_PATH . 'cache' . DS . '_sessions');
 
 require_once ROOT_PATH . 'kernel' . DS . 'core'. DS . 'core.php';
+
 # START CODE SPECIFIQUE APP
 define('USE_TABLE_CONFIG',true);
 

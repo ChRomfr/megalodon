@@ -51,6 +51,13 @@ class utilisateur extends Baseutilisateur{
      */
     public $follow_my_contact;
 
+    /**
+     * Determine l'option perso pour l affichage du preview contact
+     * @var string
+     * @Db: {"name":"contacts_preview","type":"VARCHAR(10)", "default":"none"}
+     */
+    public $contacts_preview;
+
     public function checkLogin(){
     	global $registry;
         

@@ -9,7 +9,7 @@ class contactsManager extends BaseModel{
 	*/
 	public function count($_where = null){
 		$this->db->select(' COUNT(DISTINCT(c.id)) as nb')
-			->from('contacts c')
+			->from('contacts c');
 			//->left_join('personne p','c.id = p.contact_id')
 			//->left_join('societe s','c.id = s.contact_id')
 			//->left_join('telephones t','c.id = t.contact_id');
@@ -72,8 +72,8 @@ class contactsManager extends BaseModel{
 	public function get($_where = null, $limit = null, $offset = null, $fields = 'c.*'){
 
 		
-		$this->db->select(' DISTINCT(c.id), '. $fields .', c.nom , c.prenom, (SELECT COUNT(tel.id) FROM telephones tel WHERE c.id = tel.contact_id AND tel.type != 5) as has_tel')
-			->from('contacts c')
+		$this->db->select(' DISTINCT(c.id), '. $fields .', c.nom , c.prenom, (SELECT COUNT(tel.id) FROM telephones tel WHERE c.id = tel.contact_id AND tel.type != 5) as has_tel, LEFT(c.zip_code,2) as dpt')
+			->from('contacts c');
 			//->left_join('personne p','c.id = p.contact_id')
 			//->left_join('societe s','c.id = s.contact_id')
 			//->left_join('telephones t','c.id = t.contact_id');

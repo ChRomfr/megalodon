@@ -1,8 +1,9 @@
-ALTER TABLE `listes`.`telephones` 
-ADD INDEX `tel_type` (`type` ASC);
+- prod no  | test ok
+ALTER TABLE `user` ADD COLUMN `contacts_preview` VARCHAR(10) NULL DEFAULT 'modal' AFTER `follow_my_contact`;
 
 
-- prod ok | local no | test ok
+- prod ok | test ok
+ALTER TABLE `telephones` ADD INDEX `tel_type` (`type` ASC);
 ALTER TABLE `contacts` ADD COLUMN `pasdecontact` INT(1) NULL DEFAULT 0 COMMENT 'Marque le contact comme souhaitant de pas etre appel' AFTER `collab_id`, ADD COLUMN `date_pasdecontact` DATE NULL AFTER `pasdecontact`;
 
 ALTER TABLE `societe` ADD COLUMN `mig` INT(1) NULL DEFAULT 0 AFTER `parent_id`;

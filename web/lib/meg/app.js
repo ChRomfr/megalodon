@@ -295,3 +295,19 @@ function GetFormAddPhone(cid){
     $('#modal-global-label').html('Nouveau telephone');
     $('#modal-global').modal('show');
 }
+
+/**
+ * Permet d affiche le resume via une modal
+ * @param  {[type]} cid [description]
+ * @return {[type]}     [description]
+ */
+function contacts_preview_modal(cid){
+	$.get(
+        base_url + 'index.php/contacts/preview_modal/'+cid,{},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('');
+    $('#modal-global').modal('show');
+}
