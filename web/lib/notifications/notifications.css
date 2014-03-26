@@ -6,9 +6,9 @@
 .notifications .dropdown-menu .divider {
     margin: 1px;
 }
-#notification-items {
+/*#notification-items {
     width: 300px;
-}
+}*/
 #notification-spinner {
     text-align: center;
     padding: 8px 0px 11px;

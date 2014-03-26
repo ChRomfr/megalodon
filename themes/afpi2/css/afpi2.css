@@ -180,3 +180,6 @@ body {
   display: inline-block;
   border-radius: 50%;
 }
+
+#task-items{width:500px;}
+#notification-items{width:500px;}

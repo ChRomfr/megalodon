@@ -80,14 +80,16 @@ if(suser.id != 'Visiteur'){
 	var userid = suser.id;
 	var count_url = base_url + "index.php/notifications/getcount";
 	var list_url = base_url + "index.php/notifications/getlist";
+	var tasks_count_url = base_url + 'index.php/ajax/nb_tasks';
+	var tasks_list_url = base_url + 'index.php/ajax/tasks_list_navbar';
 	$(document).ready(function(){
 	    startNotifications();
+	    callCron();
 	});
 
 	$(document).ready(function() {
 		$.get(
-	        base_url + 'index.php/ajax/my_tasks',
-	        {nohtml:'nohtml',},
+	        base_url + 'index.php/ajax/my_tasks',{},
 	        function(data){
 	            $('#nav-menu-my-task').html(data);
 	        }
@@ -310,4 +312,133 @@ function contacts_preview_modal(cid){
     );
     $('#modal-global-label').html('');
     $('#modal-global').modal('show');
+}
+
+/**
+ * Permet de marque une tache comme realise via le checkbox
+ * @param  {[type]} tid [description]
+ * @return {[type]}     [description]
+ */
+function task_process(tid){
+	$.get(
+        base_url + 'index.php/tasks/set_process/'+tid,{},        
+        function(data){
+        	$('#task-id-'+tid+'').css('text-decoration','line-through');
+        	$(function(){
+	    	    $.pnotify({
+				    title: 'Tache terminée',
+				    text: 'Tache marqué comme terminée.',
+				    type: 'success',
+				    hide: true,
+				});
+			});
+        }
+    );
+}
+
+function callCron(){
+	 // Save the pagetitle
+    pagetitle = $(document).attr('title');
+
+    $('#task-icon').bind('click', function() {
+        getTaskList();
+    });
+    
+    // Initial poll
+    startCron(); 
+
+    // Set poll timer
+    setInterval(function(){ 
+        startCron(); 
+    }, interval);
+}
+
+function startCron(){
+	countTasks();
+}
+
+/**
+ * Retourne le nombre de tache a faire
+ * @return {[type]} [description]
+ */
+function countTasks() {
+    $.ajax({
+        url: tasks_count_url,
+        cache: false
+    }).done(function(result) {
+        setTasksCounter(result);
+    });
+    return false;
+}
+
+/**
+ * Affiche le nombre de tache
+ * @param {[type]} number [description]
+ */
+function setTasksCounter(number) {
+    var counter = $('#task-counter');
+    var icon = $('#task-icon i');
+    var title = pagetitle;
+    if(parseInt(number) == 0) {
+        $(counter).hide();
+        $(icon).removeClass('icon-white');
+    } else {
+        $(counter).show();
+        $(icon).addClass('icon-white');
+        title = '(' + number + ') ' + pagetitle;
+        $('.task-counter').html(number);
+    }
+    $(counter).html(number);
+    //$(document).attr('title', title);
+    return false;
+}
+
+function setTaskItems(content) {
+   // $('.notification-icon .notification-item').remove();
+    $('.notification-item').remove();
+   // $('.notification-icon .notification-empty').remove();
+    $('#nav-tasks-list').remove();
+    var spinner = $('#task-spinner');
+    $(spinner).before(content);
+    $(spinner).hide();
+
+    return false;
+}
+
+function getTaskList() {
+    $('.notification-icon .notification-item').hide();
+    $('.notification-icon .notification-empty').hide();
+    var spinner = $('#task-spinner');
+    $(spinner).show();
+            
+    $.ajax({
+        url: tasks_list_url,
+        cache: false
+    }).done(function(result) {
+        setTaskItems(result);
+    });
+    return false;
+}
+
+
+function task_get_form(controller,cid){
+	$.get(
+        base_url + 'index.php/tasks/get_form',{controller:controller, controller_id:cid},
+        function(data){
+            $("#modal-global-body").html(data);
+        }        
+    );
+    $('#modal-global-label').html('Nouvelle tâche');
+    $('#modal-global').modal('show');
+}
+
+/**
+ * Demande la confirmation pour supprimer une tache
+ * @param  {[type]} tid [description]
+ * @return {[type]}     [description]
+ */
+function task_delete(tid){
+	if(confirm('Etes vous sur de vouloir supprimer cette tâche ?')){
+		window.location.href = base_url+'index.php/tasks/set_delete/'+tid;
+	}
 }

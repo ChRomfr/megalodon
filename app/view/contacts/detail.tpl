@@ -21,6 +21,7 @@
 	{/if}
 
 	<div class="pull-right">
+		<a href="javascript:task_get_form('contacts', {$contact.id});" title="Ajouter une tâche"><i class="fa fa-lg fa-tasks"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		<a href="javascript:get_form_add_file({$contact.id});" title="{$lang.Ajouter_un_document}"><i class="fa fa-lg fa-cloud-upload"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;
 		{if !empty($contact.email)}
 		<a href="javascript:get_form_send_email({$contact.id})" title="Envoyer un email"><i class="fa fa-envelope fa-lg"></i></a>&nbsp;&nbsp;&nbsp;&nbsp;

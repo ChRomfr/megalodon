@@ -57,6 +57,9 @@ $registry->load_web_lib('pnotify/jquery.pnotify.min.js','js','footer');
 $registry->load_web_lib('scrollup/jquery.scrollUp.min.js','js','footer');
 $registry->load_web_lib('pnotify/jquery.pnotify.default.css','css');
 $registry->load_web_lib('shark_tasks/shark_tasks.css','css');
+$registry->load_web_lib('moment-2.4.0.js','js','footer');
+$registry->load_web_lib('bt3_datapicker/css/bootstrap-datetimepicker.min.css','css');
+$registry->load_web_lib('bt3_datapicker/js/bootstrap-datetimepicker.min.js','js','footer');
 
 /**
 *	Traitement des parametres particulier de config
@@ -94,6 +97,7 @@ function AppAutoload(){
 		'site'				=>	ROOT_PATH.'app'.DS.'model'.DS.'site.php',
 		//'societe'			=>	ROOT_PATH.'app'.DS.'model'.DS.'societe.php',
 		'telephone'			=>	ROOT_PATH.'app'.DS.'model'.DS.'telephone.php',
+		'task'				=>	ROOT_PATH.'app'.DS.'model'.DS.'task.php',
 		'tier'				=>	ROOT_PATH.'app'.DS.'model'.DS.'tier.php',
 		'utilisateur'		=>	ROOT_PATH.'app'.DS.'model'.DS.'utilisateur.php',
 

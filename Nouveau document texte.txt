@@ -1,3 +1,9 @@
+ALTER TABLE `listes_test`.`tasks` 
+ADD COLUMN `is_delete` INT(1) NULL DEFAULT 0 COMMENT 'Marque une tache comme supprimée' AFTER `guid`,
+ADD INDEX `task_delete` (`is_delete` ASC),
+ADD INDEX `task_user_id` (`user_id` ASC),
+ADD INDEX `task_process` (`process` DESC);
+
 - prod no  | test ok
 ALTER TABLE `user` ADD COLUMN `contacts_preview` VARCHAR(10) NULL DEFAULT 'modal' AFTER `follow_my_contact`;
 

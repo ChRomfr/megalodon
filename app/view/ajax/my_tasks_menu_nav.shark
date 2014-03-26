@@ -1,6 +1,13 @@
+{strip}
 {if !empty($mytasks)}
 <hr/>
-<i class="fa fa-tasks"></i>&nbsp;&nbsp;Mes taches
+<ul class="nav nav-pills nav-stacked">
+	<li class="">
+		<a href="#">
+			<i class="fa fa-tasks"></i>&nbsp;&nbsp;Mes taches<span class="badge pull-right task-counter">0</span>
+		</a>
+	</li>
+</ul>
 	<ul class="list-group" id="nav-task-list">
 	{foreach $mytasks as $row}
 		<li class="list-group-item">
@@ -10,24 +17,4 @@
 	{/foreach}
 	</ul>
 {/if}
-<script type="text/javascript">
-<!--
-function task_process(tid){
-	$.get(
-        '{$Helper->getLink("tasks/set_process/'+tid+'")}',{literal}
-		{nohtml:'nohtml'},        
-        function(data){
-        	$('#task-id-'+tid+'').css('text-decoration','line-through');
-        	$(function(){
-	    	    $.pnotify({
-				    title: 'Tache terminée',
-				    text: 'Tache marqué comme terminée.',
-				    type: 'success',
-				    hide: true,
-				});
-			});
-        }
-    );{/literal}
-}
-//-->
-</script>
+{/strip}

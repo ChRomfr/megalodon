@@ -15,7 +15,7 @@
 		{if isset($modules.mailing) && $modules.mailing.actif == 1}
 		{if $smarty.session.utilisateur.isAdmin == 1 || isset($smarty.session.acl.mailing_access)}
 		<li class="dropdown-submenu {if $App->router->controller == 'mailingController'}active{/if}">
-			<a href="#" data-toggle="dropdown"><i class="fa fa-envelope"></i>&nbsp;<strong>Mailing</strong></a>
+			<a href="#" data-toggle="dropdown"><i class="fa fa-envelope"></i>&nbsp;<strong>Mailing</strong><span class="pull-right"><b class="caret"></b></span></a>
 			<ul class="dropdown-menu">
 				<li><a href="{$Helper->getLink("mailing")}" title="Liste des mailings"><i class="fa fa-list-ul"></i>&nbsp;{$lang.Liste}</a></li>				
 				<li><a href="{$Helper->getLink("mailing/calendrier")}" title="Calendrier"><i class="fa fa-calendar"></i>&nbsp;{$lang.Calendrier}</a></li>

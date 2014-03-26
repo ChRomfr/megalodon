@@ -67,9 +67,19 @@ class ajaxController extends Controller{
 	}
 
 	public function my_tasksAction(){
-		$tasks = $this->registry->db->get('tasks', array('user_id =' => $_SESSION['utilisateur']['id'], 'process =' => 0));
+		$tasks = $this->registry->db->get('tasks', array('user_id =' => $_SESSION['utilisateur']['id'], 'process =' => 0, 'is_delete =' => 0));
 		$this->registry->smarty->assign('mytasks', $tasks);
 		return $this->registry->smarty->fetch(VIEW_PATH . 'ajax' . DS . 'my_tasks_menu_nav.shark');
+	}
+
+	public function nb_tasksAction(){
+		return $this->registry->db->count('tasks', array('user_id =' => $_SESSION['utilisateur']['id'], 'process =' => 0, 'is_delete =' => 0));
+	}
+
+	public function tasks_list_navbarAction(){
+		$tasks = $this->registry->db->get('tasks', array('user_id =' => $_SESSION['utilisateur']['id'], 'process =' => 0, 'is_delete =' => 0),null, 10);
+		$this->registry->smarty->assign('mytasks', $tasks);
+		return $this->registry->smarty->fetch(VIEW_PATH . 'ajax' . DS . 'tasks_list_navbar.tpl');
 	}
 	
 	/**

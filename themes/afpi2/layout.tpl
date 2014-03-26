@@ -45,7 +45,7 @@ var suser = {$smarty.session.utilisateur|json_encode};
             <span class="icon-bar"></span>
           </button>
           <a class="navbar-brand" href="#">
-          	<img alt="M&euros;H" src="http://www.sharkphp.com/web/images/sharkphp_white.png" style="height:20px;">
+          	<img alt="MEG" src="http://www.sharkphp.com/web/images/sharkphp_white.png" style="height:20px;">
           </a>
         </div>
         <div class="navbar-collapse collapse">
@@ -62,6 +62,18 @@ var suser = {$smarty.session.utilisateur|json_encode};
           <ul class="nav navbar-nav navbar-right">
 			{if $smarty.session.utilisateur.id != 'Visiteur'}
 			
+			<li class="dropdown">
+				<a id="task-icon" class="notifications notification-icon dropdown-toggle" data-toggle="dropdown" href="#">
+					<i class="fa fa-tasks"></i>
+					<span class="notification-counter" id="task-counter" style="display: none;">0</span>
+				</a>
+				<ul id="task-items" class="dropdown-menu" aria-labelledby="task-icon">
+					
+			        
+			        <li id="task-spinner"><img src="{$config.url}web/lib/notifications/img/loading.gif" alt="Loading" /></li>	       			        
+			    </ul>			
+			</li>
+
 			<li class="dropdown">		
 				<a id="notification-icon" class="notifications notification-icon dropdown-toggle" data-toggle="dropdown" href="#">				    	
 					<i class="glyphicon glyphicon-globe"></i>
